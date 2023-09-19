@@ -1,7 +1,7 @@
 import './App.css';
 import { useState } from 'react';
 import { userRegister } from './helpers/backend_helpers';
-
+import toastr from 'toastr';
 const App = () => {
   const[firstname,setFirstname] = useState()
   const[lastname,setLastname] = useState()
@@ -17,6 +17,7 @@ const App = () => {
     }
     const res = await userRegister(payload)
     if(res.success){
+      toastr.success(`user register  successfully`, "Success")
       console.log("res",res)
     }
   }
