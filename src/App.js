@@ -2,6 +2,8 @@ import './App.css';
 import { useState } from 'react';
 import { userRegister } from './helpers/backend_helpers';
 import toastr from 'toastr';
+import "toastr/build/toastr.min.css"
+
 const App = () => {
   const[firstname,setFirstname] = useState()
   const[lastname,setLastname] = useState()
