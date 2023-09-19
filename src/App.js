@@ -1,24 +1,80 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState } from 'react';
+import { userRegister } from './helpers/backend_helpers';
 
-function App() {
+const App = () => {
+  const[firstname,setFirstname] = useState()
+  const[lastname,setLastname] = useState()
+  const[email,setEmail] = useState()
+  const [password,setPassword] = useState() 
+
+  const handleSubmit = async() => {
+    const payload = {
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      password: password
+    }
+    const res = await userRegister(payload)
+    if(res.success){
+      console.log("res",res)
+    }
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <div className="registration-form">
+    <h2>Registration Form</h2>
+  
+      <div className="form-group">
+        <label htmlFor="username">Firstname:</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          value={firstname}
+          onChange={(e) => setFirstname(e.target.value)}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="username">Lastname:</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          value={lastname}
+          onChange={(e) => setLastname(e.target.value)}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <button type="submit" onClick={handleSubmit}>Register</button>
+      </div>
+
+  </div>
+  </>
   );
 }
 
