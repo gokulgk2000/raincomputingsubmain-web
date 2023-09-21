@@ -11,7 +11,7 @@ const Footer = () => {
           <Row>
             <div className="col-md-3 col-sm-10 " id="footmen">
               <ul className="list-unstyled">
-                <h3 className="text-primary">ABOUT</h3>
+                <h5 className="text-primary">ABOUT</h5>
                 <Link role="button" to="#" className="text-dark">
                   <li className="mt-4 font-size-14 "> - About Us</li>
                   <li className="mt-3 font-size-14 "> - How it works</li>
@@ -22,7 +22,7 @@ const Footer = () => {
 
             <div className="col-md-3 col-sm-6" id="footmen">
               <ul className="list-unstyled ">
-                <h3 className="text-primary">SOLUTION</h3>
+                <h5 className="text-primary">SOLUTION</h5>
                 <Link role="button" to="#" className="text-dark">
                   <li className="mt-4 font-size-14 "> - Enterprise</li>
                   <li className="mt-3 font-size-14 "> - Private Label</li>
@@ -33,7 +33,7 @@ const Footer = () => {
 
             <div className="col-md-3 col-sm-6" id="footmen">
               <ul className="list-unstyled  ">
-                <h3 className="text-primary">CONTACT</h3>
+                <h5 className="text-primary">CONTACT</h5>
                 <Link role="button" to="#" className="text-dark">
                   <li className="mt-4 font-size-14 "> - Contact Us </li>
                   <li className="mt-3 font-size-14"> - Careers</li>
@@ -44,7 +44,7 @@ const Footer = () => {
 
             <div className="col-md-3 col-sm-6 ">
               <ul className="list-unstyled  ">
-                <h3 className="text-primary">FOLLOW US</h3>
+                <h5 className="text-primary">FOLLOW US</h5>
                 <Link role="button" to="#">
                   <li className="mt-4 text-dark  font-size-14">
                     <i className="mdi mdi-facebook text-primary mx-2" />

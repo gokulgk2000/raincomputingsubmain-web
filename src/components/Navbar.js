@@ -16,7 +16,7 @@ const Header = () => {
                   <img src={rainlglogo} alt="" height="50" />
                 </span>
               </Link>
-               <h3>Hsuanyeh Law Group,PC</h3>
+               <h5>Hsuanyeh Law Group,PC</h5>
               {/* <Link to="/" className="logo logo-light  ">
                 <span className="logo-sm">
                   <img src={rainlglogo} alt="" height="22" />

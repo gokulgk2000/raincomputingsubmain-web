@@ -35,10 +35,10 @@ const LandingCard = () => {
                 </div>
                 <div id="attdetail">
                   <div className="mt-1 mx-3">
-                    <h5
+                    <h6
                       id="attname"
                       className="font-size-16 mb-1 text-primary "
-                    >Attorney 1</h5>
+                    >Attorney 1</h6>
                   </div>{" "}
                   <br></br>
                   <p className="mx-3 text-dark" id="attfirm"></p>
@@ -78,10 +78,10 @@ const LandingCard = () => {
                 </div>
                 <div id="attdetail">
                   <div className="mt-1 mx-3">
-                    <h5
+                    <h6
                       id="attname"
                       className="font-size-16 mb-1 text-primary "
-                    >Attorney 2</h5>
+                    >Attorney 2</h6>
                   </div>{" "}
                   <br></br>
                   <p className="mx-3 text-dark" id="attfirm"></p>
@@ -121,10 +121,10 @@ const LandingCard = () => {
                 </div>
                 <div id="attdetail">
                   <div className="mt-1 mx-3">
-                    <h5
+                    <h6
                       id="attname"
                       className="font-size-16 mb-1 text-primary "
-                    >Attorney 3</h5>
+                    >Attorney 3</h6>
                   </div>{" "}
                   <br></br>
                   <p className="mx-3 text-dark" id="attfirm"></p>
@@ -166,10 +166,10 @@ const LandingCard = () => {
                 </div>
                 <div id="attdetail">
                   <div className="mt-1 mx-3">
-                    <h5
+                    <h6
                       id="attname"
                       className="font-size-16 mb-1 text-primary "
-                    >Attorney 4</h5>
+                    >Attorney 4</h6>
                   </div>{" "}
                   <br></br>
                   <p className="mx-3 text-dark" id="attfirm"></p>
@@ -209,10 +209,10 @@ const LandingCard = () => {
                 </div>
                 <div id="attdetail">
                   <div className="mt-1 mx-3">
-                    <h5
+                    <h6
                       id="attname"
                       className="font-size-16 mb-1 text-primary "
-                    >Attorney 5</h5>
+                    >Attorney 5</h6>
                   </div>{" "}
                   <br></br>
                   <p className="mx-3 text-dark" id="attfirm"></p>
@@ -252,10 +252,10 @@ const LandingCard = () => {
                 </div>
                 <div id="attdetail">
                   <div className="mt-1 mx-3">
-                    <h5
+                    <h6
                       id="attname"
                       className="font-size-16 mb-1 text-primary "
-                    >Attorney 6</h5>
+                    >Attorney 6</h6>
                   </div>{" "}
                   <br></br>
                   <p className="mx-3 text-dark" id="attfirm"></p>
