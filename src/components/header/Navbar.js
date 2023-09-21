@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import "./navbar.scss"
-import rainlglogo from "../assets/images/raincom_Logo1.png"
+import rainlglogo from "../../assets/images/raincom_Logo1.png"
 const Header = () => {
   return (
     <React.Fragment>

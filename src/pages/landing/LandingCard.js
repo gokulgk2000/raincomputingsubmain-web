@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardBody, Col, Row } from "reactstrap";
 import "./landingcard.scss";
-import { attImages } from "../helpers/mockData";
+import { attImages } from "../../helpers/mockData";
 const LandingCard = () => {
   const imgIndex = Math.floor(Math.random() * 8);
 
