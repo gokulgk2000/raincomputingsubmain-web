@@ -26,10 +26,11 @@ const LandingCard = () => {
             <CardBody>
               <div className="d-flex">
                 <div id="attimg">
-                  <img
+                <input type="image"
+                  img
                     className="avatar-xl1"
                     src={attImages[imgIndex]?.url}
-                    alt="profile image"
+                    alt="photo"
                   />
                 </div>
                 <div id="attdetail">
@@ -37,7 +38,7 @@ const LandingCard = () => {
                     <h5
                       id="attname"
                       className="font-size-16 mb-1 text-primary "
-                    ></h5>
+                    >Attorney 1</h5>
                   </div>{" "}
                   <br></br>
                   <p className="mx-3 text-dark" id="attfirm"></p>
@@ -68,10 +69,11 @@ const LandingCard = () => {
             <CardBody>
               <div className="d-flex">
                 <div id="attimg">
-                  <img
+                <input type="image"
+                  img
                     className="avatar-xl1"
-                    src={attImages[imgIndex].url}
-                    alt="profile image"
+                    src={attImages[imgIndex]?.url}
+                    alt="photo"
                   />
                 </div>
                 <div id="attdetail">
@@ -79,7 +81,7 @@ const LandingCard = () => {
                     <h5
                       id="attname"
                       className="font-size-16 mb-1 text-primary "
-                    ></h5>
+                    >Attorney 2</h5>
                   </div>{" "}
                   <br></br>
                   <p className="mx-3 text-dark" id="attfirm"></p>
@@ -110,10 +112,11 @@ const LandingCard = () => {
             <CardBody>
               <div className="d-flex">
                 <div id="attimg">
-                  <img
+                <input type="image"
+                  img
                     className="avatar-xl1"
-                    src={attImages[imgIndex].url}
-                    alt="profile image"
+                    src={attImages[imgIndex]?.url}
+                    alt="photo"
                   />
                 </div>
                 <div id="attdetail">
@@ -121,7 +124,7 @@ const LandingCard = () => {
                     <h5
                       id="attname"
                       className="font-size-16 mb-1 text-primary "
-                    ></h5>
+                    >Attorney 3</h5>
                   </div>{" "}
                   <br></br>
                   <p className="mx-3 text-dark" id="attfirm"></p>
@@ -154,10 +157,11 @@ const LandingCard = () => {
             <CardBody>
               <div className="d-flex">
                 <div id="attimg">
-                  <img
+                <input type="image"
+                  img
                     className="avatar-xl1"
-                    src={attImages[imgIndex].url}
-                    alt="profile image"
+                    src={attImages[imgIndex]?.url}
+                    alt="photo"
                   />
                 </div>
                 <div id="attdetail">
@@ -165,7 +169,7 @@ const LandingCard = () => {
                     <h5
                       id="attname"
                       className="font-size-16 mb-1 text-primary "
-                    ></h5>
+                    >Attorney 4</h5>
                   </div>{" "}
                   <br></br>
                   <p className="mx-3 text-dark" id="attfirm"></p>
@@ -196,10 +200,11 @@ const LandingCard = () => {
             <CardBody>
               <div className="d-flex">
                 <div id="attimg">
-                  <img
+                <input type="image"
+                  img
                     className="avatar-xl1"
-                    src={attImages[imgIndex].url}
-                    alt="profile image"
+                    src={attImages[imgIndex]?.url}
+                    alt="photo"
                   />
                 </div>
                 <div id="attdetail">
@@ -207,7 +212,7 @@ const LandingCard = () => {
                     <h5
                       id="attname"
                       className="font-size-16 mb-1 text-primary "
-                    ></h5>
+                    >Attorney 5</h5>
                   </div>{" "}
                   <br></br>
                   <p className="mx-3 text-dark" id="attfirm"></p>
@@ -238,10 +243,11 @@ const LandingCard = () => {
             <CardBody>
               <div className="d-flex">
                 <div id="attimg">
-                  <img
+                <input type="image"
+                  img
                     className="avatar-xl1"
-                    src={attImages[imgIndex].url}
-                    alt="profile image"
+                    src={attImages[imgIndex]?.url}
+                    alt="photo"
                   />
                 </div>
                 <div id="attdetail">
@@ -249,7 +255,7 @@ const LandingCard = () => {
                     <h5
                       id="attname"
                       className="font-size-16 mb-1 text-primary "
-                    ></h5>
+                    >Attorney 6</h5>
                   </div>{" "}
                   <br></br>
                   <p className="mx-3 text-dark" id="attfirm"></p>
