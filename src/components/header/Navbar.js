@@ -16,7 +16,7 @@ const Header = () => {
                   <img src={rainlglogo} alt="" height="50" />
                 </span>
               </Link>
-               <h5>Hsuanyeh Law Group,PC</h5>
+               <h5 style={{color:"#0d6efd"}}>Hsuanyeh Law Group,PC</h5>
               {/* <Link to="/" className="logo logo-light  ">
                 <span className="logo-sm">
                   <img src={rainlglogo} alt="" height="22" />
@@ -32,26 +32,20 @@ const Header = () => {
            
                   <ul id="menunav" className="d-flex">
                     <li id="navmen" className="">
-                      <Link to="/">Home</Link>
+                      <p style={{color:"#0d6efd"}} to="/">Home</p>
                     </li>
                     <li id="navmen" className="">
-                      <Link to="#">
-                        <Link
-                          className=""
-                          to="#"
-                        >
-                         ChatPro<sup>TM</sup>
-                        </Link>
-                      </Link>
+                    <p style={{color:"#0d6efd"}} to="/">ChatPro<sup>TM</sup></p>
+                      
                     </li>
                       <li id="navmen" className="">
-                        <Link to="#">Help</Link>
+                      <p style={{color:"#0d6efd"}} to="/">Help</p>
                       </li>
                       <li id="navmen" className="">
-                        <Link to="#">Requests</Link>
+                      <p style={{color:"#0d6efd"}} to="/">Requests</p>
                       </li>
                       <li id="navmen" className="">
-                        <Link to="#">Connection</Link>   
+                      <p style={{color:"#0d6efd"}} to="/">Connection</p>
                       </li>
                                    
                   </ul>

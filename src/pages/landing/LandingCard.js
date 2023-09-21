@@ -7,8 +7,8 @@ const LandingCard = () => {
 
   return (
     <React.Fragment>
-      <div className="mb-2 px-5">
-        <div className="app-search ">
+      <div className="mb-2 px-5 py-4">
+        <div className="app-search text-sm">
           <input
             type="text-success"
             className="form-control "
@@ -20,9 +20,9 @@ const LandingCard = () => {
           {/* <span className="bx bx-search-alt mt-3" /> */}
         </div>
       </div>
-      <Row className="py-5 px-5">
+      <Row className="py-2 px-5">
         <Col>
-          <Card className="text-center " id="attcard">
+          <Card className="text-center shadow-sm" id="attcard" style={{border:"0px"}}>
             <CardBody>
               <div className="d-flex">
                 <div id="attimg">
@@ -48,7 +48,7 @@ const LandingCard = () => {
                   <p className="mx-3 text-muted">Attorney</p>
                 </div>
               </div>
-              <div className="d-flex justify-content-end">
+              <div className="d-flex justify-content-end text-primary">
                 <div id="prof"></div>
                 <div className="d-flex mx-3">
                   <div id="attmenus">
@@ -65,7 +65,7 @@ const LandingCard = () => {
           </Card>
         </Col>
         <Col>
-          <Card className="text-center " id="attcard">
+          <Card className="text-center shadow-sm" id="attcard" style={{border:"0px"}}>
             <CardBody>
               <div className="d-flex">
                 <div id="attimg">
@@ -91,7 +91,7 @@ const LandingCard = () => {
                   <p className="mx-3 text-muted">Attorney</p>
                 </div>
               </div>
-              <div className="d-flex justify-content-end">
+              <div className="d-flex justify-content-end text-primary">
                 <div id="prof"></div>
                 <div className="d-flex mx-3">
                   <div id="attmenus">
@@ -108,7 +108,7 @@ const LandingCard = () => {
           </Card>
         </Col>
         <Col>
-          <Card className="text-center " id="attcard">
+          <Card className="text-center shadow-sm" id="attcard" style={{border:"0px"}}>
             <CardBody>
               <div className="d-flex">
                 <div id="attimg">
@@ -134,7 +134,7 @@ const LandingCard = () => {
                   <p className="mx-3 text-muted">Attorney</p>
                 </div>
               </div>
-              <div className="d-flex justify-content-end">
+              <div className="d-flex justify-content-end text-primary">
                 <div id="prof"></div>
                 <div className="d-flex mx-3">
                   <div id="attmenus">
@@ -153,7 +153,7 @@ const LandingCard = () => {
       </Row>
       <Row className="py-5 px-5">
         <Col>
-          <Card className="text-center " id="attcard">
+          <Card className="text-center shadow-sm" id="attcard" style={{border:"0px"}}>
             <CardBody>
               <div className="d-flex">
                 <div id="attimg">
@@ -179,7 +179,7 @@ const LandingCard = () => {
                   <p className="mx-3 text-muted">Attorney</p>
                 </div>
               </div>
-              <div className="d-flex justify-content-end">
+              <div className="d-flex justify-content-end text-primary">
                 <div id="prof"></div>
                 <div className="d-flex mx-3">
                   <div id="attmenus">
@@ -196,7 +196,7 @@ const LandingCard = () => {
           </Card>
         </Col>
         <Col>
-          <Card className="text-center " id="attcard">
+          <Card className="text-center shadow-sm" id="attcard" style={{border:"0px"}}>
             <CardBody>
               <div className="d-flex">
                 <div id="attimg">
@@ -222,7 +222,7 @@ const LandingCard = () => {
                   <p className="mx-3 text-muted">Attorney</p>
                 </div>
               </div>
-              <div className="d-flex justify-content-end">
+              <div className="d-flex justify-content-end text-primary">
                 <div id="prof"></div>
                 <div className="d-flex mx-3">
                   <div id="attmenus">
@@ -239,7 +239,7 @@ const LandingCard = () => {
           </Card>
         </Col>
         <Col>
-          <Card className="text-center " id="attcard">
+          <Card className="text-center shadow-sm" id="attcard" style={{border:"0px"}}>
             <CardBody>
               <div className="d-flex">
                 <div id="attimg">
@@ -265,7 +265,7 @@ const LandingCard = () => {
                   <p className="mx-3 text-muted">Attorney</p>
                 </div>
               </div>
-              <div className="d-flex justify-content-end">
+              <div className="d-flex justify-content-end text-primary">
                 <div id="prof"></div>
                 <div className="d-flex mx-3">
                   <div id="attmenus">
