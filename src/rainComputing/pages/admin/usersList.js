@@ -10,7 +10,7 @@ import paginationFactory, {
   PaginationListStandalone,
   SizePerPageDropdownStandalone,
 } from "react-bootstrap-table2-paginator"
-import ToolkitProvider,{Search} from "react-bootstrap-table2-toolkit"
+import ToolkitProvider,{Search} from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit"
 //Import Breadcrumb
 import Breadcrumbs from "../../../components/Common/Breadcrumb"
 import "../../components/chat/style/datatables.scss"

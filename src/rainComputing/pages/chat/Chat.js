@@ -60,13 +60,14 @@ import {
   completedCase,
   updateGroup,
   getAllSubCases,
+  getClientsByUserId,
   // sentMessageEmail,
 } from "../../../../src/rainComputing/helpers/backend_helper"
 import { Link } from "react-router-dom"
 import DynamicModel from "../../../../src/rainComputing/components/modals/DynamicModal"
 import { useToggle } from "../../../../src/rainComputing/helpers/hooks/useToggle"
 import DynamicSuspense from "../../../../src/rainComputing/components/loader/DynamicSuspense"
-import { initialNewCaseValues } from "../../../../src/rainComputing/helpers/initialFormValues"
+import { initialNewCaseValues, initialNewClientValues } from "../../../../src/rainComputing/helpers/initialFormValues"
 import CaseGrid from "../../../../src/rainComputing/components/chat/CaseGrid"
 import useAccordian from "../../../../src/rainComputing/helpers/hooks/useAccordian"
 import SubgroupBar from "../../../../src/rainComputing/components/chat/SubgroupBar"
@@ -97,6 +98,7 @@ import EditMessageModel from "../../../../src/rainComputing/components/chat/mode
 import "react-quill/dist/quill.snow.css"
 import "quill-mention"
 import ReactQuillInput from "../../../../src/rainComputing/components/ReactQuill/ReactQuill"
+import CreateClient from "../../../../src/rainComputing/components/chat/CreateClient"
 const CreateCase = lazy(() =>
   import("../../../../src/rainComputing/components/chat/CreateCase")
 )
@@ -118,6 +120,11 @@ const ChatRc = () => {
     toggleOpen: newCaseModelOpen,
     setToggleOpen: setNewCaseModelOpen,
     toggleIt: toggleNewCaseModelOpen,
+  } = useToggle(false)
+  const {
+    toggleOpen: newClientModelOpen,
+    setToggleOpen: setNewClientModelOpen,
+    toggleIt: toggleNewClientModelOpen,
   } = useToggle(false)
   // const {
   //   toggleOpen: completeCaseModelOpen,
@@ -153,6 +160,11 @@ const ChatRc = () => {
     toggleOpen: caseSortingOpen,
     setToggleOpen: setCaseSortingOpen,
     toggleIt: toggleCaseSortingOpen,
+  } = useToggle(false)
+  const {
+    toggleOpen: clientSortingOpen,
+    setToggleOpen: setClientSortingOpen,
+    toggleIt: toggleClientSortingOpen,
   } = useToggle(false)
   const {
     toggleOpen: forwardModalOpen,
@@ -230,7 +242,13 @@ const ChatRc = () => {
   const [contacts, setContacts] = useState([])
   const [contactsLoading, setContactsLoading] = useState(false)
   const [newCase, setNewCase] = useState(initialNewCaseValues)
+  const [newClient, setNewClient] = useState(initialNewClientValues)
+  const [clients, setClients] = useState([])
+  const [clientId, setClientId] = useState("")
+  const [caseClientId, setCaseClientId] = useState(null)
   const [allCases, setAllCases] = useState([])
+  const [cases, setCases] = useState([])
+  const [clientName, setClientName] = useState(initialNewClientValues)
   const [allSubCases, setAllSubCases] = useState([])
   const [caseLoading, setCaseLoading] = useState(true)
   const [currentCase, setCurrentCase] = useState(null)
@@ -280,7 +298,6 @@ const ChatRc = () => {
   // const toggle_Quill = () => {
   //   setIsQuil(!isQuil)
   // }
-
   const [isQuill, setIsQuill] = useState(false)
   const toggle_Quill = () => {
     setIsQuill(!isQuill)
@@ -626,6 +643,24 @@ const ChatRc = () => {
       return chatMember.id?.firstname + " " + chatMember.id?.lastname
     return senderId
   }
+
+  // get All clientNames
+  const onGetAllClientNames = async () => {
+    const allClientNamesRes = await getClientsByUserId({
+      userId: currentUser.userID,
+      // caseId: currentCase.caseId
+    })
+
+    if (allClientNamesRes.success) {
+      setClients(allClientNamesRes?.clients)
+    }
+
+  }
+  useEffect(() => {
+    onGetAllClientNames()
+  }, [])
+
+
   //Getting all the cases
   const ongetAllCases = async ({ isSet = false, isSearch = false }) => {
     setCaseLoading(true)
@@ -657,18 +692,18 @@ const ChatRc = () => {
 
     setCaseLoading(false)
   }
-  const onGetAllSubCases = async () => {
-    const payload = {
-      isSubcase: true,
-    }
-    const res = await getAllSubCases(payload)
-    if (res.success) {
-      setAllSubCases(res?.allsubCases)
-    }
-  }
-  useEffect(() => {
-    onGetAllSubCases()
-  }, [])
+  // const onGetAllSubCases = async () => {
+  //   const payload = {
+  //     isSubcase: true,
+  //   }
+  //   const res = await getAllSubCases(payload)
+  //   if (res.success) {
+  //     setAllSubCases(res?.allsubCases)
+  //   }
+  // }
+  // useEffect(() => {
+  //   onGetAllSubCases()
+  // }, [])
   //Fetching user,case,group count
   const ongetCounts = async () => {
     const countRes = await getCounts({ userId: currentUser?.userID })
@@ -835,7 +870,7 @@ const ChatRc = () => {
   }
   const handleChatDelete = id => {
     setChatDeleteModalOpen(true)
-     setCurrentChatDelete(id)
+    setCurrentChatDelete(id)
   }
 
   //Deleting Last Message
@@ -900,6 +935,7 @@ const ChatRc = () => {
         caseId: currentCase?._id,
         groupId: currentChat?._id,
         sender: currentUser?.userID,
+        clientName: currentCase?.clientName,
         receivers,
         messageData: curMessage,
         isAttachment,
@@ -1139,9 +1175,9 @@ const ChatRc = () => {
         attachments?.url,
         typeof attachments === "object" && attachments?.url
           ? {
-              url: attachments.url,
-              content: "View Attachment",
-            }
+            url: attachments.url,
+            content: "View Attachment",
+          }
           : "-",
       ]
       rows.push(tempRow)
@@ -1195,9 +1231,8 @@ const ChatRc = () => {
         )
       },
     })
-    const chatDocName = `${
-      currentCase?.caseName ?? "Private Chat"
-    } - ${groupName} - ${moment(Date.now()).format("DD-MM-YY HH:mm")}`
+    const chatDocName = `${currentCase?.caseName ?? "Private Chat"
+      } - ${groupName} - ${moment(Date.now()).format("DD-MM-YY HH:mm")}`
     const chatDocBlob = doc.output("blob")
     const zip = new JSZip()
     zip.file(`${chatDocName}.pdf`, chatDocBlob)
@@ -1518,12 +1553,14 @@ const ChatRc = () => {
   useEffect(() => {
     if (privateChatId && !pageLoader) {
       const tempChat = chats?.find(ch => ch?._id === privateChatId)
+      setactiveTab("1")
       setCurrentChat(tempChat)
     }
   }, [privateChatId, pageLoader])
   useEffect(() => {
     if (privateReplyChatId && !pageLoader) {
       const tempChat = chats?.find(ch => ch?._id === privateReplyChatId)
+      setactiveTab("1")
       setCurrentChat(tempChat)
     }
   }, [privateReplyChatId, pageLoader])
@@ -1546,16 +1583,56 @@ const ChatRc = () => {
       setCurrentChat(groupChat)
     }
   }, [groupChatId, pageLoader, caseChatId, caseLoading])
-  // useEffect(() => {
-  //   if (groupChatId && caseChatId && !pageLoader && !caseLoading) {
-  //     const groupChat = allgroups?.find(gch => gch?._id === groupChatId)
-  //     const tempCase = allSubCases?.find(c => c?._id === caseChatId)
-  //     setactiveTab("2")
-  //     setCurrentCase(tempCase)
-  //     setCurrentChat(groupChat)
-  //   }
-  // }, [groupChatId, pageLoader, caseChatId, caseLoading])
+  useEffect(() => {
+    if (groupChatId && caseChatId && !pageLoader && !caseLoading) {
+      const groupChat = allgroups?.find(gch => gch?._id === groupChatId)
+      const tempCase = allSubCases?.find(c => c?._id === caseChatId)
+      setactiveTab("2")
+      setCurrentCase(tempCase)
+      setCurrentChat(groupChat)
+    }
+  }, [groupChatId, pageLoader, caseChatId, caseLoading])
+  const handleClientCreatedAt = () => {
+    const sortedclients = [...clients].sort((a, b) => {
+      const dateA = new Date(a.createdAt)
+      const dateB = new Date(b.createdAt)
+      return dateB - dateA // Compare date objects in descending order
+    })
+    setClients(sortedclients) // Update the component state with the sorted allCases array
+  }
 
+  const handleClientName = () => {
+    const sortedclients = [...clients].sort((a, b) => {
+      const caseNameA = a.clientName.toUpperCase() // Convert case names to uppercase for case-insensitive sorting
+      const caseNameB = b.clientName.toUpperCase()
+
+      if (caseNameA < caseNameB) {
+        return -1
+      }
+      if (caseNameA > caseNameB) {
+        return 1
+      }
+      return 0
+    })
+    setClients(sortedclients) // Update the component state with
+    // Use the sortedCases array for further processing
+  }
+
+  const handleClientId = () => {
+    const sortedclients = [...clients].sort((a, b) => {
+      const caseNameA = a.clientId.toUpperCase() // Convert case names to uppercase for case-insensitive sorting
+      const caseNameB = b.clientId.toUpperCase()
+
+      if (caseNameA < caseNameB) {
+        return -1
+      }
+      if (caseNameA > caseNameB) {
+        return 1
+      }
+      return 0
+    })
+    setClients(sortedclients)
+  }
   const handlecreatedAt = () => {
     const sortedCases = [...allCases].sort((a, b) => {
       const dateA = new Date(a.createdAt)
@@ -1642,6 +1719,18 @@ const ChatRc = () => {
       }, 0)
     }
   })
+
+  const attorneycases = [...clients, ...allCases]
+  const uniqueClientAndCaseNames = new Set();
+  const filteredCases = attorneycases.filter(user => {
+    // const key = user.clientName + user.caseName;
+    if (!uniqueClientAndCaseNames.has(user.clientName)) {
+      uniqueClientAndCaseNames.add(user.clientName);
+      return true;
+    }
+    return false;
+  });
+  
 
   return (
     <div className="page-contents " style={{ marginTop: 100 }}>
@@ -1743,7 +1832,7 @@ const ChatRc = () => {
               open={newCaseModelOpen}
               toggle={toggleNewCaseModelOpen}
               size="lg"
-              modalTitle="New Case"
+              modalTitle="Create Case"
               footer={false}
             >
               <DynamicSuspense>
@@ -1753,6 +1842,27 @@ const ChatRc = () => {
                   contacts={contacts}
                   setModalOpen={setNewCaseModelOpen}
                   getAllCases={ongetAllCases}
+                  clientId={clientId}
+                />
+              </DynamicSuspense>
+            </DynamicModel>
+            {/* Model for creating client*/}
+            <DynamicModel
+              open={newClientModelOpen}
+              toggle={toggleNewClientModelOpen}
+              size="lg"
+              modalTitle="Create NewClient"
+              footer={false}
+            >
+              <DynamicSuspense>
+                <CreateClient
+                  userFormValues={newCase}
+                  formValues={newClient}
+                  setFormValues={setNewClient}
+                  contacts={contacts}
+                  setModalOpen={setNewClientModelOpen}
+                  getAllCases={ongetAllCases}
+                  getAllClients={onGetAllClientNames}
                 />
               </DynamicSuspense>
             </DynamicModel>
@@ -1776,9 +1886,8 @@ const ChatRc = () => {
                 open={subGroupModelOpen}
                 toggle={togglesubGroupModelOpen}
                 modalTitle="Subgroup Setting"
-                modalSubtitle={`You have ${
-                  allgroups.filter(a => !a.isParent)?.length || 0
-                } subgroups`}
+                modalSubtitle={`You have ${allgroups.filter(a => !a.isParent)?.length || 0
+                  } subgroups`}
                 footer={true}
                 size="lg"
               >
@@ -1973,8 +2082,8 @@ const ChatRc = () => {
                                         chat.chat.isGroup
                                           ? profile
                                           : getChatProfilePic(
-                                              chat.chat.groupMembers
-                                            )
+                                            chat.chat.groupMembers
+                                          )
                                       }
                                       className="rounded-circle avatar-sm"
                                       alt=""
@@ -2016,17 +2125,17 @@ const ChatRc = () => {
                         <button
                           type="button"
                           className="btn btn-info btn-rounded mb-2 col-6"
-                          onClick={() => setNewCaseModelOpen(true)}
+                          onClick={() => setNewClientModelOpen(true)}
                         >
-                          Create case
+                          Create NewClient
                           <i className="bx bx-pencil font-size-16 align-middle me-2 mx-2"></i>
                         </button>
 
                         <div className="d-flex justify-content-center align-items-center">
                           <Dropdown
-                            isOpen={caseSortingOpen}
+                            isOpen={clientSortingOpen}
                             toggle={() =>
-                              toggleCaseSortingOpen(!caseSortingOpen)
+                              toggleClientSortingOpen(!clientSortingOpen)
                             }
                           >
                             <DropdownToggle
@@ -2043,17 +2152,32 @@ const ChatRc = () => {
                                 </label>
                               </div>
                             </DropdownToggle>
-                            <DropdownMenu>
-                              <DropdownItem onClick={handleCaseId}>
-                                Case Id
-                              </DropdownItem>
-                              <DropdownItem onClick={handlecaseName}>
-                                Case Name
-                              </DropdownItem>
-                              <DropdownItem onClick={handlecreatedAt}>
-                                Case Date
-                              </DropdownItem>
-                            </DropdownMenu>
+                            {currentAttorney ? (
+                              <DropdownMenu>
+                                <DropdownItem onClick={handleClientId}>
+                                  Client Id
+                                </DropdownItem>
+                                <DropdownItem onClick={handleClientName}>
+                                  Client Name
+                                </DropdownItem>
+                                <DropdownItem onClick={handleClientCreatedAt}>
+                                  Client Date
+                                </DropdownItem>
+                              </DropdownMenu>
+                            ) : (
+                              <DropdownMenu>
+                                <DropdownItem onClick={handleCaseId}>
+                                  Case Id
+                                </DropdownItem>
+                                <DropdownItem onClick={handlecaseName}>
+                                  Case Name
+                                </DropdownItem>
+                                <DropdownItem onClick={handlecreatedAt}>
+                                  Case Date
+                                </DropdownItem>
+                              </DropdownMenu>
+                            )
+                            }
                           </Dropdown>
                         </div>
                         {/* {allCases.some(group =>
@@ -2076,40 +2200,75 @@ const ChatRc = () => {
                       ) : (
                         <PerfectScrollbar style={{ height: "500px" }}>
                           <ul className="list-unstyled chat-list">
-                            {allCases
-                              .map(caseData => ({
-                                caseData,
-                                notifyCount: notifyCountforCase(caseData._id),
-                              }))
-                              .sort((a, b) => {
-                                const notifyCountDiff =
-                                  b.notifyCount - a.notifyCount
-                                if (notifyCountDiff !== 0) {
-                                  return notifyCountDiff // Sort by notifyCount first
-                                }
-                              })
-                              .map(
-                                (
-                                  { caseData, notifyCount },
-                                  index // Define the 'index' variable here
-                                ) => (
-                                  <CaseGrid
-                                    caseData={caseData}
-                                    index={index}
-                                    key={index}
-                                    active={activeAccordian}
-                                    onAccordionButtonClick={
-                                      handleSettingActiveAccordion
+                            {
+                              currentAttorney ? (
+                                filteredCases
+                                  .map(caseData => ({
+                                    caseData,
+                                    notifyCount: notifyCountforCase(caseData._id),
+                                  }))
+                                  .sort((a, b) => {
+                                    const notifyCountDiff =
+                                      b.notifyCount - a.notifyCount
+                                    if (notifyCountDiff !== 0) {
+                                      return notifyCountDiff // Sort by notifyCount first
                                     }
-                                    handleSelectingCase={onSelectingCase}
-                                    selected={
-                                      currentCase?._id === caseData?._id
-                                    }
-                                    notifyCountforCase={notifyCountforCase}
-                                    ongetAllCases={ongetAllCases}
-                                  />
-                                )
-                              )}
+                                  })
+                                  .map(
+                                    (
+                                      { caseData, notifyCount },
+                                      index // Define the 'index' variable here
+                                    ) => (<>
+                                      <CaseGrid
+                                        caseData={caseData}
+                                        notifyCount={notifyCount}
+                                        key={caseData._id} // Use a unique key, such as caseData._id
+                                        active={activeAccordian}
+                                        onAccordionButtonClick={handleSettingActiveAccordion}
+                                        handleSelectingCase={onSelectingCase}
+                                        selected={currentCase?._id === caseData?._id}
+                                        notifyCountforCase={notifyCountforCase}
+                                        ongetAllCases={ongetAllCases}
+                                        onGetAllClientNames={onGetAllClientNames}
+                                      /></>
+                                    )
+                                  )
+                              ) : (
+                                <>
+                                  {allCases
+                                    .map(caseData => ({
+                                      caseData,
+                                      notifyCount: notifyCountforCase(caseData._id),
+                                    }))
+                                    .sort((a, b) => {
+                                      const notifyCountDiff =
+                                        b.notifyCount - a.notifyCount
+                                      if (notifyCountDiff !== 0) {
+                                        return notifyCountDiff // Sort by notifyCount first
+                                      }
+                                    })
+                                    .map(
+                                      (
+                                        { caseData, notifyCount },
+                                        index // Define the 'index' variable here
+                                      ) => (
+                                        <CaseGrid
+                                          caseData={caseData}
+                                          index={index}
+                                          key={index}
+                                          active={activeAccordian}
+                                          onAccordionButtonClick={handleSettingActiveAccordion}
+                                          handleSelectingCase={onSelectingCase}
+                                          selected={currentCase?._id === caseData?._id}
+                                          notifyCountforCase={notifyCountforCase}
+                                          ongetAllCases={ongetAllCases}
+                                          onGetAllClientNames={onGetAllClientNames}
+                                        />
+                                      )
+                                    )}
+                                </>
+                              )
+                            }
                           </ul>
                         </PerfectScrollbar>
                       )}
@@ -2152,7 +2311,7 @@ const ChatRc = () => {
                                           <h5 className="text-truncate font-size-14 mb-1">
                                             {contact.firstname}{" "}
                                             {contact.lastname}
-                                            {}
+                                            { }
                                           </h5>
                                           <p className="font-size-12 mb-1 text-primary ">
                                             {contact.email}
@@ -2332,7 +2491,7 @@ const ChatRc = () => {
                                     </DropdownToggle>
                                     <DropdownMenu className="dropdown-menu-md">
                                       {searchMessageText &&
-                                      searchedMessages?.length > 1 ? (
+                                        searchedMessages?.length > 1 ? (
                                         <span className="ps-3 fw-bold">
                                           {searchedMessages?.length} results
                                           found
@@ -2547,16 +2706,16 @@ const ChatRc = () => {
                                           </DropdownItem>
                                           {msg?.sender ===
                                             currentUser.userID && (
-                                            <DropdownItem
-                                              href="#"
-                                              onClick={() => {
-                                                setCurEditMessageId(msg)
-                                                setMessageEditModalOpen(true)
-                                              }}
-                                            >
-                                              Edit
-                                            </DropdownItem>
-                                          )}
+                                              <DropdownItem
+                                                href="#"
+                                                onClick={() => {
+                                                  setCurEditMessageId(msg)
+                                                  setMessageEditModalOpen(true)
+                                                }}
+                                              >
+                                                Edit
+                                              </DropdownItem>
+                                            )}
                                           <DropdownItem
                                             href="#"
                                             onClick={() => {
@@ -2580,8 +2739,8 @@ const ChatRc = () => {
                                               msg.sender === currentUser.userID
                                                 ? handleDelete(msg)
                                                 : toastr.info(
-                                                    "Unable to  delete other's message"
-                                                  )
+                                                  "Unable to  delete other's message"
+                                                )
                                             }}
                                           >
                                             Delete
@@ -2605,7 +2764,7 @@ const ChatRc = () => {
                                         style={{
                                           backgroundColor:
                                             msg.sender == currentUser.userID &&
-                                            currentChat?.color
+                                              currentChat?.color
                                               ? currentChat?.color + "33"
                                               : "#00EE00" + "33",
                                         }}
@@ -2751,7 +2910,7 @@ const ChatRc = () => {
                                             backgroundColor:
                                               msg.sender ==
                                                 currentUser.userID &&
-                                              currentChat?.color
+                                                currentChat?.color
                                                 ? currentChat?.color + "33"
                                                 : "#00EE00" + "33",
                                           }}
@@ -2792,7 +2951,7 @@ const ChatRc = () => {
                               <div className="col">
                                 <div className="position-relative">
                                   {recorder &&
-                                  recorder.state === "recording" ? (
+                                    recorder.state === "recording" ? (
                                     <div className="d-flex justify-content-center">
                                       <i
                                         className="mdi mdi-microphone font-size-18 text-primary"
@@ -2825,30 +2984,30 @@ const ChatRc = () => {
                                             {" "}
                                             {Array.from(allFiles)?.length >
                                               0 && (
-                                              <div class="d-flex gap-2 flex-wrap mt-2">
-                                                {Array.from(allFiles)?.map(
-                                                  (att, a) => (
-                                                    <span
-                                                      class="badge badge-soft-primary font-size-13"
-                                                      key={a}
-                                                    >
-                                                      {att.name}
-                                                      <i
-                                                        class="bx bx-x-circle mx-1"
-                                                        onClick={() =>
-                                                          handleFileRemove(
-                                                            att?.name
-                                                          )
-                                                        }
-                                                        style={{
-                                                          cursor: "pointer",
-                                                        }}
-                                                      />
-                                                    </span>
-                                                  )
-                                                )}
-                                              </div>
-                                            )}
+                                                <div class="d-flex gap-2 flex-wrap mt-2">
+                                                  {Array.from(allFiles)?.map(
+                                                    (att, a) => (
+                                                      <span
+                                                        class="badge badge-soft-primary font-size-13"
+                                                        key={a}
+                                                      >
+                                                        {att.name}
+                                                        <i
+                                                          class="bx bx-x-circle mx-1"
+                                                          onClick={() =>
+                                                            handleFileRemove(
+                                                              att?.name
+                                                            )
+                                                          }
+                                                          style={{
+                                                            cursor: "pointer",
+                                                          }}
+                                                        />
+                                                      </span>
+                                                    )
+                                                  )}
+                                                </div>
+                                              )}
                                           </div>
                                           <div>
                                             <ReactQuillInput

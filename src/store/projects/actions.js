@@ -17,7 +17,7 @@ import {
   GET_ATTORNEY_DETAIL,
   GET_ATTORNEYDETAIL_SUCCESS,
   GET_ATTORNEYDETAIL_FAIL,
-} from "./actionTypes"
+} from "../../../src/store/projects/actionTypes"
 
 export const getAttorneyByid = user => {
   return {

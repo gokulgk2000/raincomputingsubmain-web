@@ -12,7 +12,7 @@ import paginationFactory, {
   PaginationListStandalone,
   SizePerPageDropdownStandalone,
 } from "react-bootstrap-table2-paginator"
-import ToolkitProvider from "react-bootstrap-table2-toolkit"
+import ToolkitProvider from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit"
 import "../../../components/chat/style/datatables.scss"
 import ChatLoader from "../../../components/chat/ChatLoader"
 import {

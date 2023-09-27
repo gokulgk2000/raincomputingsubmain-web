@@ -13,7 +13,8 @@ const SubCase = ({ caseId,open,setOpen }) => {
   const [contacts, setContacts] = useState([])
   const [caseName, setCaseName] = useState("")
   const [caseIds, setCaseId] = useState("")
-  const [serialNumber, setSerialNumber] = useState("")
+  // const [serialNumber, setSerialNumber] = useState("")
+  const [clientName, setClientName] = useState("")
   const [caseMembers, setCaseMembers] = useState([])
   const [searchText, setSearchText] = useState("")
   const [loading, setloading] = useState(false)
@@ -39,7 +40,8 @@ const SubCase = ({ caseId,open,setOpen }) => {
         {
           caseName:caseName,
           caseId:incrementedCaseId,
-          serialNumber:serialNumber,
+          // serialNumber:serialNumber,
+          clientName: caseId.clientName,
           caseMembers:caseMembers,
           notifyMembers:currentUser?.userID ,
           admins: currentUser?.userID,
@@ -74,7 +76,8 @@ const SubCase = ({ caseId,open,setOpen }) => {
     if (caseId) {
       setCaseId(caseId?.caseId)
       setCaseName(caseId?.caseName)
-      setSerialNumber(caseId?.serialNumber)
+      setClientName(caseId?.clientName)
+      // setSerialNumber(caseId?.serialNumber)
       setCaseMembers(
         caseId?.caseMembers.map(m => {
           const { id } = m
@@ -90,7 +93,8 @@ const SubCase = ({ caseId,open,setOpen }) => {
     return () => {
       setCaseName("")
       setCaseId("")
-      setSerialNumber("")
+      setClientName("")
+      // setSerialNumber("")
       setCaseMembers([])
     }
   }, [caseId])
@@ -118,7 +122,22 @@ const SubCase = ({ caseId,open,setOpen }) => {
   }, [searchText])
   return (
     <>
-    
+    <Row className="my-md-3">
+        <label
+          htmlFor="example-text-input"
+          className="col-md-3 col-lg-2 col-form-label">
+          Client Name
+        </label>
+        <div className="col-md-8">
+          <input
+            className="form-control"
+            type="text"
+            value={clientName}
+            placeholder="Client Name"
+            onChange={e => setClientName(e.target.value)}
+          />
+        </div>
+      </Row>
       <Row>
         <label
           htmlFor="example-text-input"
@@ -148,7 +167,7 @@ const SubCase = ({ caseId,open,setOpen }) => {
           <input className="form-control" type="text"value={incrementedCaseId} placeholder="xxxx-xxxx" onChange={(e)=>setCaseId(e.target.value)}/>
         </div>
       </Row>
-      <Row className="my-md-3">
+      {/* <Row className="my-md-3">
         <label
           htmlFor="example-text-input"
           className="col-md-3 col-lg-2 col-form-label"
@@ -164,7 +183,7 @@ const SubCase = ({ caseId,open,setOpen }) => {
             onChange={(e)=>setSerialNumber(e.target.value)}
           />
         </div>
-      </Row>
+      </Row> */}
       {/* <Row className="my-md-3">
         <label
           htmlFor="example-text-input"
