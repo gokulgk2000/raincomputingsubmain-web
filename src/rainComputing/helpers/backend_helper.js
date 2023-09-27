@@ -70,10 +70,14 @@ const setResetPassword = payload =>
 
 const getSubgroups = payload =>
   post(`${BASE_URL}/subgroup/getByParentRoom`, payload)
-
+  const createNewClient = payload => post(`${BASE_URL}/client/create`, payload)
 const createNewCase = payload => post(`${BASE_URL}/case/create`, payload)
 const getTrademarkSearchDetails = payload =>
   post(`${BASE_URL}/case/searchCasebySno`, payload)
+  const getClientsByUserId = payload =>
+  post(`${BASE_URL}/client/getClientsByUserId`, payload)
+  const getCasesByClientId = payload => 
+  post(`${BASE_URL}/case/getCasesByClientId`, payload)
 const getCasesByUserId = payload =>
   post(`${BASE_URL}/case/getByUserId`, payload)
 
@@ -238,6 +242,9 @@ export {
   setResetPassword,
   getSubgroups,
   createNewCase,
+  createNewClient,
+  getClientsByUserId,
+  getCasesByClientId,
   getCasesByUserId,
   getGroupsByUserIdandCaseId,
   getPinnedMsg,

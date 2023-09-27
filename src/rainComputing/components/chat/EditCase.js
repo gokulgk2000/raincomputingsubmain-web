@@ -19,7 +19,7 @@ const EditCase = ({
   const [contacts, setContacts] = useState([])
   const [caseName, setCaseName] = useState("")
   const [caseId, setCaseId] = useState("")
-  const [serialNumber, setSerialNumber] = useState("")
+  // const [serialNumber, setSerialNumber] = useState("")
   const [caseMembers, setCaseMembers] = useState([])
   const [searchText, setSearchText] = useState("")
   const [loading, setloading] = useState(false)
@@ -27,7 +27,7 @@ const EditCase = ({
     currentCase?.threadIdCondition
   )
   const [emailMembers, setEmailMembers] = useState([])
-
+  const [clientName, setClientName] = useState("")
   // useEffect(() => {
   //   // Save the threadIdCondition to local storage whenever it changes
   //   localStorage.setItem("threadIdCondition", threadIdCondition)
@@ -78,7 +78,8 @@ const EditCase = ({
       id: currentCase?._id,
       caseId,
       caseName,
-      serialNumber,
+      clientName: clientName,
+      // serialNumber,
       members: structuredMembers,
       admin: currentUser?.userID,
       threadIdCondition,
@@ -92,6 +93,8 @@ const EditCase = ({
       setAllCases(
         allCases.map(i => (i._id === currentCase?._id ? res?.updatedCase : i))
       )
+      await getAllCases({ isSet: false })
+      await getSubGroups()
       setOpen(false)
     } else {
       toastr.error(`Failed to update case due to ${res?.msg}`, "Failed!!!")
@@ -126,7 +129,8 @@ const EditCase = ({
     if (currentCase) {
       setCaseId(currentCase?.caseId)
       setCaseName(currentCase?.caseName)
-      setSerialNumber(currentCase?.serialNumber)
+      setClientName(currentCase.clientName)
+      // setSerialNumber(currentCase?.serialNumber)
       setCaseMembers(
         currentCase?.caseMembers.map(m => {
           const { id } = m
@@ -142,7 +146,7 @@ const EditCase = ({
     return () => {
       setCaseName("")
       setCaseId("")
-      setSerialNumber("")
+      // setSerialNumber("")
       setCaseMembers([])
     }
   }, [currentCase])
@@ -164,6 +168,22 @@ const EditCase = ({
             />
             <span className="fw-medium">Manage Case {currentCase?.caseId}</span>
           </div>
+          <Row className="my-md-3">
+            <label
+              htmlFor="example-text-input"
+              className="col-md-3 col-lg-2 col-form-label">
+              Client Name
+            </label>
+            <div className="col-md-8">
+              <input
+                className="form-control"
+                type="text"
+                value={clientName}
+                placeholder="Client Name"
+                onChange={e => setClientName(e.target.value)}
+              />
+            </div>
+          </Row>
           <Row>
             <label
               htmlFor="example-text-input"
@@ -201,7 +221,7 @@ const EditCase = ({
               />
             </div>
           </Row>
-          <Row className="my-md-3">
+          {/* <Row className="my-md-3">
             <label
               htmlFor="caseid"
               className="col-md-5 col-lg-2 col-form-label"
@@ -217,7 +237,7 @@ const EditCase = ({
                 onChange={e => setSerialNumber(e.target.value)}
               />
             </div>
-          </Row>
+          </Row> */}
 
           <Row className="my-3">
             <label

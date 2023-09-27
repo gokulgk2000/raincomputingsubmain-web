@@ -16,6 +16,9 @@ const CreateCase = ({
   setFormValues,
   setModalOpen,
   getAllCases,
+  clientId,
+  caseData,
+  onGetAllClientNames
 }) => {
   const { currentUser } = useUser()
   const history = useHistory()
@@ -25,6 +28,7 @@ const CreateCase = ({
   const [caseSerialNo, setCaseSerialNo] = useState("")
   const [caseEvent, setCaseEvent] = useState("")
   const [caseEventDate, setCaseEventDate] = useState("")
+  const [clientName, setClientName] = useState("")
   toastr.options = {
     progressBar: true,
     closeButton: true,
@@ -82,10 +86,12 @@ const CreateCase = ({
       admin: currentUser?.userID,
       caseId: formValues?.caseId,
       caseName: formValues?.caseName,
-      serialNumber: caseSerialNo,
+      // serialNumber: caseSerialNo,
       members: [currentUser?.userID, ...filteredMembers],
       threadId: randomThreadId, // Assign the generated ThreadId
       threadIdCondition: "GroupMembers",
+      clientName: clientName,
+      clientId:clientId,
     }
     const caseRes = await createNewCase(payLoad)
     if (caseRes.success) {
@@ -105,6 +111,32 @@ const CreateCase = ({
     }
     setloading(false)
   }
+
+  useEffect(() => {
+    if (caseData) {
+      // setCaseId(caseData?.caseId)
+      // setCaseName(caseData?.caseName)
+      setClientName(caseData?.clientName)
+      // setCaseMembers(
+      //   caseData?.caseMembers.map(m => {
+      //     const { id } = m
+      //     return {
+      //       id: id?._id,
+      //       firstname: id?.firstname,
+      //       lastname: id?.lastname,
+      //       email: id?.email,
+      //     }
+      //   })
+      // )
+    }
+    return () => {
+      // setCaseName("")
+      // setCaseId("")
+      setClientName("")
+      // setCaseMembers([])
+    }
+  }, [caseData])
+
 
   useEffect(() => {
     const handleFetchingContacts = async () => {
@@ -131,6 +163,22 @@ const CreateCase = ({
 
   return (
     <>
+       <Row className="my-md-3">
+        <label
+          htmlFor="example-text-input"
+          className="col-md-3 col-lg-2 col-form-label">
+          Client Name
+        </label>
+        <div className="col-md-8">
+          <input
+            className="form-control"
+            type="text"
+            value={clientName}
+            placeholder="Client Name"
+            onChange={e => setClientName(e.target.value)}
+          />
+        </div>
+      </Row>
       <Row>
         <label
           htmlFor="example-text-input"
@@ -167,7 +215,7 @@ const CreateCase = ({
           />
         </div>
       </Row>
-      <Row className="my-md-3">
+      {/* <Row className="my-md-3">
         <label
           htmlFor="example-text-input"
           className="col-md-3 col-lg-2 col-form-label"
@@ -184,7 +232,7 @@ const CreateCase = ({
             onChange={e => setCaseSerialNo(e.target.value)}
           />
         </div>
-      </Row>
+      </Row> */}
       {/* <Row className="my-md-3">
         <label
           htmlFor="example-text-input"
@@ -354,8 +402,11 @@ const CreateCase = ({
 CreateCase.propTypes = {
   formValues: PropTypes.object,
   setFormValues: PropTypes.func,
-  setModalOpen: PropTypes.func,
+  setModalOpen: PropTypes.any,
   getAllCases: PropTypes.func,
+  clientId:PropTypes.any,
+  caseData:PropTypes.object,
+  onGetAllClientNames: PropTypes.func
 }
 
 export default CreateCase

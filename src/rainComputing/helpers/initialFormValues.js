@@ -4,3 +4,10 @@ export const initialNewCaseValues = {
   members: [],
   admin: "",
 }
+
+export const initialNewClientValues = {
+  clientName: "",
+  clientId: "",
+  email:"",
+  address:"",
+}

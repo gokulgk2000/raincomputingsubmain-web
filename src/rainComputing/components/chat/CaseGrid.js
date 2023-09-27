@@ -14,6 +14,7 @@ import { useUser } from "../../../../src/rainComputing/contextProviders/UserProv
 import {
   LeaveGroup,
   caseIdbySubCase,
+  getCasesByClientId,
 } from "../../../../src/rainComputing/helpers/backend_helper"
 import toastr from "toastr"
 import DocketResultModel from "./models/DocketResultModel"
@@ -25,7 +26,8 @@ import SubCase from "./models/SubCase"
 import SubCaseGrid from "./SubCaseGrid"
 import useAccordian from "../../../../src/rainComputing/helpers/hooks/useAccordian"
 import { useNotifications } from "../../../../src/rainComputing/contextProviders/NotificationsProvider"
-
+import { initialNewCaseValues } from "../../../../src/rainComputing/helpers/initialFormValues"
+import CreateCase from "./CreateCase"
 const CaseGrid = ({
   caseData,
   index,
@@ -35,23 +37,29 @@ const CaseGrid = ({
   selected,
   notifyCountforCase,
   ongetAllCases,
-  allCases,
+  onGetAllClientNames,
 }) => {
+  console.log("Clients-caseData:", caseData)
+  const { currentAttorney } = useUser()
   const history = useHistory()
   const { toggleOpen: notifyOn, toggleIt: setNotifyOn } = useToggle(false)
+  const { notifications, setNotifications } = useNotifications()
+  console.log("Rk-1-Notifications:", notifications)
   const { currentUser } = useUser()
   const [casedetails, setCaseDetails] = useState(caseData)
-  const { notifications, setNotifications } = useNotifications()
-
+  const [caseIdSubCases, setCaseIdSubCases] = useState([])
   const [newCaseId, setNewCaseId] = useState()
   const [currentCase, setCurrentCase] = useState(null)
-  const [caseIdSubCases, setCaseIdSubCases] = useState([])
   const { activeAccordian, handleSettingActiveAccordion } = useAccordian(-1)
   const [subCaseList, setSubCaseList] = useState(false)
-  // const handleSubCaseClick = () => {
-  //   setSubCaseList(!subCaseList)
-  //   onGetCaseIdSubcases(caseData?.caseId)
-  // }
+  const [caseClientNames, setCaseClientNames] = useState([])
+  const [clientCases, setClientCases] = useState([])
+  const [newCase, setNewCase] = useState(initialNewCaseValues)
+  const [cases, setCases] = useState(false)
+
+  const handleCaseClick = () => {
+    setCases(!cases)
+  }
   const onSelectingCase = cas => {
     setCurrentCase(cas)
   }
@@ -95,6 +103,11 @@ const CaseGrid = ({
     setToggleOpen: setNewSubCaseModelOpen,
     toggleIt: toggleNewSubCaseModelOpen,
   } = useToggle(false)
+  const {
+    toggleOpen: newCaseModelOpen,
+    setToggleOpen: setNewCaseModelOpen,
+    toggleIt: toggleNewCaseModelOpen,
+  } = useToggle(false)
   const handleLeave = () => {
     setLeaveGroupModalOpen(true)
   }
@@ -130,8 +143,8 @@ const CaseGrid = ({
     }
   }
   // const handleClick = () => {
-  //   if (caseIdSubCases && caseIdSubCases.length > 0) {
-  //     const lastCaseId = caseIdSubCases[caseIdSubCases.length - 1].caseId
+  //   if (caseClientNames && caseClientNames.length > 0) {
+  //     const lastCaseId = caseClientNames[caseClientNames.length - 1].caseId
   //     const lastDigit = parseInt(lastCaseId.slice(-1))
   //     const newLastDigit = lastDigit + 1
   //     const newCaseId =
@@ -147,21 +160,71 @@ const CaseGrid = ({
   //   }
   //   setNewSubCaseModelOpen(true)
   // }
-  const onGetCaseIdSubcases = async caseId => {
+
+  // const onGetCaseIdSubcases = async () => {
+  //   const payload = {
+  //     caseId: casedetails?.caseId,
+  //   }
+  //   const res = await caseIdbySubCase(payload)
+  //   if (res.success) {
+  //     setCaseIdSubCases(res?.caseIdSubCases)
+  //   }
+  // }
+  // useEffect(() => {
+  //   onGetCaseIdSubcases()
+  // }, [])
+
+  // const onGetClientNames = async () => {
+  //   const payload = {
+  //     clientName: casedetails?.clientName,
+  //     userID: currentUser?.userID
+  //   }
+  //   const res = await caseIdbySubCase(payload)
+  //   if (res.success) {
+  //     setCaseClientNames(res?.caseClientNames)
+  //   }
+  // }
+  // useEffect(() => {
+  //   onGetClientNames()
+  // }, [])
+
+  // get All Client Cases
+  const onGetClientCases = async (client) => {
+    if(currentAttorney) {
+    if(client?.address){
     const payload = {
-      caseId: caseId,
+      clientId:  client?._id,
+      userId: currentUser.userID,
     }
-    const res = await caseIdbySubCase(payload)
-    if (res.success) {
-      setCaseIdSubCases(res?.caseIdSubCases)
+  
+ 
+      const res = await getCasesByClientId(payload)
+      if (res.success) {
+        setClientCases(res?.cases)
+      
     }
+  }else {
+    const payload = {
+      clientId:  client?.clientId,
+      userId: currentUser.userID,
+    }
+  
+    
+      const res = await getCasesByClientId(payload)
+      if (res.success) {
+        setClientCases(res?.cases)
+      }
+    
+  }
+}
   }
   useEffect(() => {
-    onGetCaseIdSubcases()
+    onGetClientCases()
   }, [])
 
-  const notificationSubCase = id => {
-    const matchingCase = notifications.find(i => i?.maincaseId === id)
+  const notificationSubCase = clientName => {
+    console.log("clientName:", clientName)
+    const matchingCase = notifications.find(i => i?.clientName === clientName)
     return matchingCase ? true : false
   }
   return (
@@ -208,7 +271,7 @@ const CaseGrid = ({
             />
           </DynamicSuspense>
         </DynamicModel>
-        <DynamicModel
+        {/* <DynamicModel
           open={subCaseModelOpen}
           toggle={toggleNewSubCaseModelOpen}
           size="lg"
@@ -223,7 +286,7 @@ const CaseGrid = ({
               newCaseId={newCaseId}
             />
           </DynamicSuspense>
-        </DynamicModel>
+        </DynamicModel> */}
         {/* <DynamicModel
           open={createEventMasterModelOpen}
           toggle={toggleCreateEventMasterModelOpen}
@@ -238,6 +301,26 @@ const CaseGrid = ({
           closeModal={toggleCreateEventMasterModelOpen} 
           /></DynamicSuspense>
         </DynamicModel> */}
+        <DynamicModel
+          open={newCaseModelOpen}
+          toggle={toggleNewCaseModelOpen}
+          size="lg"
+          modalTitle="Create Case"
+          footer={false}
+        >
+          <DynamicSuspense>
+            <CreateCase
+              formValues={newCase}
+              setFormValues={setNewCase}
+              // contacts={contacts}
+              setModalOpen={setNewCaseModelOpen}
+              getAllCases={ongetAllCases}
+              clientId={caseData?._id}
+              caseData={caseData}
+              onGetAllClientNames={onGetAllClientNames}
+            />
+          </DynamicSuspense>
+        </DynamicModel>
         <DynamicModel
           open={eventCalenderModelOpen}
           toggle={toggleEventCalenderModelOpen}
@@ -276,48 +359,75 @@ const CaseGrid = ({
         >
           <Col
             xs={10}
-            className="pointer"
-            onClick={() => handleSelectingCase(caseData)}
+            className="pointer position-relative"
+            onClick={() => caseData.caseName && handleSelectingCase(caseData)}
           >
-            <span className="fw-medium">{caseData.caseId}</span>
-            <span className="text-muted font-size-12 ms-2">
-              {caseData.caseName}
+            { currentAttorney && caseData.clientName ?
+              ( cases && caseData.clientName ?
+              <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg"
+                style={{ cursor: "pointer", width: "15px", height: "15px", fill: "#f0b40e" }}
+                viewBox="0 0 113.84 122.88">
+                <title>Case List</title>
+                <path class="cls-1"
+                  d="M1.78,4,.18,7.55H44.23L42.61,4H23a1.17,1.17,0,0,1-1.18-1.17V0H5.05V2.81A1.17,1.17,0,0,1,3.87,4Zm67.7,95.21,2.88,22.22a1.49,1.49,0,0,0,1.36,1.47h35c.81,0,1.26-.78,1.36-1.5l3.73-22.19Zm1.78-5.77L69.66,97h44l-1.62-3.57H92.44a1.17,1.17,0,0,1-1.18-1.17V89.44H74.52v2.81a1.17,1.17,0,0,1-1.17,1.17ZM66.87,55.49l2.89,22.22a1.48,1.48,0,0,0,1.35,1.47h35c.81,0,1.26-.78,1.36-1.5l3.73-22.19Zm1.78-5.77-1.6,3.57H111.1l-1.62-3.57H89.83a1.17,1.17,0,0,1-1.17-1.18v-2.8H71.92v2.81a1.18,1.18,0,0,1-1.18,1.17ZM25.18,62.65H58.7v6H25.18v42H58.37v6H19.18V37.71h6V62.65ZM0,9.75,2.88,32a1.5,1.5,0,0,0,1.36,1.47h35c.81,0,1.26-.78,1.36-1.5L44.36,9.75Z" /></svg>
+              :
+              caseData.clientName ? <svg version="1.1" viewBox="0 0 122.88 89.09"
+                style={{ cursor: "pointer", width: "15px", height: "15px", fill: "#f0b40e" }} >
+                <title>Client Cases</title>
+                <path class="st0" d="M3.97,9.75l-3.93,8.73l122.77,0.01l-3.96-8.74H55.82c-1.59,0-2.88-1.29-2.88-2.88V0H11.97v6.87 c0,1.59-1.29,2.88-2.88,2.88H3.97L3.97,9.75L3.97,9.75z" />
+                <path class="st1" d="M4.63,18.48H0l7.03,67.03c0.11,1.07,0.55,2.02,1.2,2.69c0.55,0.55,1.28,0.89,2.11,0.89h100.1 c0.82,0,1.51-0.33,2.05-0.87c0.68-0.68,1.13-1.67,1.28-2.79l9.1-66.94H4.63V18.48L4.63,18.48z" />
+              </svg> :
+                <svg version="1.1" viewBox="0 0 122.88 89.09"
+                  style={{ cursor: "pointer", width: "15px", height: "15px", fill: "#ebd9a9" }} >
+                  <title>Client Cases</title>
+                  <path class="st0" d="M3.97,9.75l-3.93,8.73l122.77,0.01l-3.96-8.74H55.82c-1.59,0-2.88-1.29-2.88-2.88V0H11.97v6.87 c0,1.59-1.29,2.88-2.88,2.88H3.97L3.97,9.75L3.97,9.75z" />
+                  <path class="st1" d="M4.63,18.48H0l7.03,67.03c0.11,1.07,0.55,2.02,1.2,2.69c0.55,0.55,1.28,0.89,2.11,0.89h100.1 c0.82,0,1.51-0.33,2.05-0.87c0.68-0.68,1.13-1.67,1.28-2.79l9.1-66.94H4.63V18.48L4.63,18.48z" />
+                </svg>):(<svg version="1.1" viewBox="0 0 122.88 89.09"
+                style={{ cursor: "pointer", width: "15px", height: "15px", fill: "#f0b40e" }} >
+                <title>Client Cases</title>
+                <path class="st0" d="M3.97,9.75l-3.93,8.73l122.77,0.01l-3.96-8.74H55.82c-1.59,0-2.88-1.29-2.88-2.88V0H11.97v6.87 c0,1.59-1.29,2.88-2.88,2.88H3.97L3.97,9.75L3.97,9.75z" />
+                <path class="st1" d="M4.63,18.48H0l7.03,67.03c0.11,1.07,0.55,2.02,1.2,2.69c0.55,0.55,1.28,0.89,2.11,0.89h100.1 c0.82,0,1.51-0.33,2.05-0.87c0.68-0.68,1.13-1.67,1.28-2.79l9.1-66.94H4.63V18.48L4.63,18.48z" />
+              </svg>
+            )
+            }
+
+            {/* <span className="fw-medium">{caseData.caseId}</span> */}
+            <span className="text-muted font-size-12 fw-bold ms-2"
+              onClick={() => { caseData.clientName && onGetClientCases(caseData) 
+              handleCaseClick() }}>
+              {currentAttorney ? caseData.clientName &&
+                (caseData.clientName) : (caseData.caseName)
+              }
             </span>
           </Col>
           <Col xs={1} style={{ padding: 2 }}>
-            {notificationSubCase(caseData?.caseId) && (
+            { currentAttorney &&
+            notificationSubCase(caseData?.clientName) && (
               <i className="bx bxs-bell bx-tada text-danger" />
-            )}
+            )
+            }
             {notifyCountforCase(caseData?._id) && (
               <i className="bx bxs-bell bx-tada text-danger" />
             )}
           </Col>
-          <Col
-            xs={1}
-            style={{ padding: 2, display: "flex", gap: "7px" }}
-            className=""
-          >
-            {/* <i
+          <Col xs={1} style={{ padding: 2 }} >
+            {currentAttorney && <i
               style={{ cursor: "pointer" }}
-              className="bx bxs-plus-square font-size-14 "
-              title="Create SubCase"
-              onClick={() => handleClick()}
-            />
-            <i
-              className="bi bi-ui-radios"
-              style={{ cursor: "pointer" }}
-              title="Sub Cases"
-              onClick={() => {
-                handleSubCaseClick()
-              }}
-            /> */}
-            <img
-              src={Chevron}
-              onClick={() => onAccordionButtonClick(index)}
-              aria-expanded={index === active}
-              className="accordion-icon"
-              style={{ cursor: "pointer" }}
-            />
+              className="bx bxs-plus-square font-size-14 pt-1 me-2"
+              title="Create Case"
+              onClick={() => setNewCaseModelOpen(true)}
+            ></i>
+            }
+            <div className="md:ml-20">
+              {!caseData.clientName &&
+                <img
+                  src={Chevron}
+                  onClick={() => onAccordionButtonClick(index)}
+                  aria-expanded={index === active}
+                  className="accordion-icon"
+                />
+              }
+            </div>
           </Col>
         </Row>
         <div className="px-2 border-top">
@@ -442,12 +552,11 @@ const CaseGrid = ({
             </div>
           </div> */}
           </Collapse>
-          {subCaseList && (
+          {cases && (
             <ul className="list-unstyled chat-list">
-              {caseIdSubCases
-                .map((caseData, index) => ({
+              {clientCases
+                .map(caseData => ({
                   caseData,
-                  index, // Include index here
                   notifyCount: notifyCountforCase(caseData._id),
                 }))
                 .sort((a, b) => {
@@ -455,21 +564,25 @@ const CaseGrid = ({
                   if (notifyCountDiff !== 0) {
                     return notifyCountDiff // Sort by notifyCount first
                   }
-                  return 0 // No need for additional sorting for sub-cases
                 })
-                .map(({ caseData, index, notifyCount }) => (
-                  <SubCaseGrid
-                    caseData={caseData}
-                    index={index}
-                    key={index}
-                    active={activeAccordian} // Replace with actual active check
-                    onAccordionButtonClick={handleSettingActiveAccordion}
-                    handleSelectingCase={handleSelectingCase}
-                    selected={selected}
-                    notifyCountforCase={notifyCountforCase}
-                    ongetAllCases={ongetAllCases}
-                  />
-                ))}
+                .map(
+                  (
+                    { caseData, notifyCount },
+                    index // Define the 'index' variable here
+                  ) => (
+                    <SubCaseGrid
+                      caseData={caseData}
+                      index={index}
+                      key={index}
+                      active={activeAccordian}
+                      onAccordionButtonClick={handleSettingActiveAccordion}
+                      handleSelectingCase={handleSelectingCase}
+                      selected={selected}
+                      notifyCountforCase={notifyCountforCase}
+                      ongetAllCases={ongetAllCases}
+                    />
+                  )
+                )}
             </ul>
           )}
         </div>
@@ -485,11 +598,12 @@ CaseGrid.propTypes = {
   onAccordionButtonClick: PropTypes.func,
   handleSelectingCase: PropTypes.func,
   ongetAllCases: PropTypes.func,
-  allCases: PropTypes.func,
   children: PropTypes.any,
   selected: PropTypes.bool,
   notifyCountforCase: PropTypes.func,
   handleAccordionClick: PropTypes.func,
+  onGetAllClientNames: PropTypes.func,
 }
+
 
 export default CaseGrid

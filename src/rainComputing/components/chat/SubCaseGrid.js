@@ -117,6 +117,7 @@ const SubCaseGrid = ({
   const onGetCaseIdSubcases = async () => {
     const payload = {
       caseId: casedetails?.caseId,
+      userID: caseData?.userID
     }
     const res = await caseIdbySubCase(payload)
     if (res.success) {
@@ -179,7 +180,7 @@ const SubCaseGrid = ({
         >
           <DynamicSuspense>
             <SubCase
-              ongetAllCases={ongetAllCases}
+              // ongetAllCases={ongetAllCases}
               setModalOpen={setNewSubCaseModelOpen}
               caseId={caseData}
               newCaseId={newCaseId}
@@ -241,8 +242,14 @@ const SubCaseGrid = ({
             className="pointer"
             onClick={() => handleSelectingCase(caseData)}
           >
-            <span className="fw-medium">{caseData.caseId}</span>
-            <span className="text-muted font-size-12 ms-2">
+           <svg version="1.1" viewBox="0 0 122.88 89.09"
+              style={{ cursor: "pointer", width: "15px", height: "15px", fill: "#f0b40e" }} >
+              <path class="st0" d="M3.97,9.75l-3.93,8.73l122.77,0.01l-3.96-8.74H55.82c-1.59,0-2.88-1.29-2.88-2.88V0H11.97v6.87 c0,1.59-1.29,2.88-2.88,2.88H3.97L3.97,9.75L3.97,9.75z" />
+              <path class="st1" d="M4.63,18.48H0l7.03,67.03c0.11,1.07,0.55,2.02,1.2,2.69c0.55,0.55,1.28,0.89,2.11,0.89h100.1 c0.82,0,1.51-0.33,2.05-0.87c0.68-0.68,1.13-1.67,1.28-2.79l9.1-66.94H4.63V18.48L4.63,18.48z" />
+            </svg>
+            {" "}
+            {/* <span className="fw-medium">{caseData.caseId}</span> */}
+            <span className="text-muted fw-medium font-size-12 ms-2">
               {caseData.caseName}
             </span>
           </Col>
@@ -262,6 +269,7 @@ const SubCaseGrid = ({
               onClick={() => onAccordionButtonClick(index)}
               aria-expanded={index === active}
               className="accordion-icon"
+              style={{ cursor: "pointer" }}
             />
           </Col>
         </Row>
