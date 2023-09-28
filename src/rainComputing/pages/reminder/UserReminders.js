@@ -16,7 +16,7 @@ const UserReminders = () => {
   const [removeData, setRemoveData] = useState()
   const [getReminders, setGetReminders] = useState([])
   const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(9)
+  const [limit] = useState(9)
   const {
     toggleOpen: groupReminderDeleteModalOpen,
     setToggleOpen: setReminderDeleteModalOpen,
@@ -40,7 +40,7 @@ const UserReminders = () => {
       setPageLoader(false)
     }
     getAllReminderById()
-  }, [currentUser])
+  })
 
   const handleRemove = async () => {
     const payload = {

@@ -1,5 +1,5 @@
 import React from "react"
-import { Card, CardBody, CardText, CardTitle, Modal } from "reactstrap"
+import { Card, CardBody, CardText, CardTitle } from "reactstrap"
 // import {
 //   getReminder,
 //   removeReminder,

@@ -68,7 +68,7 @@ const Reminders = ({ toggle, open, setOpen, show = false }) => {
     const intervalId = setInterval(getReminderData, intervalTime)
     // clear the interval on component unmount
     return () => clearInterval(intervalId)
-  }, [])
+  })
 
   // console.log("dk:",groupReminder);
   // useEffect(() => {
@@ -80,7 +80,7 @@ const Reminders = ({ toggle, open, setOpen, show = false }) => {
 
   useEffect(() => {
     getReminderData()
-  }, [currentUser])
+  })
   return (
     <div>
       <i

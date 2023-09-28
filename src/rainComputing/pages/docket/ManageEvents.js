@@ -135,7 +135,7 @@ const ManageEvents = () => {
 
   useEffect(() => {
     getEventsById()
-  }, [])
+  })
 
   return (
     <div className="py-5 my-5">

@@ -1,7 +1,7 @@
 import { takeEvery, fork, put, all, call } from "redux-saga/effects"
 
 //Account Redux states
-import { REGISTER_USER, USER_REGISTER } from "./actionTypes"
+import { REGISTER_USER} from "./actionTypes"
 import { registerUserSuccessful, registerUserFailed } from "./actions"
 
 import { postRegister } from "../../../helpers/backend_helper"
