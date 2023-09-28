@@ -2121,15 +2121,15 @@ const ChatRc = () => {
                       </ul>
                     </TabPane>
                     <TabPane tabId="2">
-                      <div className="d-flex gap-2 my-2">
-                        <button
+                      <div className="d-flex  gap-2 my-2">
+                       {currentAttorney && <button
                           type="button"
                           className="btn btn-info btn-rounded mb-2 col-6"
                           onClick={() => setNewClientModelOpen(true)}
                         >
                           Create NewClient
                           <i className="bx bx-pencil font-size-16 align-middle me-2 mx-2"></i>
-                        </button>
+                        </button>}
 
                         <div className="d-flex justify-content-center align-items-center">
                           <Dropdown
@@ -2142,7 +2142,7 @@ const ChatRc = () => {
                               className="btn nav-btn d-flex"
                               tag="i"
                             >
-                              <div className="d-flex justify-content-center align-items-center gap-2 ">
+                              <div className="d-flex  justify-content-end align-items-center gap-2 ">
                                 <i
                                   className="mdi mdi-sort-variant font-size-24 mr-2"
                                   title="Filter"
