@@ -24,7 +24,7 @@ const LandingCard = props => {
                       ? user?.regUser?.profilePic
                       : attImages[imgIndex].url
                   }
-                  alt="profile image"
+                  alt="profile"
                 />
               </div>
               <div id="attdetail">

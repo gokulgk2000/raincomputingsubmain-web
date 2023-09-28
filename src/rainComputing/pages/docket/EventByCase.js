@@ -24,7 +24,6 @@ const EventByCase = ({ location }) => {
     toggleIt: toggleintervalIddataModal,
   } = useToggle(false)
   const caseData = location.state.caseData
-  const tab = new URLSearchParams(location.search).get("tab")
   const [getAllEvents, setGetAllEvents] = useState([])
   const [selectedIntervalId, setSelectedIntervalId] = useState()
 
@@ -42,7 +41,7 @@ const EventByCase = ({ location }) => {
     if (caseData) {
       getCaseEvents()
     }
-  }, [caseData])
+  })
 
   const handleChange = id => {
     setSelectedIntervalId(id)

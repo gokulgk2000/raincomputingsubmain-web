@@ -1,5 +1,5 @@
 import MetaTags from "react-meta-tags"
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import {
   Container,
   Row,
@@ -40,7 +40,6 @@ const UserProfile = props => {
   const [loading, setLoading] = useState(false)
   const [proloading, setProLoading] = useState(false)
   const { currentUser, setCurrentUser } = useUser(user)
-  const [profilePic, setProfilePic] = useState("")
   const [profileUpdateSuccess, setProfileUpateSuccess] = useState("")
   const [profileUpdateError, setProfileUpateError] = useState("")
   const [passwordUpdateSuccess, setPasswordUpateSuccess] = useState("")

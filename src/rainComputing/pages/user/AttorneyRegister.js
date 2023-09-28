@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react"
-import MetaTags from "react-meta-tags"
+import React, {  useState } from "react"
 import {
   Card,
   CardBody,
@@ -27,8 +26,6 @@ import "toastr/build/toastr.min.css"
 const AttorneyRegister = () => {
   const history = useHistory()
   const { currentUser, setCurrentUser } = useUser()
-  const [profileUpdateError, setProfileUpateError] = useState("")
-  const [profileUpdateSuccess, setProfileUpateSuccess] = useState("")
   const [updateError, setUpdateError] = useState("")
   const [updateSuccess, setUpdateSuccess] = useState("")
   const validation = useFormik({
@@ -101,9 +98,7 @@ const AttorneyRegister = () => {
       <div className="page-content">
         {updateError && <Alert color="danger">{updateError}</Alert>}
         {updateSuccess && <Alert color="success">{updateSuccess}</Alert>}
-        {profileUpdateError && (
-          <Alert color="danger">{profileUpdateError}</Alert>
-        )}
+    
         <Container fluid={true}>
           <Row>
             <Col lg="12">

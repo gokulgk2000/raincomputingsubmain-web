@@ -53,7 +53,7 @@ const PaymentStatus = () => {
       const res = await getPaymentId({ pi: query.get("payment_intent") })
     }
     getUserPaymentData()
-  }, [])
+  })
 
   return (
     <React.Fragment>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import PropTypes, { any } from "prop-types"
+import PropTypes from "prop-types"
 import {
   createEvent,
   getAllEvent,
@@ -23,7 +23,6 @@ const CreateEvents = ({ caseId }) => {
     { value: "weeks", text: "Weeks " },
     { value: "months", text: " Months" },
   ]
-  const currentCase = caseId?._id
   const handleIconClick = () => {
     setDocIntervals(prevInputs => [...prevInputs, ""])
   }
@@ -106,7 +105,7 @@ const CreateEvents = ({ caseId }) => {
   }
   useEffect(() => {
     handleAllEvents()
-  }, [currentAttorney])
+  })
 
   const handleRemoveField = index => {
     if (docIntervals.length === 1) {

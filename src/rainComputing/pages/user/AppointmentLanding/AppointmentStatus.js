@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react"
-import MetaTags from "react-meta-tags"
 import {
   Col,
-  Container,
   Row,
   Badge,
   Card,
@@ -33,7 +31,7 @@ const AppointmentCard = () => {
       setPageLoader(false)
     }
     getStatusByUser()
-  }, [])
+  })
 
   return (
     <React.Fragment>

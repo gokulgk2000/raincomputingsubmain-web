@@ -40,7 +40,7 @@ export default function Payment() {
         return res.json()
       })
       .then(data => setClientSecret(data.clientSecret))
-  }, [])
+  })
 
 
 

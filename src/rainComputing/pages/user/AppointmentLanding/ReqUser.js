@@ -1,6 +1,5 @@
-import MetaTags from "react-meta-tags"
 import React, { useState, useEffect } from "react"
-import { Container, Row, Col, Card, CardBody, Button } from "reactstrap"
+import {Row, Col, Card, CardBody} from "reactstrap"
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
 import DeleteModal from "../../../../../src/rainComputing/components/modals/DeleteModal"
@@ -19,7 +18,6 @@ const RequestUser = () => {
   const { currentAttorney } = useUser()
   const [modalOpen, setModalOpen, toggleModal] = useModal(false)
   const [pageLoader, setPageLoader] = useState(true)
-  const [selectedAppointmentReq, setSelectedAppointmentReq] = useState(null)
   toastr.options = {
     progressBar: true,
     closeButton: true,
@@ -39,7 +37,7 @@ const RequestUser = () => {
 
   useEffect(() => {
     onGetAllAppointmentRequest()
-  }, [currentAttorney])
+  })
   const onGetAllAppointmentRequest = async () => {
     setPageLoader(true)
     const RequestRes = await getAllAppointmentRequestById({

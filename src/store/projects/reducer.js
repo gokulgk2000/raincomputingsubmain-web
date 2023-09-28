@@ -19,9 +19,6 @@ const INIT_STATE = {
   projectDetail: {},
   error: {},
   attorney: {},
-  error: {},
-
-
 }
 
 const projects = (state = INIT_STATE, action) => {

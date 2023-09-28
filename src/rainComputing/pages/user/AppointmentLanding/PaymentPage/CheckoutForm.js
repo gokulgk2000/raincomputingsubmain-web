@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, {useState } from "react"
 import { PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js"
 
 export default function CheckoutForm() {

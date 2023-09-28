@@ -8,7 +8,6 @@ import {
 } from "../../../../src/rainComputing/helpers/backend_helper"
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
-import { useChat } from "../../../../src/rainComputing/contextProviders/ChatProvider"
 import { useUser } from "../../../../src/rainComputing/contextProviders/UserProvider"
 // import moment from "moment"
 // import { async } from "q"
@@ -37,7 +36,6 @@ const EditReminder = ({
     .join("-")
     .replace(/(\d{2})-(\d{2})-(\d{4})/, "$3-$1-$2")
   // const scheduledTime = new Date(`${date}T${time}:00.000Z`).toISOString()
-  const { currentRoom: currentChat, setMessages, messages } = useChat()
   const { currentUser } = useUser()
   const [title, setTitle] = useState(reminder?.title)
   const [date, setDate] = useState(formattedDate)
@@ -49,8 +47,8 @@ const EditReminder = ({
   const [selectedMembers, setSelectedMembers] = useState(
     reminderSelectedMembers
   )
-  const [userId, setUserId] = useState(null)
-  const [isChecked, setIsChecked] = useState("")
+  // const [userId, setUserId] = useState(null)
+  // const [isChecked, setIsChecked] = useState("")
   const {
     toggleOpen: groupReminderDeleteModalOpen,
     setToggleOpen: setReminderDeleteModalOpen,
@@ -60,13 +58,13 @@ const EditReminder = ({
     progressBar: true,
     closeButton: true,
   }
-  useEffect(() => {
-    if (isChecked) {
-      setUserId(currentUser?.userID)
-    } else {
-      setUserId("")
-    }
-  }, [isChecked, currentUser])
+  // useEffect(() => {
+  //   if (isChecked) {
+  //     setUserId(currentUser?.userID)
+  //   } else {
+  //     setUserId("")
+  //   }
+  // }, [isChecked, currentUser])
 
   const handleAddingNewSelectedgroupMembers = member => {
     if (selectedMembers.some(m => m.id === member.id)) {
@@ -79,9 +77,9 @@ const EditReminder = ({
   const getSelectedReminderMembers = selectedMembers?.map(
     member => member.id._id
   )
-  const handleChange = e => {
-    setIsChecked(e.target.checked)
-  }
+  // const handleChange = e => {
+  //   setIsChecked(e.target.checked)
+  // }
   const handlereminderCancel = () => {
     setEditModalOpen(false)
   }
@@ -96,7 +94,7 @@ const EditReminder = ({
   }
   useEffect(() => {
     getAllReminderById()
-  }, [])
+  })
 
   // useEffect(() => {
   //   if (currentUser) {
