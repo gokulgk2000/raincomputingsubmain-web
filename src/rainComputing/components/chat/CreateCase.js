@@ -91,7 +91,7 @@ const CreateCase = ({
       threadId: randomThreadId, // Assign the generated ThreadId
       threadIdCondition: "GroupMembers",
       clientName: clientName,
-      clientId:clientId,
+      clientId: clientId,
     }
     const caseRes = await createNewCase(payLoad)
     if (caseRes.success) {
@@ -163,7 +163,7 @@ const CreateCase = ({
 
   return (
     <>
-       <Row className="my-md-3">
+      <Row className="my-md-3">
         <label
           htmlFor="example-text-input"
           className="col-md-3 col-lg-2 col-form-label">
@@ -404,8 +404,8 @@ CreateCase.propTypes = {
   setFormValues: PropTypes.func,
   setModalOpen: PropTypes.any,
   getAllCases: PropTypes.func,
-  clientId:PropTypes.any,
-  caseData:PropTypes.object,
+  clientId: PropTypes.any,
+  caseData: PropTypes.object,
   onGetAllClientNames: PropTypes.func
 }
 
