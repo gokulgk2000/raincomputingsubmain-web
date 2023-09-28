@@ -1,9 +1,6 @@
-import { takeEvery, fork, put, all, call } from "redux-saga/effects"
+import { fork,all} from "redux-saga/effects"
 
 // Login Redux States
-
-import { profileSuccess, profileError } from "./actions"
- 
 export function* watchProfile() {
  
 }

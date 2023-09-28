@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import PropTypes from "prop-types"
-import { Button, Col, Row } from "reactstrap"
+import {  Row } from "reactstrap"
 import { useHistory } from 'react-router-dom';
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
@@ -13,18 +13,12 @@ const CreateClient = ({
     formValues,
     setFormValues,
     setModalOpen,
-    getAllCases,
     getAllClients
 }) => {
     const { currentUser } = useUser()
     const history = useHistory();
     const [loading, setloading] = useState(false)
-    const [contacts, setContacts] = useState([])
-    const [searchText, setSearchText] = useState("")
-    const [caseSerialNo, setCaseSerialNo] = useState("")
-    const [caseEvent, setCaseEvent] = useState("")
-    const [caseEventDate, setCaseEventDate] = useState("")
-    const [clientName, setClientName] = useState("")
+  
     toastr.options = {
         progressBar: true,
         closeButton: true,
@@ -52,7 +46,6 @@ const CreateClient = ({
     const handleCreatingClient = async () => {
 
         setloading(true)
-        const filteredMembers = userFormValues?.members.map(m => m?._id)
         const payLoad = {
             clientId: formValues?.clientId,
             clientName: formValues?.clientName,

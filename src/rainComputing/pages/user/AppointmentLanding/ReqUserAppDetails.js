@@ -31,17 +31,20 @@ const CreateCase = lazy(() =>
 )
 const ReqUserAppointmentDetails = ({ refetch = false }) => {
   const { currentUser } = useUser()
-  const [loading, setLoading] = useState(false)
+  const [loading] = useState(false)
   const { currentAttorney } = useUser()
   const [newCase, setNewCase] = useState(initialNewCaseValues)
-  const [contacts, setContacts] = useState([])
   const [appointmentUser, setAppointmentUser] = useState([])
   const [caseLoading, setCaseLoading] = useState(true)
+  console.log("caseLoading:",caseLoading)
   const [currentCase, setCurrentCase] = useState(null)
+  console.log("currentCase:",currentCase)
   const [allCases, setAllCases] = useState([])
-  const [casePage, setCasePage] = useState(1)
-  const [searchText, setSearchText] = useState("")
+  console.log("allCases:",allCases)
+  const [casePage] = useState(1)
+  const [searchText] = useState("")
   const [allgroups, setAllgroups] = useState([])
+  console.log("allgroups:",allgroups)
   const {
     toggleOpen: newCaseModelOpen,
     setToggleOpen: setNewCaseModelOpen,
@@ -85,37 +88,37 @@ const ReqUserAppointmentDetails = ({ refetch = false }) => {
     if (row?.appointmentstatus === "approved" ) {
       setNewCaseModelOpen(true);
     }
-  };
+  }
   const columns = [
     {
       dataField: "_id",
       text: "S.NO",
       sort: true,
-      formatter: idFormatter,
+      formatter: idFormatter
     },
     {
       dataField: "username",
       text: "User Name",
       sort: true,
-      formatter: nameFormatter,
+      formatter: nameFormatter
     },
     {
       dataField: "email",
       text: "Email",
       sort: true,
-      formatter: emailFormatter,
+      formatter: emailFormatter
     },
     {
       dataField: "status",
       text: "Status",
       sort: true,
-      formatter: statusFormatter,
+      formatter: statusFormatter
     },
     {
       dataField: "date",
       text: "Date",
       sort: true,
-      formatter: dateFormatter,
+      formatter: dateFormatter
     },
    {
   dataField: "Create Case",
@@ -147,7 +150,6 @@ const ReqUserAppointmentDetails = ({ refetch = false }) => {
     textAlign: "center",
   },
 },
-,
   ]
   const defaultSorted = [
     {
@@ -174,10 +176,10 @@ const ReqUserAppointmentDetails = ({ refetch = false }) => {
   }
   useEffect(() => {
     onGetAllAppointmentDetails()
-  }, [currentAttorney])
+  })
   useEffect(() => {
     if (refetch) onGetAllAppointmentDetails()
-  }, [refetch])
+  })
   return (
     <React.Fragment>
       <DynamicModel
@@ -191,7 +193,6 @@ const ReqUserAppointmentDetails = ({ refetch = false }) => {
             <CreateCase
               formValues={newCase}
               setFormValues={setNewCase}
-              contacts={contacts}
               setModalOpen={setNewCaseModelOpen}
               getAllCases={ongetAllCases}
             />

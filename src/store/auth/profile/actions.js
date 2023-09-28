@@ -1,4 +1,4 @@
-import { PROFILE_ERROR, PROFILE_SUCCESS, RESET_PROFILE_FLAG } from "./actionTypes"
+import { PROFILE_ERROR,RESET_PROFILE_FLAG } from "./actionTypes"
 
 
 

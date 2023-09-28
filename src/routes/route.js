@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react"
 import PropTypes from "prop-types"
 import { Route, Redirect } from "react-router-dom"
 import { useUser } from "../../src/rainComputing/contextProviders/UserProvider"

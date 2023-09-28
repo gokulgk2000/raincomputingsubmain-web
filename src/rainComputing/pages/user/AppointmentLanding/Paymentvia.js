@@ -1,4 +1,3 @@
-import MetaTags from "react-meta-tags"
 import React, { useState, useEffect } from "react"
 import {
   Container,
@@ -31,14 +30,17 @@ const PaymentVia = () => {
   const history = useHistory()
  const query = useQuery()
 
-  const { currentUser, setCurrentUser } = useUser()
+  const { currentUser} = useUser()
   const imgIndex = Math.floor(Math.random() * 8)
+  console.log("imgIndex:",imgIndex)
   const [loading, setLoading] = useState(false)
+  console.log("loading:",loading)
   const [allFiles, setAllFiles] = useState([])
   const [isAttachments, setIsAttachments] = useState(false)
   const [caseData, setCaseData] = useState("")
   const [attorneyDetails,setAttorneyDetail] = useState({})
   const [email, setEmail] = useState("")
+  console.log("email:",email)
   toastr.options = {
     progressBar: true,
     closeButton: true,
@@ -57,7 +59,7 @@ const PaymentVia = () => {
 }
 useEffect(() =>{
   getAttorneyinfo()
-},[])
+})
   const onSendEmail = async () => {
     const mailRes = await attorneyInvite({id:query.get("uid")})
     setEmail(mailRes.true)

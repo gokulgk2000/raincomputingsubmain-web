@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { Col, Collapse, Row, Tooltip } from "reactstrap";
+import { Col, Collapse, Row } from "reactstrap";
 import "./style/case-grid.scss";
 import Chevron from "../../../../src/assets/icon/chevron-down.svg";
 import profile from "../../../../src/assets/images/avatar-defult.jpg";
@@ -13,7 +13,6 @@ import DeleteModal from "../modals/DeleteModal";
 import { useUser } from "../../../../src/rainComputing/contextProviders/UserProvider";
 import {
   LeaveGroup,
-  caseIdbySubCase,
   getCasesByClientId,
 } from "../../../../src/rainComputing/helpers/backend_helper";
 import toastr from "toastr";
@@ -22,7 +21,6 @@ import EventMaster from "./models/EventMaster";
 import DynamicSuspense from "../loader/DynamicSuspense";
 import EventCalender from "./models/EventCalender";
 import { useHistory } from "react-router-dom";
-import SubCase from "./models/SubCase";
 import SubCaseGrid from "./SubCaseGrid";
 import useAccordian from "../../../../src/rainComputing/helpers/hooks/useAccordian";
 import { useNotifications } from "../../../../src/rainComputing/contextProviders/NotificationsProvider";
@@ -42,26 +40,21 @@ const CaseGrid = ({
   console.log("Clients-caseData:", caseData);
   const { currentAttorney } = useUser();
   const history = useHistory();
-  const { toggleOpen: notifyOn, toggleIt: setNotifyOn } = useToggle(false);
-  const { notifications, setNotifications } = useNotifications();
-  console.log("Rk-1-Notifications:", notifications);
+  // const { toggleOpen: notifyOn, toggleIt: setNotifyOn } = useToggle(false);
+  const { notifications } = useNotifications();
   const { currentUser } = useUser();
-  const [casedetails, setCaseDetails] = useState(caseData);
-  const [caseIdSubCases, setCaseIdSubCases] = useState([]);
-  const [newCaseId, setNewCaseId] = useState();
-  const [currentCase, setCurrentCase] = useState(null);
+  // const [caseIdSubCases, setCaseIdSubCases] = useState([]);
+  // const [newCaseId, setNewCaseId] = useState();
+  // const [currentCase, setCurrentCase] = useState(null);
   const { activeAccordian, handleSettingActiveAccordion } = useAccordian(-1);
-  const [subCaseList, setSubCaseList] = useState(false);
-  const [caseClientNames, setCaseClientNames] = useState([]);
+  // const [subCaseList, setSubCaseList] = useState(false);
+  // const [caseClientNames, setCaseClientNames] = useState([]);
   const [clientCases, setClientCases] = useState([]);
   const [newCase, setNewCase] = useState(initialNewCaseValues);
   const [cases, setCases] = useState(false);
 
   const handleCaseClick = () => {
     setCases(!cases);
-  };
-  const onSelectingCase = (cas) => {
-    setCurrentCase(cas);
   };
   const {
     toggleOpen: membersModelOpen,
@@ -80,7 +73,7 @@ const CaseGrid = ({
   } = useToggle(false);
   const {
     toggleOpen: docketModelOpen,
-    setToggleOpen: setDocketModelOpen,
+    // setToggleOpen: setDocketModelOpen,
     toggleIt: toggleDocketModelOpen,
   } = useToggle(false);
   // const {
@@ -95,14 +88,14 @@ const CaseGrid = ({
   } = useToggle(false);
   const {
     toggleOpen: eventCalenderModelOpen,
-    setToggleOpen: setEventCalenderModelOpen,
+    // setToggleOpen: setEventCalenderModelOpen,
     toggleIt: toggleEventCalenderModelOpen,
   } = useToggle(false);
-  const {
-    toggleOpen: subCaseModelOpen,
-    setToggleOpen: setNewSubCaseModelOpen,
-    toggleIt: toggleNewSubCaseModelOpen,
-  } = useToggle(false);
+  // const {
+  //   toggleOpen: subCaseModelOpen,
+  //   setToggleOpen: setNewSubCaseModelOpen,
+  //   toggleIt: toggleNewSubCaseModelOpen,
+  // } = useToggle(false);
   const {
     toggleOpen: newCaseModelOpen,
     setToggleOpen: setNewCaseModelOpen,
@@ -119,7 +112,7 @@ const CaseGrid = ({
     >
       <Col xs={11}>{children}</Col>
       <Col xs={1} style={{ padding: 0 }}>
-        <img src={Chevron} className="accordion-icon-right" />
+        <img src={Chevron} className="accordion-icon-right" alt="#" />
       </Col>
     </Row>
   );
@@ -132,7 +125,7 @@ const CaseGrid = ({
 
   const handleLeaveGroup = async () => {
     const payload = {
-      caseId: casedetails?._id,
+      caseId: caseData?._id,
       memberId: currentUser?.userID,
     };
     const res = await LeaveGroup(payload);
@@ -216,7 +209,7 @@ const CaseGrid = ({
   };
   useEffect(() => {
     onGetClientCases();
-  }, []);
+  });
 
   const notificationSubCase = (clientName) => {
     console.log("clientName:", clientName);
@@ -456,14 +449,20 @@ const CaseGrid = ({
             )}
             <div className="md:ml-20">
               {!caseData.clientName && (
-                <img
-                  src={Chevron}
+                <div
                   onClick={() => onAccordionButtonClick(index)}
                   aria-expanded={index === active}
                   className="accordion-icon"
-                />
+                  role="button"
+                >
+                  <img
+                    src={Chevron}
+                    alt="#"
+                  />
+                </div>
               )}
             </div>
+
           </Col>
         </Row>
         <div className="px-2 border-top">
@@ -600,27 +599,24 @@ const CaseGrid = ({
                   if (notifyCountDiff !== 0) {
                     return notifyCountDiff; // Sort by notifyCount first
                   }
+                  return 0; // Default return value when notifyCountDiff is 0
                 })
-                .map(
-                  (
-                    { caseData, notifyCount },
-                    index // Define the 'index' variable here
-                  ) => (
-                    <SubCaseGrid
-                      caseData={caseData}
-                      index={index}
-                      key={index}
-                      active={activeAccordian}
-                      onAccordionButtonClick={handleSettingActiveAccordion}
-                      handleSelectingCase={handleSelectingCase}
-                      selected={selected}
-                      notifyCountforCase={notifyCountforCase}
-                      ongetAllCases={ongetAllCases}
-                    />
-                  )
-                )}
+                .map(({ caseData, notifyCount }, index) => (
+                  <SubCaseGrid
+                    caseData={caseData}
+                    index={index}
+                    key={index}
+                    active={activeAccordian}
+                    onAccordionButtonClick={handleSettingActiveAccordion}
+                    handleSelectingCase={handleSelectingCase}
+                    selected={selected}
+                    notifyCountforCase={notifyCountforCase}
+                    ongetAllCases={ongetAllCases}
+                  />
+                ))}
             </ul>
           )}
+
         </div>
       </li>
     </>
