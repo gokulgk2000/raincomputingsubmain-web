@@ -61,14 +61,14 @@ const RainLogin = props => {
     },
   })
 
-  //handleGoogleLoginResponse
-  const googleResponse = response => {}
+  // //handleGoogleLoginResponse
+  // const googleResponse = response => {}
 
-  // handleTwitterLoginResponse
-  const twitterResponse = e => {}
+  // // handleTwitterLoginResponse
+  // const twitterResponse = e => {}
 
-  //handleFacebookLoginResponse
-  const facebookResponse = e => {}
+  // //handleFacebookLoginResponse
+  // const facebookResponse = e => {}
 
   return (
     <React.Fragment>
@@ -80,7 +80,7 @@ const RainLogin = props => {
         <div className="d-none d-xl-block  ">
           <div className="d-none d-lg-block   my-5 pt-sm-5 ms-lg-5  p-5">
             <div className="justify-content-center">
-              <img src={login} width="600" height="450" />
+              <input type="img" src={login} width="600" height="450" />
             </div>
             {/* <p className="fs-5 pt-5 ps-5 ">
               Manage all communication in one place
@@ -101,7 +101,7 @@ const RainLogin = props => {
                         </div>
                       </Col>
                       <Col className="col-5 align-self-end">
-                        <img src={profile} width="300"  height="200" className="img-fluid" />
+                        <input type="img" src={profile} width="300"  height="200" className="img-fluid" />
                       </Col>
                     </Row>
                   </div>
@@ -110,7 +110,7 @@ const RainLogin = props => {
                       <Link to="/" className="auth-logo-light">
                         <div className="avatar-md profile-user-wid mb-3">
                           <span className="avatar-title rounded-circle bg-light">
-                            <img
+                            <input type="img"
                               src={logo}
                               alt=""
                               className="rounded-circle"
