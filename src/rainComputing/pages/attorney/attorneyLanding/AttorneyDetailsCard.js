@@ -14,7 +14,6 @@ import {
   NavLink,
   Row,
   FormFeedback,
-  Button,
   DropdownToggle,
   Dropdown,
 } from "reactstrap"
@@ -33,10 +32,9 @@ import AttorneyCalendar from "../../../../../src/rainComputing/pages/Calendar/At
 import toastr from "toastr"
 
 const AttorneyDetailsCard = () => {
-  const { currentUser, setCurrentUser } = useUser()
+  const { currentUser  } = useUser()
   const [attorneyDetail, setAttorneyDetail] = useState({})
   const { currentAttorney } = useUser()
-  const [loading, setLoading] = useState(false)
   const {
     toggleOpen: CalendarModelOpen,
     setToggleOpen: setCalendarModelOpen,

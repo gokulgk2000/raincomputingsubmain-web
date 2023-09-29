@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import {Row, Col, Card, CardBody} from "reactstrap"
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
@@ -35,19 +35,17 @@ const RequestUser = () => {
     })
   }
 
-  useEffect(() => {
-    onGetAllAppointmentRequest()
-  })
-  const onGetAllAppointmentRequest = async () => {
-    setPageLoader(true)
+ 
+  const onGetAllAppointmentRequest = useCallback(async () => {
+    setPageLoader(true);
     const RequestRes = await getAllAppointmentRequestById({
       userID: currentAttorney._id,
-    })
+    });
     if (RequestRes.success) {
-      setAppointmentReq(RequestRes.appointment)
+      setAppointmentReq(RequestRes.appointment);
     }
-    setPageLoader(false)
-  }
+    setPageLoader(false);
+  }, [currentAttorney]);
   const handleAppointmentAccept = async ({ id }) => {
     const payload = {
       appointmentstatus: "approved",
@@ -79,6 +77,10 @@ const RequestUser = () => {
     }
     setModalOpen(false)
   }
+
+  useEffect(() => {
+    onGetAllAppointmentRequest()
+  }, [currentAttorney,onGetAllAppointmentRequest])
   return (
     <React.Fragment>
       <DeleteModal

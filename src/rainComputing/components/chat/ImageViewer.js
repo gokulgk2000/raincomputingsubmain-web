@@ -1,4 +1,4 @@
-import React, { useEffect, memo } from "react"
+import React, {  memo } from "react"
 import PropTypes from "prop-types"
 import { SERVER_URL } from "../../../../src/rainComputing/helpers/configuration"
 

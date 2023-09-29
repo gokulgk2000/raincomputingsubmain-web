@@ -1,8 +1,6 @@
-import PropTypes from "prop-types"
 import React from "react"
 
 import { Switch, BrowserRouter as Router, Route } from "react-router-dom"
-import { connect } from "react-redux"
 
 // Import Routes all
 import { authProtectedRoutes, publicRoutes, adminRoutes } from "./routes"
@@ -14,7 +12,6 @@ import Authmiddleware from "./routes/route"
 import VerticalLayout from "./components/VerticalLayout/"
 import HorizontalLayout from "./components/HorizontalLayout/"
 
-import NonAuthLayout from "./components/NonAuthLayout"
 
 // Import scss
 import "./assets/scss/theme.scss"
@@ -22,10 +19,8 @@ import "./assets/scss/theme.scss"
 import { ChatProvider } from "../src/rainComputing/contextProviders/ChatProvider"
 import { useSocket } from "../src/rainComputing/contextProviders/SocketProvider"
 import LandingGrid from "../src/rainComputing/pages/landing/LandingGrid"
-import { useUser } from "../src/rainComputing/contextProviders/UserProvider"
 
 const App = () => {
-  const { currentUser } = useUser()
   // LogRocket.init("jk2db1/demo", {
   //   dom: {
   //     textSanitizer: true,

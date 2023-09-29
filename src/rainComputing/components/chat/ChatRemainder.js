@@ -14,20 +14,19 @@ const ChatRemainder = ({
   selectdate,
   getAllReminderById,
 }) => {
-  const { currentRoom: currentChat, setMessages, messages } = useChat()
+  const { currentRoom: currentChat} = useChat()
   const { currentUser } = useUser()
   const [title, setTitle] = useState("")
   const [date, setDate] = useState(selectdate)
   console.log("date", date)
   const timeOption = getTimeOptions()
   const [time, setTime] = useState(timeOption[0]?.key)
-
-  const [scheduledTime, setScheduledTime] = useState("")
   const [selectedMembers, setSelectedMembers] = useState([])
   const [selectedDates, setSelectedDates] = useState([date])
 
   const [userId, setUserId] = useState(null)
-  const [isChecked, setIsChecked] = useState("")
+  const [isChecked] = useState("")
+  console.log("userId", userId)
 
   toastr.options = {
     progressBar: true,
@@ -50,9 +49,9 @@ const ChatRemainder = ({
     }
   }
 
-  const handleChange = e => {
-    setIsChecked(e.target.checked)
-  }
+  // const handleChange = e => {
+  //   setIsChecked(e.target.checked)
+  // }
   const handlereminderCancel = () => {
     setModalOpen(false)
   }
