@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useState,useCallback } from "react"
 import PropTypes from "prop-types"
 import { getAllChatRooms } from "../../../src/rainComputing/helpers/backend_helper"
 import { useNotifications } from "./NotificationsProvider"
@@ -16,24 +16,24 @@ export function ChatProvider({ socket, children }) {
   const [currentRoom, setCurrentRoom] = useState(null)
   const [messages, setMessages] = useState([])
   const [messageStack, setMessageStack] = useState([])
-  const getRoomsonEveryMessage = async () => {
-    const chatRoomsRes = await getAllChatRooms({ userID: currentUser.userID })
+  const getRoomsonEveryMessage = useCallback(async () => {
+    const chatRoomsRes = await getAllChatRooms({ userID: currentUser.userID });
     if (chatRoomsRes.success) {
-      setChats(chatRoomsRes.chats)
+      setChats(chatRoomsRes.chats);
     } else {
-      setChats([])
+      setChats([]);
     }
-  }
-  const handleSendingMessage = async msgData => {
-    setMessageStack(prevStae => [...prevStae, msgData])
-    await socket.emit("s_m", msgData)
-  }
-
-  const handleSendingReplyMessage = async msgData => {
-    setMessageStack(prevStae => [...prevStae, msgData])
-    await socket.emit("s_r", msgData)
-  }
-
+  }, [ setChats]);
+  
+  const handleSendingMessage = useCallback(async (msgData) => {
+    setMessageStack((prevState) => [...prevState, msgData]);
+    await socket.emit("s_m", msgData);
+  }, [setMessageStack, socket]);
+  
+  const handleSendingReplyMessage = useCallback(async (msgData) => {
+    setMessageStack((prevState) => [...prevState, msgData]);
+    await socket.emit("s_r", msgData);
+  }, [setMessageStack, socket]);
   //   useEffect(() => {
   //     if (socket == null) return
 
@@ -70,12 +70,14 @@ export function ChatProvider({ socket, children }) {
       })
     } else {
       const notification = new Audio(currentUser?.notificationSound)
+      console.log("notification",notification)
+
       if (socket == null) return
       socket.off("receive_message").once("receive_message", async msgData => {
         setNotifications([msgData, ...notifications])
       })
     }
-  }, [socket, handleSendingMessage, handleSendingReplyMessage])
+  }, [socket, handleSendingMessage, handleSendingReplyMessage,currentRoom,currentUser?.notificationSound,getRoomsonEveryMessage,messages,notifications,setNotifications])
 
   useEffect(() => {
     if (currentRoom) {
@@ -115,6 +117,8 @@ export function ChatProvider({ socket, children }) {
             "Rain Computing Notification",
             options
           )
+        console.log("notification",notification)
+
         }
       })
       socket.off("s_s").once("s_s", async msgData => {
@@ -139,6 +143,8 @@ export function ChatProvider({ socket, children }) {
             "Rain Computing Notification",
             options
           )
+        console.log("notification",notification)
+
         }
       })
       // socket.off("r_s").once("r_s", async msgData => {
@@ -162,6 +168,8 @@ export function ChatProvider({ socket, children }) {
           "Rain Computing Notification",
           options
         )
+        console.log("notification",notification)
+
       })
       if (socket == null) return
       socket.off("r_r").once("r_r", async msgData => {
@@ -179,12 +187,13 @@ export function ChatProvider({ socket, children }) {
           "Rain Computing Notification",
           options
         )
+        console.log("notification",notification)
       })
     }
     socket.off("u_l").once("u_l", async msgData => {
       setNotifications([...msgData, ...notifications])
     })
-  }, [socket, handleSendingMessage, handleSendingReplyMessage, notifications])
+  }, [socket, handleSendingMessage, handleSendingReplyMessage, notifications,currentRoom,currentUser?.notificationSound,setNotifications,messages])
 
   return (
     <ChatContext.Provider

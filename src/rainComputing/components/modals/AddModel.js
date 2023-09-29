@@ -47,7 +47,7 @@ const AddModal = ({
       </ModalHeader>
       <ModalBody className="p-3" >
         <div className="d-flex justify-content-center pb-3" >
-        <img src={add} style={{height:"100px"}}></img>
+      <input type="img"  src={add} style={{height:"100px"}}></input>
        
         </div>
         <p className="d-flex justify-content-center">Are you interested in creating an admin account?</p>

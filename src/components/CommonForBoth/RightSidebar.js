@@ -33,12 +33,12 @@ import {
 } from "../../constants/layout";
 
 const RightSidebar = props => {
-  const onCloseRightBar = () => {
-    const { onClose } = props;
-    if (onClose) {
-      onClose();
-    }
-  };
+  // const onCloseRightBar = () => {
+  //   const { onClose } = props;
+  //   if (onClose) {
+  //     onClose();
+  //   }
+  // };
   return (
     <React.Fragment>
      <div className="right-bar" id="right-bar">

@@ -11,6 +11,7 @@ const EventCalender = ({ caseId }) => {
   const [allEventsData, setAllEventsData] = useState([])
   const [filteredEvents, setFilteredEvents] = useState()
   const [getAllEvents, setGetAllEvents] = useState([])
+  console.log("getAllEvents",getAllEvents)
   const handleSelectEvent = event => {
     setSelectedEvent(event.target.value)
   }
@@ -69,7 +70,7 @@ const EventCalender = ({ caseId }) => {
       }
       getCaseEvents()
     }
-  }, [])
+  }, [caseId])
 
   return (
     <div>

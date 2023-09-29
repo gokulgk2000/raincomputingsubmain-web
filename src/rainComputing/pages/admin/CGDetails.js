@@ -7,7 +7,6 @@ import {
   CardBody,
   Form,
   Table,
-  Modal,
 } from "reactstrap"
 import { useQuery } from "../../../../src/rainComputing/helpers/hooks/useQuery"
 import {
@@ -19,8 +18,8 @@ const CaseGroupDetails = () => {
 
     const query = useQuery()
     const [casesById, setCasesById] = useState([])
-    const [currentCase, setCurrentCase] = useState([])
-    const [subGroupsById, setSubGroupsById] = useState([])
+    const [ setCurrentCase] = useState([])
+    const [setSubGroupsById] = useState([])
 
     const getAllCases = async () => {
         const res = await getCasesByUserId({
@@ -45,11 +44,11 @@ const CaseGroupDetails = () => {
 
     useEffect(() => {
         getAllCases()
-        },[])
+        },)
         
     useEffect(()=>{
       getAllSubGroups()
-    },[])
+    },)
 
   return (
     <React.Fragment>

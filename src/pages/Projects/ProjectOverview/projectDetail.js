@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import PropTypes from "prop-types"
 import "../../Projects/ProjectOverview/projectdetail.scss"
-import { map, get, attempt } from "lodash"
-import { Button, Card, CardBody, Col, Row } from "reactstrap"
+import { Button} from "reactstrap"
 import { Link } from "react-router-dom"
 import { attImages } from "../../../helpers/mockData"
 

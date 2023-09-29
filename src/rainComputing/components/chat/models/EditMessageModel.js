@@ -1,4 +1,3 @@
-import { useUser } from "../../../../../src/rainComputing/contextProviders/UserProvider"
 import React, { useEffect, useState } from "react"
 import { Col, Modal, Row } from "reactstrap"
 import PropTypes from "prop-types"
@@ -9,7 +8,6 @@ import ReactQuillInput from "../../../../../src/rainComputing/components/ReactQu
 
 const EditMessageModel = ({ open, setOpen, toggleOpen, curMessageId }) => {
   const { setMessages, messages } = useChat()
-  const { currentUser } = useUser()
   const [updateMessages, setUpdateMessages] = useState(null)
 
   const [isQuill, setIsQuill] = useState(false)

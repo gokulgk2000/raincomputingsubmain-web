@@ -1,31 +1,26 @@
 import React, {
   useEffect,
   useState,
-  Suspense,
   lazy,
-  useCallback,
   useRef,
+  useCallback
 } from "react"
 import { MetaTags } from "react-meta-tags"
 import {
   Button,
   Card,
   Col,
-  Container,
   Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
   Input,
-  Label,
   Nav,
   NavItem,
   NavLink,
   Row,
   TabContent,
   TabPane,
-  Form,
-  FormGroup,
   InputGroup,
   UncontrolledDropdown,
   Modal,
@@ -33,11 +28,11 @@ import {
 } from "reactstrap"
 import PerfectScrollbar from "react-perfect-scrollbar"
 
-import fileDownload from "js-file-download"
+// import fileDownload from "js-file-download"
 import "react-perfect-scrollbar/dist/css/styles.css"
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
-import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock"
+// import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock"
 import { jsPDF } from "jspdf"
 import autoTable from "jspdf-autotable"
 import profile from "../../../../src/assets/images/avatar-defult.jpg"
@@ -51,7 +46,6 @@ import {
   getGroupsByUserIdandCaseId,
   getMessagesByUserIdandGroupId,
   getOnevsOneChat,
-  getMessageById,
   updateCase,
   deleteLastMsg,
   sentEmail,
@@ -59,8 +53,8 @@ import {
   getCaseFiles,
   completedCase,
   updateGroup,
-  getAllSubCases,
   getClientsByUserId,
+  getAllSubCases,
   // sentMessageEmail,
 } from "../../../../src/rainComputing/helpers/backend_helper"
 import { Link } from "react-router-dom"
@@ -82,14 +76,14 @@ import { useNotifications } from "../../../../src/rainComputing/contextProviders
 import { useQuery } from "../../../../src/rainComputing/helpers/hooks/useQuery"
 import ChatLoader from "../../../../src/rainComputing/components/chat/ChatLoader"
 import EditCase from "../../../../src/rainComputing/components/chat/EditCase"
-import { useDropzone } from "react-dropzone"
+// import { useDropzone } from "react-dropzone"
 // import ForwardMsg from "rainComputing/components/chat/ForwardMsg"
 import copy from "copy-to-clipboard"
 import PinnedModels from "../../../../src/rainComputing/components/chat/models/PinnedModels"
 import ReplyMsgModal from "../../../../src/rainComputing/components/chat/models/ReplyMsgModal"
 import ChatRemainder from "../../../../src/rainComputing/components/chat/ChatRemainder"
 // import Reminders from "../reminder"
-import { getFileFromGFS } from "../../../../src/rainComputing/helpers/backend_helper"
+// import { getFileFromGFS } from "../../../../src/rainComputing/helpers/backend_helper"
 import Calender from "../../../../src/rainComputing/pages/Calendar/Calendar"
 import RecordRTC from "recordrtc"
 import VoiceMessage from "../../../../src/rainComputing/components/audio"
@@ -148,36 +142,27 @@ const ChatRc = () => {
   } = useToggle(false)
   const {
     toggleOpen: chatSettingOpen,
-    setToggleOpen: setChatSettingOpen,
+    // setToggleOpen: setChatSettingOpen,
     toggleIt: toggleChatSettingOpen,
   } = useToggle(false)
   const {
     toggleOpen: groupIdOpen,
-    setToggleOpen: setGroupIdOpen,
+    // setToggleOpen: setGroupIdOpen,
     toggleIt: toggleGroupIdOpen,
   } = useToggle(false)
-  const {
-    toggleOpen: caseSortingOpen,
-    setToggleOpen: setCaseSortingOpen,
-    toggleIt: toggleCaseSortingOpen,
-  } = useToggle(false)
+
   const {
     toggleOpen: clientSortingOpen,
-    setToggleOpen: setClientSortingOpen,
+    // setToggleOpen: setClientSortingOpen,
     toggleIt: toggleClientSortingOpen,
   } = useToggle(false)
-  const {
-    toggleOpen: forwardModalOpen,
-    setToggleOpen: setForwardModalOpen,
-    toggleIt: toggleForwardModal,
-  } = useToggle(false)
+
 
   const {
     chats,
     setChats,
     currentRoom: currentChat,
     setCurrentRoom: setCurrentChat,
-    getRoomsonEveryMessage,
     handleSendingMessage,
     messages,
     setMessages,
@@ -194,7 +179,7 @@ const ChatRc = () => {
   const replymsgId = query.get("reply_id")
   const msgId = query.get("msg_id")
   const { notifications, setNotifications } = useNotifications()
-  const [forwardMessages, setForwardMessages] = useState([])
+  // const [forwardMessages, setForwardMessages] = useState([])
   const { activeAccordian, handleSettingActiveAccordion } = useAccordian(-1)
   const {
     toggleOpen: caseDeleteModalOpen,
@@ -234,8 +219,8 @@ const ChatRc = () => {
 
   const MESSAGE_CHUNK_SIZE = 50
 
-  const [isChatScroll, setIsChatScroll] = useState(false)
-  const [messageBox, setMessageBox] = useState(null)
+  // const [isChatScroll, setIsChatScroll] = useState(false)
+  // const [messageBox, setMessageBox] = useState(null)
   const [pageLoader, setPageLoader] = useState(true)
   const [chatLoader, setChatLoader] = useState(true)
   const [activeTab, setactiveTab] = useState("1")
@@ -244,11 +229,11 @@ const ChatRc = () => {
   const [newCase, setNewCase] = useState(initialNewCaseValues)
   const [newClient, setNewClient] = useState(initialNewClientValues)
   const [clients, setClients] = useState([])
-  const [clientId, setClientId] = useState("")
-  const [caseClientId, setCaseClientId] = useState(null)
+  // const [clientId, setClientId] = useState("")
+  // const [caseClientId, setCaseClientId] = useState(null)
   const [allCases, setAllCases] = useState([])
-  const [cases, setCases] = useState([])
-  const [clientName, setClientName] = useState(initialNewClientValues)
+  // const [cases, setCases] = useState([])
+  // const [clientName, setClientName] = useState(initialNewClientValues)
   const [allSubCases, setAllSubCases] = useState([])
   const [caseLoading, setCaseLoading] = useState(true)
   const [currentCase, setCurrentCase] = useState(null)
@@ -272,19 +257,23 @@ const ChatRc = () => {
   const [curEditMessageId, setCurEditMessageId] = useState("")
   const [curReminderMessageId, setCurReminderMessageId] = useState(null)
   const [isDeleteMsg, setIsDeleteMsg] = useState(false)
+  console.log("isDeleteMsg",isDeleteMsg)
   const [emailModal, setEmailModal] = useState(false)
   const [email, setEmail] = useState("")
   const [searchIndex, setSearchIndex] = useState(0)
   const [pinModal, setPinModal] = useState(false)
   const [pinnedMsg, setPinnedMsg] = useState("")
-  const [getpinnedMsg, setGetPinnedMsg] = useState("")
+  console.log("pinnedMsg",pinnedMsg)
+  // const [getpinnedMsg, setGetPinnedMsg] = useState("")
   const [msgDelete, setMsgDelete] = useState()
   const containerRef = useRef(null)
   const [prevHeight, setPrevHeight] = useState(0)
+  console.log("prevHeight",prevHeight)
   const [visibleMessages, setVisibleMessages] = useState([])
   const [blobURL, setBlobURL] = useState(null)
   const [isSearchTextCleared, setIsSearchTextCleared] = useState(false)
   const [filteredChats, setFilteredChats] = useState(chats)
+  console.log("filteredChats",filteredChats)
   const [duration, setDuration] = useState(0)
   const [durationIntervalId, setDurationIntervalId] = useState(null)
   const [caseFile, setCaseFile] = useState([])
@@ -294,6 +283,7 @@ const ChatRc = () => {
   // const [isQuil, setIsQuil] = useState(false)
   const [sortedChats, setSortedChats] = useState([])
   const [deleteMessage, setDeleteMessage] = useState()
+  console.log("deleteMessage",deleteMessage)
   const [nonewmessage, setNoNewMessage] = useState([])
   // const toggle_Quill = () => {
   //   setIsQuil(!isQuil)
@@ -343,7 +333,7 @@ const ChatRc = () => {
       // Clean up the duration interval on component unmount
       clearInterval(durationIntervalId)
     }
-  }, [])
+  }, [durationIntervalId])
   const handleScroll = event => {
     if (event && event.currentTarget) {
       const { scrollTop, clientHeight, scrollHeight } = event.currentTarget
@@ -397,8 +387,48 @@ const ChatRc = () => {
       }, 500)
       return () => clearTimeout(timer)
     }
-  }, [messages])
-  const filterChats = () => {
+  }, [messages,nonewmessage])
+  const ongetAllChatRooms = useCallback(async () => {
+    const chatRoomsRes = await getOnevsOneChat({ userId: currentUser.userID });
+    if (chatRoomsRes.success) {
+      const updatedChats = chatRoomsRes.groups.map(chat => {
+        const notification = notifications.find(n => n.groupId === chat._id);
+        return {
+          ...chat,
+          notification,
+        };
+      });
+  
+      updatedChats.sort((a, b) => {
+        if (a.notification && b.notification) {
+          return (
+            new Date(b.notification.updatedAt) -
+            new Date(a.notification.updatedAt)
+          );
+        } else if (a.notification) {
+          return -1; // Move chat with notification to the top
+        } else if (b.notification) {
+          return 1; // Move chat with notification to the top
+        } else {
+          return 0; // No notifications for both chats, maintain order
+        }
+      });
+  
+      setChats(updatedChats);
+      setCurrentChat(updatedChats[0]);
+      if (updatedChats.length < 1) {
+        setactiveTab("3");
+      }
+    } else {
+      setChats([]);
+    }
+    setChatLoader(false);
+  }, [currentUser.userID, notifications,setChats,setCurrentChat]);
+  
+  // Use ongetAllChatRooms in your component as before
+  
+
+  const filterChats = useCallback(() => {
     if (searchText !== "") {
       const filteredChats = chats?.filter(chat =>
         chat.groupMembers.some(member =>
@@ -406,24 +436,24 @@ const ChatRc = () => {
             ?.toLowerCase()
             .includes(searchText.toLowerCase())
         )
-      )
-      setFilteredChats(filteredChats)
-      setChats(filteredChats)
-      setIsSearchTextCleared(false)
+      );
+      setFilteredChats(filteredChats);
+      setChats(filteredChats);
+      setIsSearchTextCleared(false);
     } else {
       if (!isSearchTextCleared) {
-        ongetAllChatRooms() // Call the function to get all chats
-        setIsSearchTextCleared(true)
+        ongetAllChatRooms(); // Call the function to get all chats
+        setIsSearchTextCleared(true);
       }
     }
-  }
-
+  }, [searchText, chats, isSearchTextCleared, ongetAllChatRooms,setChats]);
+  
   useEffect(() => {
     if (searchText === "") {
-      setIsSearchTextCleared(true)
+      setIsSearchTextCleared(true);
     }
-    filterChats()
-  }, [searchText])
+    filterChats();
+  }, [searchText, filterChats])
 
   // useEffect(() => {
   //   if (messages && visibleMessages?.length < messages?.length) {
@@ -450,7 +480,7 @@ const ChatRc = () => {
   }
 
   //Handle Body Scrolling
-  isChatScroll ? disableBodyScroll(document) : enableBodyScroll(document)
+  // isChatScroll ? disableBodyScroll(document) : enableBodyScroll(document)
 
   // const depMessages = visibleMessages?.slice()
 
@@ -502,21 +532,21 @@ const ChatRc = () => {
     return notiCount ? true : false
   }
 
-  const handleForwardMessage = async msgId => {
-    setChatLoader(true)
-    const payload = {
-      msgId: msgId,
-    }
-    const res = await getMessageById(payload)
-    if (res.success) {
-      setForwardMessages(res.Msg)
-      //setcurMessage(res.messageData)
-    } else {
-      console.log("Failed to fetch message", res)
-    }
-    //setcurMessage(res.messageData)
-    setChatLoader(false)
-  }
+  // const handleForwardMessage = async msgId => {
+  //   setChatLoader(true)
+  //   const payload = {
+  //     msgId: msgId,
+  //   }
+  //   const res = await getMessageById(payload)
+  //   if (res.success) {
+  //     setForwardMessages(res.Msg)
+  //     //setcurMessage(res.messageData)
+  //   } else {
+  //     console.log("Failed to fetch message", res)
+  //   }
+  //   //setcurMessage(res.messageData)
+  //   setChatLoader(false)
+  // }
   //Getting all 1vs1 chats
   useEffect(() => {
     const updatedSortedChats = chats
@@ -546,43 +576,7 @@ const ChatRc = () => {
     setSortedChats(updatedSortedChats)
   }, [chats, notifications])
 
-  const ongetAllChatRooms = async () => {
-    const chatRoomsRes = await getOnevsOneChat({ userId: currentUser.userID })
-    if (chatRoomsRes.success) {
-      const updatedChats = chatRoomsRes.groups.map(chat => {
-        const notification = notifications.find(n => n.groupId === chat._id)
-        return {
-          ...chat,
-          notification,
-        }
-      })
-
-      updatedChats.sort((a, b) => {
-        if (a.notification && b.notification) {
-          return (
-            new Date(b.notification.updatedAt) -
-            new Date(a.notification.updatedAt)
-          )
-        } else if (a.notification) {
-          return -1 // Move chat with notification to the top
-        } else if (b.notification) {
-          return 1 // Move chat with notification to the top
-        } else {
-          return 0 // No notifications for both chats, maintain order
-        }
-      })
-
-      setChats(updatedChats)
-      setCurrentChat(updatedChats[0])
-      if (updatedChats.length < 1) {
-        setactiveTab("3")
-      }
-    } else {
-      setChats([])
-    }
-    setChatLoader(false)
-  }
-
+ 
   //Creating New ChatRoom
   const handleCreateChatRoom = async id => {
     setPageLoader(true)
@@ -692,18 +686,18 @@ const ChatRc = () => {
 
     setCaseLoading(false)
   }
-  // const onGetAllSubCases = async () => {
-  //   const payload = {
-  //     isSubcase: true,
-  //   }
-  //   const res = await getAllSubCases(payload)
-  //   if (res.success) {
-  //     setAllSubCases(res?.allsubCases)
-  //   }
-  // }
-  // useEffect(() => {
-  //   onGetAllSubCases()
-  // }, [])
+  const onGetAllSubCases = async () => {
+    const payload = {
+      isSubcase: true,
+    }
+    const res = await getAllSubCases(payload)
+    if (res.success) {
+      setAllSubCases(res?.allsubCases)
+    }
+  }
+  useEffect(() => {
+    onGetAllSubCases()
+  }, [])
   //Fetching user,case,group count
   const ongetCounts = async () => {
     const countRes = await getCounts({ userId: currentUser?.userID })
@@ -720,31 +714,31 @@ const ChatRc = () => {
   }
 
   //Viewing Message
-  const prettifyMsg = comment => {
-    let regex = /@\[.+?\]\(.+?\)/gm
-    let displayRegex = /@\[.+?\]/g
-    let idRegex = /\(.+?\)/g
-    let matches = comment?.match(regex)
-    let arr = []
-    matches &&
-      matches.forEach(m => {
-        let id = m.match(idRegex)[0].replace("(", "").replace(")", "")
-        let display = m.match(displayRegex)[0].replace("[", "").replace("]", "")
+  // const prettifyMsg = comment => {
+  //   let regex = /@\[.+?\]\(.+?\)/gm
+  //   let displayRegex = /@\[.+?\]/g
+  //   let idRegex = /\(.+?\)/g
+  //   let matches = comment?.match(regex)
+  //   let arr = []
+  //   matches &&
+  //     matches.forEach(m => {
+  //       let id = m.match(idRegex)[0].replace("(", "").replace(")", "")
+  //       let display = m.match(displayRegex)[0].replace("[", "").replace("]", "")
 
-        arr.push({ id: id, display: display })
-      })
-    let newComment = comment?.split(regex)
-    let output = ""
-    for (let i = 0; i < newComment?.length; i++) {
-      const c = newComment[i]
-      if (i === newComment?.length - 1) {
-        output += c
-      } else {
-        output += c + `${arr[i].display}`
-      }
-    }
-    return output
-  }
+  //       arr.push({ id: id, display: display })
+  //     })
+  //   let newComment = comment?.split(regex)
+  //   let output = ""
+  //   for (let i = 0; i < newComment?.length; i++) {
+  //     const c = newComment[i]
+  //     if (i === newComment?.length - 1) {
+  //       output += c
+  //     } else {
+  //       output += c + `${arr[i].display}`
+  //     }
+  //   }
+  //   return output
+  // }
 
   //Fetching Contacts
   const onGetContacts = async ({ isSearch = false }) => {
@@ -1025,24 +1019,24 @@ const ChatRc = () => {
     }
     setLoading(false)
   }
-  const { getRootProps, getInputProps } = useDropzone({
-    accept:
-      ".png, .jpg, .jpeg,.pdf,.doc,.xls,.docx,.xlsx,.zip,.mp3,.webm,.ogg,.wav ",
-    onDrop: acceptedFiles => {
-      setAllFiles(
-        acceptedFiles.map(allFiles =>
-          Object.assign(allFiles, {
-            preview: URL.createObjectURL(allFiles),
-          })
-        )
-      )
-      // const updatedVoicemsg = recorder.map(allVoicemsg => Object.assign(allVoicemsg, {
-      //   preview: URL.createObjectURL(allVoicemsg),
-      // }));
-      // setAllVoicemsg(updatedVoicemsg);
-      // setRecorder(updatedVoicemsg);
-    },
-  })
+  // const { getRootProps, getInputProps } = useDropzone({
+  //   accept:
+  //     ".png, .jpg, .jpeg,.pdf,.doc,.xls,.docx,.xlsx,.zip,.mp3,.webm,.ogg,.wav ",
+  //   onDrop: acceptedFiles => {
+  //     setAllFiles(
+  //       acceptedFiles.map(allFiles =>
+  //         Object.assign(allFiles, {
+  //           preview: URL.createObjectURL(allFiles),
+  //         })
+  //       )
+  //     )
+  //     // const updatedVoicemsg = recorder.map(allVoicemsg => Object.assign(allVoicemsg, {
+  //     //   preview: URL.createObjectURL(allVoicemsg),
+  //     // }));
+  //     // setAllVoicemsg(updatedVoicemsg);
+  //     // setRecorder(updatedVoicemsg);
+  //   },
+  // })
 
   const onChange = (content, delta, source, editor) => {
     // Remove <p> and <br> tags from the content
@@ -1195,7 +1189,7 @@ const ChatRc = () => {
         3: { cellWidth: 20, cellHeight: 50 },
         4: { cellWidth: 20, cellHeight: 50 },
         5: { halign: "center", cellWidth: 90 },
-        5: {
+        6: {
           // halign: "center",
           cellWidth: 100,
           // valign: "middle",
@@ -1301,14 +1295,14 @@ const ChatRc = () => {
   }
 
   //Cases infiniteScroll
-  const handleCaseScroll = t => {
-    if (
-      t.clientHeight + t.scrollTop + 1 >= t.scrollHeight &&
-      casePage <= totalPages?.cases
-    ) {
-      setCasePage(casePage + 1)
-    }
-  }
+  // const handleCaseScroll = t => {
+  //   if (
+  //     t.clientHeight + t.scrollTop + 1 >= t.scrollHeight &&
+  //     casePage <= totalPages?.cases
+  //   ) {
+  //     setCasePage(casePage + 1)
+  //   }
+  // }
   //Message ScrollintoView
   const handleShow = () => {
     setSearchIndex(searchIndex + 1)
@@ -1345,18 +1339,18 @@ const ChatRc = () => {
     return () => {
       setSearchedMessages([])
     }
-  }, [searchMessageText])
+  }, [searchMessageText,messages])
 
-  const handleFileDownload = async ({ id, filename }) => {
-    getFileFromGFS(
-      { id },
-      {
-        responseType: "blob",
-      }
-    ).then(res => {
-      fileDownload(res, filename)
-    })
-  }
+  // const handleFileDownload = async ({ id, filename }) => {
+  //   getFileFromGFS(
+  //     { id },
+  //     {
+  //       responseType: "blob",
+  //     }
+  //   ).then(res => {
+  //     fileDownload(res, filename)
+  //   })
+  // }
 
   useEffect(() => {
     if (searchedMessages?.length > 0) {
@@ -1368,36 +1362,36 @@ const ChatRc = () => {
   }, [searchedMessages])
 
   //Text Convert into Link URL
-  const stringFormatter = txt => {
-    if (txt.includes("http" || "www")) {
-      const firstIndex = txt.indexOf("http")
-      const linkEnd = txt.indexOf(" ", firstIndex) //find the end of link
-      const firstTextSection = txt.slice(0, firstIndex)
-      const linkSection = txt.slice(
-        firstIndex,
-        linkEnd !== -1 ? linkEnd : txt.length
-      )
-      const secondSection = txt.slice(linkEnd !== -1 ? linkEnd : txt.length)
-      return (
-        <p>
-          {firstTextSection}{" "}
-          <a href={linkSection} target="_blank" rel="noreferrer">
-            {linkSection}
-          </a>
-          {secondSection}
-        </p>
-      )
-    } else {
-      return <p>{txt}</p>
-    }
-  }
+  // const stringFormatter = txt => {
+  //   if (txt.includes("http" || "www")) {
+  //     const firstIndex = txt.indexOf("http")
+  //     const linkEnd = txt.indexOf(" ", firstIndex) //find the end of link
+  //     const firstTextSection = txt.slice(0, firstIndex)
+  //     const linkSection = txt.slice(
+  //       firstIndex,
+  //       linkEnd !== -1 ? linkEnd : txt.length
+  //     )
+  //     const secondSection = txt.slice(linkEnd !== -1 ? linkEnd : txt.length)
+  //     return (
+  //       <p>
+  //         {firstTextSection}{" "}
+  //         <a href={linkSection} target="_blank" rel="noreferrer">
+  //           {linkSection}
+  //         </a>
+  //         {secondSection}
+  //       </p>
+  //     )
+  //   } else {
+  //     return <p>{txt}</p>
+  //   }
+  // }
 
   useEffect(() => {
     if (searchIndex >= 0) {
       const elementid = searchedMessages[searchIndex]?._id
       document.getElementById(elementid)?.scrollIntoView(false)
     }
-  }, [searchIndex])
+  }, [searchIndex,searchedMessages])
 
   //Resetting page whiule changing Tab
   useEffect(() => {
@@ -1484,7 +1478,7 @@ const ChatRc = () => {
       }
       onGettingGroupMessages()
     }
-  }, [currentChat])
+  }, [currentChat, currentUser?.userID])
 
   //SideEffect while contact page changes
   useEffect(() => {
@@ -1556,14 +1550,14 @@ const ChatRc = () => {
       setactiveTab("1")
       setCurrentChat(tempChat)
     }
-  }, [privateChatId, pageLoader])
+  }, [privateChatId, pageLoader,chats,setCurrentChat])
   useEffect(() => {
     if (privateReplyChatId && !pageLoader) {
       const tempChat = chats?.find(ch => ch?._id === privateReplyChatId)
       setactiveTab("1")
       setCurrentChat(tempChat)
     }
-  }, [privateReplyChatId, pageLoader])
+  }, [privateReplyChatId, pageLoader,chats,setCurrentChat])
 
   useEffect(() => {
     if (groupReplyChatId && caseReplyChatId && !pageLoader && !caseLoading) {
@@ -1842,7 +1836,6 @@ const ChatRc = () => {
                   contacts={contacts}
                   setModalOpen={setNewCaseModelOpen}
                   getAllCases={ongetAllCases}
-                  clientId={clientId}
                 />
               </DynamicSuspense>
             </DynamicModel>
@@ -2199,77 +2192,63 @@ const ChatRc = () => {
                         <ChatLoader />
                       ) : (
                         <PerfectScrollbar style={{ height: "500px" }}>
-                          <ul className="list-unstyled chat-list">
-                            {
-                              currentAttorney ? (
-                                filteredCases
-                                  .map(caseData => ({
-                                    caseData,
-                                    notifyCount: notifyCountforCase(caseData._id),
-                                  }))
-                                  .sort((a, b) => {
-                                    const notifyCountDiff =
-                                      b.notifyCount - a.notifyCount
-                                    if (notifyCountDiff !== 0) {
-                                      return notifyCountDiff // Sort by notifyCount first
-                                    }
-                                  })
-                                  .map(
-                                    (
-                                      { caseData, notifyCount },
-                                      index // Define the 'index' variable here
-                                    ) => (<>
-                                      <CaseGrid
-                                        caseData={caseData}
-                                        notifyCount={notifyCount}
-                                        key={caseData._id} // Use a unique key, such as caseData._id
-                                        active={activeAccordian}
-                                        onAccordionButtonClick={handleSettingActiveAccordion}
-                                        handleSelectingCase={onSelectingCase}
-                                        selected={currentCase?._id === caseData?._id}
-                                        notifyCountforCase={notifyCountforCase}
-                                        ongetAllCases={ongetAllCases}
-                                        onGetAllClientNames={onGetAllClientNames}
-                                      /></>
-                                    )
-                                  )
-                              ) : (
-                                <>
-                                  {allCases
-                                    .map(caseData => ({
-                                      caseData,
-                                      notifyCount: notifyCountforCase(caseData._id),
-                                    }))
-                                    .sort((a, b) => {
-                                      const notifyCountDiff =
-                                        b.notifyCount - a.notifyCount
-                                      if (notifyCountDiff !== 0) {
-                                        return notifyCountDiff // Sort by notifyCount first
-                                      }
-                                    })
-                                    .map(
-                                      (
-                                        { caseData, notifyCount },
-                                        index // Define the 'index' variable here
-                                      ) => (
-                                        <CaseGrid
-                                          caseData={caseData}
-                                          index={index}
-                                          key={index}
-                                          active={activeAccordian}
-                                          onAccordionButtonClick={handleSettingActiveAccordion}
-                                          handleSelectingCase={onSelectingCase}
-                                          selected={currentCase?._id === caseData?._id}
-                                          notifyCountforCase={notifyCountforCase}
-                                          ongetAllCases={ongetAllCases}
-                                          onGetAllClientNames={onGetAllClientNames}
-                                        />
-                                      )
-                                    )}
-                                </>
-                              )
-                            }
-                          </ul>
+                       <ul className="list-unstyled chat-list">
+  {currentAttorney ? (
+    filteredCases
+      .map(caseData => ({
+        caseData,
+        notifyCount: notifyCountforCase(caseData._id),
+      }))
+      .sort((a, b) => {
+        const notifyCountDiff = b.notifyCount - a.notifyCount;
+        return notifyCountDiff !== 0 ? notifyCountDiff : 0; // Return 0 if notifyCountDiff is 0
+      })
+      .map(({ caseData, notifyCount }, index) => (
+        <React.Fragment key={caseData._id}>
+          <CaseGrid
+            caseData={caseData}
+            notifyCount={notifyCount}
+            key={caseData._id}
+            active={activeAccordian}
+            onAccordionButtonClick={handleSettingActiveAccordion}
+            handleSelectingCase={onSelectingCase}
+            selected={currentCase?._id === caseData?._id}
+            notifyCountforCase={notifyCountforCase}
+            ongetAllCases={ongetAllCases}
+            onGetAllClientNames={onGetAllClientNames}
+          />
+        </React.Fragment>
+      ))
+  ) : (
+    <>
+      {allCases
+        .map(caseData => ({
+          caseData,
+          notifyCount: notifyCountforCase(caseData._id),
+        }))
+        .sort((a, b) => {
+          const notifyCountDiff = b.notifyCount - a.notifyCount;
+          return notifyCountDiff !== 0 ? notifyCountDiff : 0; // Return 0 if notifyCountDiff is 0
+        })
+        .map(({ caseData, notifyCount }, index) => (
+          <CaseGrid
+            caseData={caseData}
+            index={index}
+            key={index}
+            active={activeAccordian}
+            onAccordionButtonClick={handleSettingActiveAccordion}
+            handleSelectingCase={onSelectingCase}
+            selected={currentCase?._id === caseData?._id}
+            notifyCountforCase={notifyCountforCase}
+            ongetAllCases={ongetAllCases}
+            onGetAllClientNames={onGetAllClientNames}
+          />
+        ))
+      }
+    </>
+  )}
+</ul>
+
                         </PerfectScrollbar>
                       )}
                     </TabPane>
@@ -2763,10 +2742,10 @@ const ChatRc = () => {
                                         className="ctext-wrap "
                                         style={{
                                           backgroundColor:
-                                            msg.sender == currentUser.userID &&
+                                            msg.sender === currentUser.userID &&
                                               currentChat?.color
                                               ? currentChat?.color + "33"
-                                              : "#00EE00" + "33",
+                                              : "#00EE00" + "33"
                                         }}
                                       >
                                         {/* {msg.isForward ? (
@@ -2908,11 +2887,11 @@ const ChatRc = () => {
                                           className="ctext-wrap "
                                           style={{
                                             backgroundColor:
-                                              msg.sender ==
+                                              msg.sender ===
                                                 currentUser.userID &&
                                                 currentChat?.color
                                                 ? currentChat?.color + "33"
-                                                : "#00EE00" + "33",
+                                                : "#00EE00" + "33"
                                           }}
                                         >
                                           <div className="conversation-name">
@@ -3072,7 +3051,7 @@ const ChatRc = () => {
                                 className="mdi mdi-microphone font-size-20 text-danger me-2"
                                 title="Stop Recording"
                                 onClick={stopRecording}
-                                disabled={recorder?.state == "stopped"}
+                                disabled={recorder?.state === "stopped"}
                                 style={{
                                   cursor: "pointer",
                                   paddingTop: "6px",
@@ -3083,7 +3062,7 @@ const ChatRc = () => {
                                 className="mdi mdi-microphone font-size-20 text-primary me-2"
                                 title="Start Recording"
                                 onClick={startRecording}
-                                disabled={recorder?.state == "recording"}
+                                disabled={recorder?.state === "recording"}
                                 style={{
                                   cursor: "pointer",
                                   paddingTop: "6px",

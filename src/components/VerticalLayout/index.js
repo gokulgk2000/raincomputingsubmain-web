@@ -53,22 +53,23 @@ const Layout = props => {
   };
 
   //hides right sidebar on body click
-  const hideRightbar = (event) => {
-    var rightbar = document.getElementById("right-bar");
-    //if clicked in inside right bar, then do nothing
-    if (rightbar && rightbar.contains(event.target)) {
-      return;
-    } else {
-      //if clicked in outside of rightbar then fire action for hide rightbar
-      dispatch(showRightSidebarAction(false));
-    }
-  };
+  
 
   /*
   layout  settings
   */
 
   useEffect(() => {
+    const hideRightbar = (event) => {
+      var rightbar = document.getElementById("right-bar");
+      //if clicked in inside right bar, then do nothing
+      if (rightbar && rightbar.contains(event.target)) {
+        return;
+      } else {
+        //if clicked in outside of rightbar then fire action for hide rightbar
+        dispatch(showRightSidebarAction(false));
+      }
+    };
     //init body click event fot toggle rightbar
     document.body.addEventListener("click", hideRightbar, true);
 
@@ -84,7 +85,7 @@ const Layout = props => {
       document.getElementById("preloader").style.display = "none";
       document.getElementById("status").style.display = "none";
     }
-  }, [isPreloader]);
+  }, [isPreloader,dispatch]);
 
   useEffect(() => {
     window.scrollTo(0, 0);

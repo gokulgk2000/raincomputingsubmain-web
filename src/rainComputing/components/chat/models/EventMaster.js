@@ -11,7 +11,7 @@ import toastr from "toastr"
 import holidays from "date-holidays"
 const EventMaster = ({ caseId, closeModal }) => {
   const { currentAttorney } = useUser()
-  const [docDate, setDocDate] = useState(Array(1).fill(""))
+  // const [docDate, setDocDate] = useState(Array(1).fill(""))
   const [selectedEvent, setSelectedEvent] = useState(Array(1).fill(""))
   const [eventText, setEventText] = useState(Array(1).fill(""))
   const [receivedDate, setReceivedDate] = useState(Array(1).fill(""))
@@ -22,17 +22,18 @@ const EventMaster = ({ caseId, closeModal }) => {
   const currentCase = caseId?._id
   const [eventsData, setEventsData] = useState([])
   const hd = new holidays("US")
-  const holiday = hd.getHolidays()
+  console.log("eventText",eventText)
+  // const holiday = hd.getHolidays()
   // const [isSaveDisabled, setIsSaveDisabled] = useState(true)
   const event = eventsData[0]?.events
-  const resText = event?.responseText
-  const handleRecievedDateChange = (index, value) => {
-    setReceivedDate(prevInputs => {
-      const newRecievedDate = [...prevInputs]
-      newRecievedDate[index] = value
-      return newRecievedDate
-    })
-  }
+  // const resText = event?.responseText
+  // const handleRecievedDateChange = (index, value) => {
+  //   setReceivedDate(prevInputs => {
+  //     const newRecievedDate = [...prevInputs]
+  //     newRecievedDate[index] = value
+  //     return newRecievedDate
+  //   })
+  // }
   const handleEventChange = (index, value, id) => {
     const updatedSelectedEvent = [...selectedEvent]
     updatedSelectedEvent[index] = value
@@ -49,12 +50,13 @@ const EventMaster = ({ caseId, closeModal }) => {
     setEventText(selectedEventText)
   }
 
-  const handleDateChange = (k, value) => {
-    const updatedDocDate = [...docDate]
-    updatedDocDate[k] = value
-    setDocDate(updatedDocDate)
-    return updatedDocDate
-  }
+  // const handleDateChange = (k, value) => {
+  //   const updatedDocDate = [...docDate]
+  //   updatedDocDate[k] = value
+  //   setDocDate(updatedDocDate)
+  //   return updatedDocDate
+  // }
+  useEffect(() => {
 
   const handleAllEvents = async () => {
     const payload = {
@@ -63,23 +65,22 @@ const EventMaster = ({ caseId, closeModal }) => {
     const allEventsData = await getAllEvent(payload)
     setAllEventsData(allEventsData?.data)
   }
-
+    handleAllEvents()
+  }, [currentAttorney])
+  useEffect(() => {
   const getEvents = async () => {
     const payload = {
       Id: eventId,
-    }
-    const res = await getEventById(payload)
+    };
+    const res = await getEventById(payload);
     if (res.success) {
-      setEventsData(res?.event)
+      setEventsData(res?.event);
     }
-  }
-  useEffect(() => {
-    getEvents()
-  }, [eventId])
+  };
+    getEvents();
+  }, [eventId]);
 
-  useEffect(() => {
-    handleAllEvents()
-  }, [currentAttorney])
+
   useEffect(() => {
     const responseTexts = event?.map(event => event.responseText)
     setResponseTextChange(responseTexts)
@@ -89,14 +90,14 @@ const EventMaster = ({ caseId, closeModal }) => {
     setReceivedDate(e.target.value)
   }
 
-  const isWeekend = date => {
-    const day = date.getDay()
-    return day === 0 || day === 6 // Sunday (0) or Saturday (6)
-  }
-  const isHoliday = date => {
-    const formattedDate = date.toISOString().split("T")[0]
-    return next50YearsallHolidays.includes(formattedDate)
-  }
+  // const isWeekend = date => {
+  //   const day = date.getDay()
+  //   return day === 0 || day === 6 // Sunday (0) or Saturday (6)
+  // }
+  // const isHoliday = date => {
+  //   const formattedDate = date.toISOString().split("T")[0]
+  //   return next50YearsallHolidays.includes(formattedDate)
+  // }
   function generateHolidays() {
     const holidays = []
     // Get the current year
@@ -118,7 +119,6 @@ const EventMaster = ({ caseId, closeModal }) => {
   }
   // Generate holidays for the next 10 years
   const next50YearsHolidays = generateHolidays()
-  // console.log("next50YearsHolidays", next50YearsHolidays)
   const next50YearsallHolidays = next50YearsHolidays.map(date => date?.date)
   // Print the list of holidays
   // next50YearsHolidays.forEach(holiday => {
@@ -132,7 +132,7 @@ const EventMaster = ({ caseId, closeModal }) => {
     // Iterate over the next 50 years
     for (let year = currentYear; year < currentYear + 50; year++) {
       // Get the list of holidays for the current year
-      const yearHolidays = hd.getHolidays(year)
+      // const yearHolidays = hd.getHolidays(year)
       // Iterate over each day of the year
       for (let day = 0; day < 365; day++) {
         const date = moment().year(year).dayOfYear(day)
@@ -148,6 +148,8 @@ const EventMaster = ({ caseId, closeModal }) => {
   // Generate weekdays for the next 50 years
   const next50YearsWeekdays = generateWeekendDates()
   // console.log("next50YearsWeekdays", next50YearsWeekdays)
+
+  useEffect(() => {
   const calculateResponseDates = () => {
     const newResponseDates = event?.map(events => {
       const { interval, scheduledType } = events
@@ -197,12 +199,11 @@ const EventMaster = ({ caseId, closeModal }) => {
 
     setResponseDates(newResponseDates)
   }
-
-  useEffect(() => {
     if (event) {
       calculateResponseDates()
     }
-  }, [receivedDate])
+  }, [receivedDate,event,next50YearsWeekdays,next50YearsallHolidays])
+
   const handleCreateEvent = async () => {
     try {
       const intervals = responseTextChange.map((responseText, index) => ({
@@ -300,7 +301,7 @@ const EventMaster = ({ caseId, closeModal }) => {
               Response Date
             </label>
           )}
-          {eventId && receivedDate == "" && (
+          {eventId && receivedDate === "" && (
             <p
               htmlFor="example-text-input"
               className="col-form-label"

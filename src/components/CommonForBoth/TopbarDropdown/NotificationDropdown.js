@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react"
 import PropTypes from "prop-types"
-import { Link } from "react-router-dom"
 import { Dropdown, DropdownToggle, DropdownMenu, Row, Col } from "reactstrap"
 import SimpleBar from "simplebar-react"
 import { withTranslation } from "react-i18next"
@@ -13,10 +12,10 @@ import PrivateReplyMsg from "../../../../src/rainComputing/components/chat/Priva
 import GroupReplyMsg from "../../../../src/rainComputing/components/chat/GroupReplyMsg"
 
 const NotificationDropdown = props => {
-  const { currentUser, setCurrentUser } = useUser()
+  const { currentUser } = useUser()
   const { notifications, setNotifications } = useNotifications()
  
-  const [loading, setLoading] = useState(false)
+  const [loading] = useState(false)
   const [menu, setMenu] = useState(false)
 
   useEffect(() => {
@@ -40,7 +39,7 @@ const NotificationDropdown = props => {
         setNotifications([...notifications])
       }
     }
-  }, [currentUser?.isNotifySound, notifications, ])
+  }, [currentUser?.isNotifySound, notifications,setNotifications,currentUser?.notificationSound ])
 
   return (
     <React.Fragment>

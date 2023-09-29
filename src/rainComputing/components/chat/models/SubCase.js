@@ -19,7 +19,7 @@ const SubCase = ({ caseId, open, setModalOpen, ongetAllCases, newCaseId }) => {
   const [serialNumber, setSerialNumber] = useState("")
   const [caseMembers, setCaseMembers] = useState([])
   const [searchText, setSearchText] = useState("")
-  const [loading, setloading] = useState(false)
+  const [loading] = useState(false)
 
   const isDisabled = () => {
     if (!caseName || !caseId || caseMembers?.length < 1) return true
@@ -107,7 +107,7 @@ const SubCase = ({ caseId, open, setModalOpen, ongetAllCases, newCaseId }) => {
       }
     }
     handleFetchingContacts()
-  }, [searchText])
+  }, [searchText,currentUser.userID])
 
   return (
     <>

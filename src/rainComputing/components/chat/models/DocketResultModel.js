@@ -34,11 +34,11 @@ const desription = docketSearch?.map(search => search?.status?.markElement)
 
   useEffect(() => {
     handleSearch();
-  }, []);
+  },);
 
   useEffect(() => {
     getAllCaseEvents();
-  }, []);
+  }, );
 
   // const sortedEvents = allEvents.sort((a, b) => new Date(a?.docDate) - new Date(b?.docDate));
 
