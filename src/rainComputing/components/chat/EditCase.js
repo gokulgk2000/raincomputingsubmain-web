@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import PropTypes from "prop-types"
 import toastr from "toastr"
-import { Button, Col, Modal, ModalBody, ModalHeader, Row } from "reactstrap"
+import { Button, Col, Modal, ModalBody, Row } from "reactstrap"
 import { useUser } from "../../../../src/rainComputing/contextProviders/UserProvider"
 import { getAllUsers, updateCase } from "../../../../src/rainComputing/helpers/backend_helper"
 
@@ -28,6 +28,8 @@ const EditCase = ({
   )
   const [emailMembers, setEmailMembers] = useState([])
   const [clientName, setClientName] = useState("")
+
+  console.log("emailMembers",emailMembers)
   // useEffect(() => {
   //   // Save the threadIdCondition to local storage whenever it changes
   //   localStorage.setItem("threadIdCondition", threadIdCondition)
@@ -123,7 +125,7 @@ const EditCase = ({
       }
     }
     handleFetchingContacts()
-  }, [searchText])
+  }, [searchText, currentUser.userID])
 
   useEffect(() => {
     if (currentCase) {

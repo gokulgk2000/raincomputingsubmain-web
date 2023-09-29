@@ -31,7 +31,7 @@ const AppointmentCard = () => {
       setPageLoader(false)
     }
     getStatusByUser()
-  })
+  },[currentUser?.userID])
 
   return (
     <React.Fragment>

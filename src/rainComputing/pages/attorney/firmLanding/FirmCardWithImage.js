@@ -1,6 +1,5 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { Link } from "react-router-dom"
 import {
   Card,
   CardBody,
@@ -12,7 +11,7 @@ import {
 } from "reactstrap"
 import DefaultAvatar from "../../../../../src/assets/images/avatar-defult.jpg"
 
-const FirmCardWithImage = ({ image, firstname, lastname, email }) => {
+const FirmCardWithImage = ({ firstname, lastname, email }) => {
   return (
     <Card>
       <Row className="no-gutters align-items-center">

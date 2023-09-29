@@ -25,18 +25,21 @@ const CompletedCase = () => {
       }, [currentUser?.userID]);
   return (
     <div className='py-5 my-5'>
-   { allCompletedCase ?.length > 0 ?(<ol>
-    {allCompletedCase.map((c, i) => (
-      <li key={i} className="border-bottom">
-        <div className="pt-2">
-          <h6>CaseName :{c.caseName}</h6>
-          <p>CaseId : {c.caseId}</p>
-        </div>
-      </li>
-    ))}
-  </ol>):(
-    <p>There is no completed Case</p>)}
-      </div>
+  {allCompletedCase?.length > 0 ? (
+    <>
+      {allCompletedCase.map((c, i) => (
+        <li key={i} className="border-bottom">
+          <div className="pt-2">
+            <h6>CaseName: {c.caseName}</h6>
+            <p>CaseId: {c.caseId}</p>
+          </div>
+        </li>
+      ))}
+    </>
+  ) : (
+    <p>There is no completed Case</p>
+  )}
+</div>
    
   )
 }

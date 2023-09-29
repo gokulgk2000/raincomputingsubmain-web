@@ -18,16 +18,12 @@ const CreateCase = ({
   getAllCases,
   clientId,
   caseData,
-  onGetAllClientNames
 }) => {
   const { currentUser } = useUser()
   const history = useHistory()
   const [loading, setloading] = useState(false)
   const [contacts, setContacts] = useState([])
-  const [searchText, setSearchText] = useState("")
-  const [caseSerialNo, setCaseSerialNo] = useState("")
-  const [caseEvent, setCaseEvent] = useState("")
-  const [caseEventDate, setCaseEventDate] = useState("")
+  const [searchText, setSearchText] = useState("")  
   const [clientName, setClientName] = useState("")
   toastr.options = {
     progressBar: true,
@@ -159,7 +155,7 @@ const CreateCase = ({
       }
     }
     handleFetchingContacts()
-  }, [searchText])
+  }, [searchText,currentUser.userID])
 
   return (
     <>

@@ -29,7 +29,6 @@ import { useToggle } from "../../../../../src/rainComputing/helpers/hooks/useTog
 
 const FirmInfo = () => {
   const { toggleOpen, setToggleOpen, toggleIt } = useToggle(false)
-  const [loading, setLoading] = useState(false)
   const query = useQuery()
   const [currentFirm, setCurrentFirm] = useState(null)
   const [addMemberModal, setAddMemberModal] = useState(false)
@@ -126,7 +125,7 @@ const FirmInfo = () => {
 
   useEffect(() => {
     getAllFirms()
-  }, [])
+  })
 
   return (
     <React.Fragment>

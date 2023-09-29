@@ -90,7 +90,7 @@ console.log("caseIdSubCases",caseIdSubCases)
     >
       <Col xs={11}>{children}</Col>
       <Col xs={1} style={{ padding: 0 }}>
-        <img src={Chevron} className="accordion-icon-right" />
+        <input type="image"  alt="Accordion Icon" src={Chevron} className="accordion-icon-right" />
       </Col>
     </Row>
   )
@@ -126,7 +126,7 @@ console.log("caseIdSubCases",caseIdSubCases)
   }
   useEffect(() => {
     onGetCaseIdSubcases()
-  }, [])
+  })
   return (
     <>
       <>
@@ -264,13 +264,15 @@ console.log("caseIdSubCases",caseIdSubCases)
               className="bx bxs-plus-square font-size-14 pt-1 me-2"
               onClick={()=>handleClick()}
             ></i> */}
-            <img
-              src={Chevron}
-              onClick={() => onAccordionButtonClick(index)}
-              aria-expanded={index === active}
-              className="accordion-icon"
-              style={{ cursor: "pointer" }}
-            />
+           <input
+  type="image"
+  src={Chevron}
+  alt="Accordion Icon" // Provide a descriptive text for the image
+  onClick={() => onAccordionButtonClick(index)}
+  aria-expanded={index === active}
+  className="accordion-icon"
+  style={{ cursor: "pointer" }}
+/>
           </Col>
         </Row>
         <div className="px-2 border-top">
@@ -285,7 +287,7 @@ console.log("caseIdSubCases",caseIdSubCases)
                 <div className="members-container">
                   {caseData?.caseMembers.map((member, m) => (
                     <div className="align-self-center me-1" key={m}>
-                      <img
+                      <input type="image"
                         src={
                           member?.id?.profilePic
                             ? member?.id?.profilePic

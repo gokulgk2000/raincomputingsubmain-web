@@ -1,6 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { useCallback, useState } from "react"
+import { useCallback } from "react"
 import ReactQuill from "react-quill"
 const ReactQuillInput = ({
   value,

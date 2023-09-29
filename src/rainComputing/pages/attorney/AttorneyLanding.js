@@ -1,6 +1,4 @@
 import React from "react"
-import { Link } from "react-router-dom"
-import { Container, Row, Col } from "reactstrap"
 import MetaTags from "react-meta-tags"
 import AttorneyCard from "./attorneyLanding/AttorneyCard"
 import AttorneyDetails from "./attorneyLanding/AttorneyDetailsCard"
