@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import {
   Row,
   Col,
@@ -12,7 +12,7 @@ import {
 } from "reactstrap"
 import MetaTags from "react-meta-tags"
 import PropTypes from "prop-types"
-import { useFormik } from "formik"
+// import { useFormik } from "formik"
 
 // datatable related plugins
 import BootstrapTable from "react-bootstrap-table-next"
@@ -50,26 +50,16 @@ const CaseFilesGrid = ({ caseId }) => {
     setAddNotesModal(false)
     setNotes("")
   }
-  const validation = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      fileNotes: "",
-    },
-    onSubmit: values => {
-    },
-  })
+  // const validation = useFormik({
+  //   enableReinitialize: true,
+  //   initialValues: {
+  //     fileNotes: "",
+  //   },
+  //   onSubmit: values => {
+  //   },
+  // })
 
   //Document Notes:
-  const handleTakeNotes = async () => {
-    const payload = { ...currentFileStatus, note: notes }
-    const res = await userNotes(payload)
-    if (res.success) {
-      await handleFetchFiles()
-      setCurrentFileStatus(res?.isFound)
-    }
-    setAddNotesModal(false)
-    setNotes("")
-  }
 
   const nameFormatter = (cell, row) => {
     if (row?.type === "jpeg" || row?.type === "png" || row?.type === "jpg") {
@@ -241,29 +231,41 @@ const CaseFilesGrid = ({ caseId }) => {
 
   const { SearchBar } = Search
 
-  const handleFetchFiles = async () => {
-    setLoading(true)
-    const filesRes = await getCaseFiles({ caseId })
+  const handleFetchFiles = useCallback(async () => {
+    setLoading(true);
+    const filesRes = await getCaseFiles({ caseId });
     if (filesRes.success && filesRes?.files?.length > 0) {
-      let tempArray = []
-      filesRes?.files?.map(f => {
-        const sendAt = moment(f.time).format("DD-MM-YY HH:mm")
-        tempArray.push({ ...f, time: sendAt, isDownloading: false })
-      })
-      setProductData(tempArray)
+      const tempArray = filesRes.files.map((f) => {
+        const sendAt = moment(f.time).format("DD-MM-YY HH:mm");
+        return { ...f, time: sendAt, isDownloading: false };
+      });
+      setProductData(tempArray);
     } else {
-      console.log("File Fetching Error :", filesRes)
+      console.log("File Fetching Error :", filesRes);
     }
-    setLoading(false)
+    setLoading(false);
+  }, [caseId, setLoading, setProductData]);
+  const handleTakeNotes = async () => {
+    const payload = { ...currentFileStatus, note: notes }
+    const res = await userNotes(payload)
+    if (res.success) {
+      await handleFetchFiles()
+      setCurrentFileStatus(res?.isFound)
+    }
+    setAddNotesModal(false)
+    setNotes("")
   }
-  useEffect(() => {
-    handleFetchFiles()
 
+  useEffect(() => {
+    handleFetchFiles();
+  
     return () => {
-      setLoading(false)
-      setProductData([])
-    }
-  }, [])
+      setLoading(false);
+      setProductData([]);
+    };
+  }, [handleFetchFiles]);
+  // Added handleFetchFiles to the dependency array
+  
   return (
     <React.Fragment>
       <MetaTags>
