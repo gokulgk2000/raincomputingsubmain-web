@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import PropTypes from "prop-types"
 import classNames from "classnames"
-import { Col, Collapse, Row, Tooltip } from "reactstrap"
+import { Col, Collapse, Row } from "reactstrap"
 import "./style/case-grid.scss"
 import Chevron from "../../../../src/assets/icon/chevron-down.svg"
 import profile from "../../../../src/assets/images/avatar-defult.jpg"
@@ -34,11 +34,11 @@ const SubCaseGrid = ({
   ongetAllCases,
 }) => {
   const history = useHistory()
-  const { toggleOpen: notifyOn, toggleIt: setNotifyOn } = useToggle(false)
   const { currentUser } = useUser()
-  const [casedetails, setCaseDetails] = useState(caseData)
+  const [casedetails] = useState(caseData)
   const [caseIdSubCases, setCaseIdSubCases] = useState([])
-  const [newCaseId, setNewCaseId] = useState()
+  const [newCaseId] = useState()
+console.log("caseIdSubCases",caseIdSubCases)
   const {
     toggleOpen: membersModelOpen,
     setToggleOpen: setMembersModelOpen,
@@ -56,7 +56,7 @@ const SubCaseGrid = ({
   } = useToggle(false)
   const {
     toggleOpen: docketModelOpen,
-    setToggleOpen: setDocketModelOpen,
+    // setToggleOpen: setDocketModelOpen,
     toggleIt: toggleDocketModelOpen,
   } = useToggle(false)
   // const {
@@ -71,7 +71,7 @@ const SubCaseGrid = ({
   } = useToggle(false)
   const {
     toggleOpen: eventCalenderModelOpen,
-    setToggleOpen: setEventCalenderModelOpen,
+    // setToggleOpen: setEventCalenderModelOpen,
     toggleIt: toggleEventCalenderModelOpen,
   } = useToggle(false)
   const {

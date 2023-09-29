@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import PropTypes from "prop-types"
 import { Col, Row } from "reactstrap"
 import "./style/subgroup-bar.scss"

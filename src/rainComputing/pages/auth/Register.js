@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import MetaTags from "react-meta-tags"
 import {
   Row,
@@ -87,7 +87,7 @@ const RainRegister = () => {
           <div className="d-none d-xl-block  ps-lg-5 ms-lg-5 mt-2 ">
             <div className="my-5">
               <div className="justify-content-center">
-                <img src={login} height="450" width="600" />
+                <input type="img" src={login} height="450" width="600" />
               </div>
               {/* <p className="fs-5 pt-5 ps-5 ">
               Manage all communication in one place
@@ -108,7 +108,7 @@ const RainRegister = () => {
                           </div>
                         </Col>
                         <Col className="col-5 align-self-end">
-                          <img
+                          <input type="img"
                             src={profileImg}
                             height="100"
                             width="300"
@@ -122,7 +122,7 @@ const RainRegister = () => {
                         <Link to="/">
                           <div className="avatar-md profile-user-wid mb-1">
                             <span className="avatar-title rounded-circle bg-light">
-                              <img
+                              <input type="img"
                                 src={logo}
                                 alt=""
                                 className="rounded-circle"
@@ -277,12 +277,14 @@ const RainRegister = () => {
                               />
                               By registering you agree to the raincomputing{" "}
                              
-                              <a
-                                className="text-primary font-sm"
-                               onClick={()=>{setTermsModelOpen(true)}}
-                              >
-                                Terms of Use
-                              </a>
+                              <button
+  className="text-primary font-sm"
+  onClick={() => {
+    setTermsModelOpen(true);
+  }}
+>
+  Terms of Use
+</button> 
                             </p>
                           </div>
                           <div className="mt-3 d-grid">
