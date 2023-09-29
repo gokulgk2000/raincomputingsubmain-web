@@ -1,9 +1,6 @@
 import React from 'react'
 import "./Terms.css"
-import { useState } from 'react'
 function TermsModal() {
-
-    const [Terms,setTerms] = useState(false);
   return (
     <div className=''>
                 <div className=''>

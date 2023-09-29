@@ -14,19 +14,13 @@ import {
 import { useSelector, useDispatch } from "react-redux"
 
 //components
-import Navbar from "./Navbar"
 import Header from "./Header"
 import Footer from "./Footer"
-import RightSidebar from "../CommonForBoth/RightSidebar"
-import { useLocation } from 'react-router-dom';
 
 const Layout = props => {
   const dispatch = useDispatch()
-  const location = useLocation();
 
-  const ischat = location.pathname.includes('/chat-rc');
-
-  const { topbarTheme, layoutWidth, isPreloader, showRightSidebar } =
+  const { topbarTheme, layoutWidth, isPreloader } =
     useSelector(state => ({
       topbarTheme: state.Layout.topbarTheme,
       layoutWidth: state.Layout.layoutWidth,
@@ -49,16 +43,7 @@ const Layout = props => {
   }, [])
 
   //hides right sidebar on body click
-  const hideRightbar = event => {
-    var rightbar = document.getElementById("right-bar")
-    //if clicked in inside right bar, then do nothing
-    if (rightbar && rightbar.contains(event.target)) {
-      return
-    } else {
-      //if clicked in outside of rightbar then fire action for hide rightbar
-      dispatch(showRightSidebarAction(false))
-    }
-  }
+  
 
   /*
   layout settings
@@ -68,6 +53,16 @@ const Layout = props => {
   }, [dispatch])
 
   useEffect(() => {
+    const hideRightbar = event => {
+      var rightbar = document.getElementById("right-bar")
+      //if clicked in inside right bar, then do nothing
+      if (rightbar && rightbar.contains(event.target)) {
+        return
+      } else {
+        //if clicked in outside of rightbar then fire action for hide rightbar
+        dispatch(showRightSidebarAction(false))
+      }
+    }
     //init body click event fot toggle rightbar
     document.body.addEventListener("click", hideRightbar, true)
 
@@ -83,7 +78,7 @@ const Layout = props => {
       document.getElementById("preloader").style.display = "none"
       document.getElementById("status").style.display = "none"
     }
-  }, [isPreloader])
+  }, [isPreloader,dispatch])
 
   useEffect(() => {
     if (topbarTheme) {

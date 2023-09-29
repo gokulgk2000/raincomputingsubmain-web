@@ -6,7 +6,6 @@ import PropTypes from "prop-types"
 import {
   regAttorneyDetails,
   regAttorneyUpdate,
-  regScheduleDates,
 } from "../../../../src/rainComputing/helpers/backend_helper"
 import { useUser } from "../../../../src/rainComputing/contextProviders/UserProvider"
 import toastr from "toastr"

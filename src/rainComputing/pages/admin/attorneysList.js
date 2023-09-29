@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Row, Col, Card, CardBody, Button } from "reactstrap"
+import { Row, Col, Card, CardBody} from "reactstrap"
 import MetaTags from "react-meta-tags"
 import { Link } from "react-router-dom"
 // datatable related plugins
@@ -113,14 +113,14 @@ const AttorneyList = () => {
   }
 
   // Custom Pagination Toggle
-  const sizePerPageList = [
-    { text: "5", value: 5 },
-    { text: "10", value: 10 },
-    { text: "15", value: 15 },
-    { text: "20", value: 20 },
-    { text: "25", value: 25 },
-    { text: "All", value: attorneyData.length },
-  ]
+  // const sizePerPageList = [
+  //   { text: "5", value: 5 },
+  //   { text: "10", value: 10 },
+  //   { text: "15", value: 15 },
+  //   { text: "20", value: 20 },
+  //   { text: "25", value: 25 },
+  //   { text: "All", value: attorneyData.length },
+  // ]
 
   // const { SearchBar } = Search
 

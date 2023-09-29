@@ -17,7 +17,6 @@ const UserDetails = () => {
   const query = useQuery()
   const [modalOpen, setModalOpen, toggleModal] = useModal(false)
   const [getUser, setGetUser] = useState(null)
-  const [getPayment, setGetPayment] = useState(null)
   const [paymentData, setPaymentData] = useState([])
 
   const getUserId = async () => {
@@ -31,7 +30,7 @@ const UserDetails = () => {
 
   useEffect(() => {
     getUserId()
-  }, [])
+  }, )
 
   const getAllPaymentData = async () => {
     const res = await allPaymentData({})
@@ -43,10 +42,10 @@ const UserDetails = () => {
   useEffect(() => {
     getAllPaymentData()
   }, [])
-  const getPaymentStatus = p => {
-    const Paid = p.find(i => i._id === getUser._id)
-    return Paid ? "Paid" : "LA"
-  }
+  // const getPaymentStatus = p => {
+  //   const Paid = p.find(i => i._id === getUser._id)
+  //   return Paid ? "Paid" : "LA"
+  // }
   const handleRemovingUser = async () => {
     const payload = {
       userID: [getUser?._id],

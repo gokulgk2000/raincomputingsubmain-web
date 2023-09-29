@@ -1,7 +1,7 @@
 import ProfileMenu from "../../../src/components/CommonForBoth/TopbarDropdown/ProfileMenu"
 import { useUser } from "../../../src/rainComputing/contextProviders/UserProvider"
 import React, { useState } from "react"
-import { Link, NavLink } from "react-router-dom"
+import { Link } from "react-router-dom"
 import "../HorizontalLayout/mobileNav.css"
 import NotificationDropdown from "../../../src/components/CommonForBoth/TopbarDropdown/NotificationDropdown"
 import Reminders from "../../../src/rainComputing/pages/reminder"
@@ -10,9 +10,9 @@ import raindrop from "../../assets/images/rain-drop.png"
 
 const MobileNav = () => {
   const [isMobile, setIsMobile] = useState(false)
-  const classNames = (...classes) => {
-    return classes.filter(Boolean).join(" ")
-  }
+  // const classNames = (...classes) => {
+  //   return classes.filter(Boolean).join(" ")
+  // }
   const [modal_scroll, setmodal_scroll] = useState(false)
 
   const { currentAttorney } = useUser()

@@ -1,6 +1,5 @@
 import PropTypes from "prop-types"
 import React, { useEffect } from "react"
-import { connect } from "react-redux"
 import { withRouter } from "react-router-dom"
 
 import { logoutUser } from "../../store/actions"
@@ -16,7 +15,7 @@ const Logout = props => {
   useEffect(() => {
     dispatch(logoutUser(props.history))
     setCurrentUser(null)
-  }, [dispatch])
+  }, [dispatch,props.history,setCurrentUser])
 
   return <></>
 }

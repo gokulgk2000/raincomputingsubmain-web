@@ -15,7 +15,7 @@ const IntervalIdData = ({ setIntervalIdDataModalOpen, intervalId }) => {
   }
   useEffect(() => {
     getIntervalIdData()
-  }, [])
+  },)
   const handleClose = () => {
     setIntervalIdDataModalOpen(false)
   }

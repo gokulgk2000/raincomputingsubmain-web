@@ -33,17 +33,18 @@ const PinnedModels = ({ handleLocateMessage }) => {
         const payload = { groupId: currentChat?._id }
         const res = await getPinnedMsg(payload)
         if (res.success) {
-          setMessages(
-            messages?.map(m =>
+          setMessages((prevMessages) => {
+            return prevMessages?.map(m =>
               m?._id === currentChat?._id ? res?.pinMessages : m
-            )
-          )
-          setPinnedMsg(res?.pinMessages)
+            );
+          });
+          setPinnedMsg(res?.pinMessages);
         }
-      }
-      PinnedMessage()
+      };
+      PinnedMessage();
     }
-  }, [pinModal])
+  }, [pinModal, currentChat?._id, messages, setMessages]);  // Include the dependencies in the array
+  
 
   const handleUnpinMessage = async msgId => {
     const payload = { Id: msgId }
@@ -62,9 +63,9 @@ const PinnedModels = ({ handleLocateMessage }) => {
     }
   }
 
-  const text = {
-    color: "#0000F9",
-  }
+  // const text = {
+  //   color: "#0000F9",
+  // }
 
   return (
     <div>
@@ -112,14 +113,15 @@ const PinnedModels = ({ handleLocateMessage }) => {
                             <div className="">
                               {/* <i class="bi bi-person-circle fs-1" style={{ color: "#3987ed" }}></i> */}
                               <p className="rouded-circle text-primary text pt-1 ">
-                                <img
+                                <input 
+                                type="img"
                                   className="avatar-sm me-2 rounded-circle "
                                   src={
                                     getSender(msg)?.profilePic
                                       ? getSender(msg)?.profilePic
                                       : avatar
                                   }
-                                ></img>
+                                ></input>
                                 {getSender(msg)?.firstname}{" "}
                                 {getSender(msg)?.lastname}
                               </p>

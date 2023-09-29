@@ -12,7 +12,7 @@ const IntervalIdUpdateModel = ({
 }) => {
   const [notes, setNotes] = useState()
   const [getUpdateIntervalId, setGetUpdateIntervalId] = useState([])
-
+console.log("getUpdateIntervalId",getUpdateIntervalId)
   const { currentUser } = useUser()
   const handleClose = () => {
     setIntervalIdUpdateModalOpen(false)

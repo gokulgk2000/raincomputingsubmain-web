@@ -6,7 +6,6 @@ import {
   Col,
   Button,
   Card,
-  CardTitle,
   CardBody,
   Form,
   Table,
@@ -177,9 +176,7 @@ const Admin = () => {
                         </div>
                         <div className="avatar-sm rounded-circle bg-primary align-self-top mini-stat-icon">
                           <span className="avatar-title rounded-circle bg-primary">
-                            <i
-                              className={"bx " + "bx bx-user" + " font-size-24"}
-                            ></i>
+                          <i className={"bx bx-user font-size-24"}></i>
                           </span>
                         </div>
                       </div>
@@ -205,11 +202,7 @@ const Admin = () => {
                         </div>
                         <div className="avatar-sm rounded-circle bg-primary align-self-top mini-stat-icon">
                           <span className="avatar-title rounded-circle bg-primary">
-                            <i
-                              className={
-                                "bx" + " bx bx-user-circle " + " font-size-24"
-                              }
-                            ></i>
+                          <i className="bx bx-user-circle font-size-24"></i>
                           </span>
                         </div>
                       </div>
@@ -236,7 +229,7 @@ const Admin = () => {
                           <span className="avatar-title rounded-circle bg-primary">
                             <i
                               className={
-                                "bx" + " bx bx bxs-briefcase " + " font-size-24"
+                                " bx bx bxs-briefcase font-size-24"
                               }
                             ></i>
                           </span>

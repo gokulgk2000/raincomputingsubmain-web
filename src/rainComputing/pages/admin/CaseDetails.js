@@ -1,6 +1,6 @@
 import MetaTags from "react-meta-tags"
 import React, { useState, useEffect } from "react"
-import { Container, Row, Col, Card, CardBody, Button } from "reactstrap"
+import { Container, Row, Col, Card, CardBody } from "reactstrap"
 import { Link } from "react-router-dom"
 import { getCasesById } from "../../../../src/rainComputing/helpers/backend_helper"
 import { useQuery } from "../../../../src/rainComputing/helpers/hooks/useQuery"
@@ -13,7 +13,6 @@ import { useModal } from "../../../../src/rainComputing/helpers/hooks/useModal"
 const CaseDetails = () => {
   const [modalOpen, setModalOpen, toggleModal] = useModal(false)
   const query = useQuery()
-  const [loading, setLoading] = useState(false)
   const [caseDetail, setCaseDetail] = useState(null)
 
   const getCases = async () => {
@@ -28,7 +27,7 @@ const CaseDetails = () => {
 
   useEffect(() => {
     getCases()
-  }, [])
+  })
   return (
     <React.Fragment>
       <DeleteModal
