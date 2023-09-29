@@ -67,7 +67,39 @@
     "extends": [
       "eslint:recommended",
       "plugin:react/recommended"
-    ]
+    ],
+    "babelOptions": {
+      "presets": [
+        "@babel/preset-react"
+      ]
+    },
+    "parser": "@babel/eslint-parser",
+    "parserOptions": {
+      "requireConfigFile": false,
+      "ecmaVersion": 2020,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
+    "env": {
+      "browser": true,
+      "es6": true
+    },
+    "globals": {
+      "$": true
+    },
+    "settings": {
+      "react": {
+        "version": "^17.0.1"
+      }
+    },
+    "rules": {
+      "semi": [
+        "error",
+        "never"
+      ]
+    }
   },
   "browserslist": {
     "production": [
