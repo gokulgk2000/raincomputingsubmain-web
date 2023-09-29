@@ -454,7 +454,17 @@ const ChatRc = () => {
     }
     filterChats();
   }, [searchText, filterChats])
-
+  const Locate = useCallback(() => {
+    const message = [...messages, ...visibleMessages].find(
+      (msg) => msg._id === msgId
+    );
+    if (message) {
+      const messageElem = document.getElementById(message._id);
+      if (messageElem) {
+        messageElem.scrollIntoView({ behavior: "auto" });
+      }
+    }
+  }, [messages, visibleMessages, msgId]);
   // useEffect(() => {
   //   if (messages && visibleMessages?.length < messages?.length) {
   //     const tempHeight = containerRef?.current?.scrollHeight - prevHeight
@@ -462,7 +472,7 @@ const ChatRc = () => {
   //   }
   // }, [visibleMessages?.length, messages])
   useEffect(() => {
-    setVisibleMessages(messages.slice(-49))
+    // setVisibleMessages(messages.slice(-49))
     if (replymsgId) {
       Locate()
     } else {
@@ -471,7 +481,7 @@ const ChatRc = () => {
       }, 500)
       return () => clearTimeout(timer)
     }
-  }, [messages?.length])
+  }, [replymsgId,Locate])
 
   //Toaster settings
   toastr.options = {
@@ -549,32 +559,38 @@ const ChatRc = () => {
   // }
   //Getting all 1vs1 chats
   useEffect(() => {
+    const getNotificationCount = (id) => {
+      const notiCount = notifications.filter((c) => c.groupId === id);
+      return notiCount ? notiCount.length : 0;
+    };
+  
     const updatedSortedChats = chats
-      .map(chat => {
-        const notificationCount = getNotificationCount(chat._id)
+      .map((chat) => {
+        const notificationCount = getNotificationCount(chat._id);
         const recentChat =
           chat.notification &&
           chat.notification.updatedAt &&
-          new Date(chat.notification.updatedAt)
+          new Date(chat.notification.updatedAt);
         return {
           chat,
           notificationCount,
           recentChat,
-        }
+        };
       })
       .sort((a, b) => {
         if (a.recentChat && b.recentChat) {
-          return b.recentChat - a.recentChat // Sort by time in descending order based on recentChat's updatedAt field
+          return b.recentChat - a.recentChat; // Sort by time in descending order based on recentChat's updatedAt field
         } else if (a.recentChat) {
-          return -1 // a has a recent chat, but b doesn't, so a should be placed above b
+          return -1; // a has a recent chat, but b doesn't, so a should be placed above b
         } else if (b.recentChat) {
-          return 1 // b has a recent chat, but a doesn't, so b should be placed above a
+          return 1; // b has a recent chat, but a doesn't, so b should be placed above a
         } else {
-          return b.notificationCount - a.notificationCount // Sort by notification count
+          return b.notificationCount - a.notificationCount; // Sort by notification count
         }
-      })
-    setSortedChats(updatedSortedChats)
-  }, [chats, notifications])
+      });
+    setSortedChats(updatedSortedChats);
+  }, [chats, notifications]);
+  
 
  
   //Creating New ChatRoom
@@ -639,21 +655,20 @@ const ChatRc = () => {
   }
 
   // get All clientNames
-  const onGetAllClientNames = async () => {
+  const onGetAllClientNames = useCallback(async () => {
     const allClientNamesRes = await getClientsByUserId({
       userId: currentUser.userID,
-      // caseId: currentCase.caseId
-    })
-
+    });
+  
     if (allClientNamesRes.success) {
-      setClients(allClientNamesRes?.clients)
+      setClients(allClientNamesRes?.clients);
     }
-
-  }
+  }, [currentUser.userID, setClients]);
+  
   useEffect(() => {
-    onGetAllClientNames()
-  }, [])
-
+    onGetAllClientNames();
+  }, [onGetAllClientNames]);
+  
 
   //Getting all the cases
   const ongetAllCases = async ({ isSet = false, isSearch = false }) => {
@@ -741,28 +756,43 @@ const ChatRc = () => {
   // }
 
   //Fetching Contacts
-  const onGetContacts = async ({ isSearch = false }) => {
-    if (searchText === "") {
-      await onGetEmailContacts()
+  const onGetEmailContacts = useCallback(async () => {
+    const userRes = await getAllUsers({
+      userID: currentUser.userID,
+      email: currentUser?.email,
+    });
+  
+    if (userRes.success) {
+      setContacts([...userRes.users]);
     } else {
-      setContactsLoading(true)
-      const userRes = await getAllUsers({
-        userID: currentUser.userID,
-        page: isSearch ? 1 : contactPage,
-        searchText,
-      })
-      if (userRes.success) {
-        if (!isSearch) {
-          setContacts([...contacts, ...userRes.users])
-        } else {
-          setContacts(userRes?.users)
-        }
-      } else {
-        setContacts([])
-      }
-      setContactsLoading(false)
+      setContacts(userRes?.users);
     }
-  }
+  }, [currentUser.userID, currentUser.email, setContacts]);
+  const onGetContacts = useCallback(
+    async ({ isSearch = false }) => {
+      if (searchText === "") {
+        await onGetEmailContacts();
+      } else {
+        setContactsLoading(true);
+        const userRes = await getAllUsers({
+          userID: currentUser.userID,
+          page: isSearch ? 1 : contactPage,
+          searchText,
+        });
+        if (userRes.success) {
+          if (!isSearch) {
+            setContacts([...contacts, ...userRes.users]);
+          } else {
+            setContacts(userRes?.users);
+          }
+        } else {
+          setContacts([]);
+        }
+        setContactsLoading(false);
+      }
+    },
+    [searchText, onGetEmailContacts, currentUser.userID, contactPage, contacts]
+  );
   //send message to email
   // const onSendMessageEmail = async (msg) => {
   //   const membersEmail = currentCase?.caseMembers.map((member) => member?.id?.email);
@@ -780,24 +810,16 @@ const ChatRc = () => {
   //   setEmail(mailRes.true)
   // }
 
-  const onGetEmailContacts = async () => {
-    const userRes = await getAllUsers({
-      userID: currentUser.userID,
-      email: currentUser?.email,
-    })
-    if (userRes.success) {
-      setContacts([...userRes.users])
-    } else {
-      setContacts(userRes?.users)
-    }
-  }
+ 
+  
   useEffect(() => {
     if (activeTab === "3" && searchText === "") {
       // Call onGetEmailContacts and clear searchText
-      onGetEmailContacts()
-      setSearchText("")
+      onGetEmailContacts();
+      setSearchText("");
     }
-  }, [activeTab, searchText])
+  }, [activeTab, searchText, onGetEmailContacts]);
+  
   //Selecting current case
   const onSelectingCase = cas => {
     setCurrentCase(cas)
@@ -1114,29 +1136,31 @@ const ChatRc = () => {
     setChatLoader(false)
   }
 
-  const handleFetchFiles = async () => {
+  const handleFetchFiles = useCallback(async () => {
     try {
-      const filesRes = await getCaseFiles(currentCase?._id)
+      const filesRes = await getCaseFiles(currentCase?._id);
       if (filesRes.success && filesRes?.files?.length > 0) {
-        const updatedFiles = filesRes.files.map(file => {
-          const sendAt = moment(file.time).format("DD-MM-YY HH:mm")
-          return { ...file, time: sendAt, isDownloading: true }
-        })
-        setCaseFile(updatedFiles)
+        const updatedFiles = filesRes.files.map((file) => {
+          const sendAt = moment(file.time).format("DD-MM-YY HH:mm");
+          return { ...file, time: sendAt, isDownloading: true };
+        });
+        setCaseFile(updatedFiles);
       } else {
-        setCaseFile([])
+        setCaseFile([]);
       }
     } catch (error) {
-      console.error(`Error fetching case files: ${error}`)
-      setCaseFile([])
+      console.error(`Error fetching case files: ${error}`);
+      setCaseFile([]);
     }
-  }
+  }, [currentCase, setCaseFile]);
+  
   useEffect(() => {
-    handleFetchFiles()
+    handleFetchFiles();
     return () => {
-      setCaseFile([])
-    }
-  }, [])
+      setCaseFile([]);
+    };
+  }, [handleFetchFiles]);
+  
   // Archive Chat
   const onArchievingChat = async () => {
     setChatLoader(true)
@@ -1482,17 +1506,18 @@ const ChatRc = () => {
 
   //SideEffect while contact page changes
   useEffect(() => {
-    if (
-      activeTab === "3" &&
-      contactPage !== 1 &&
-      contactPage <= totalPages?.users
-    ) {
-      onGetContacts({ isSearch: false })
-    }
-    if (activeTab === "3" && contactPage === 1) {
-      onGetContacts({ isSearch: true })
-    }
-  }, [contactPage])
+    const fetchData = async () => {
+      if (activeTab === "3" && contactPage !== 1 && contactPage <= totalPages?.users) {
+        await onGetContacts({ isSearch: false });
+      }
+      if (activeTab === "3" && contactPage === 1) {
+        await onGetContacts({ isSearch: true });
+      }
+    };
+  
+    fetchData();
+  }, [activeTab, contactPage, totalPages?.users]);
+  
 
   //SideEffect while case page changes
   useEffect(() => {
@@ -1567,7 +1592,7 @@ const ChatRc = () => {
       setCurrentCase(tempCase)
       setCurrentChat(groupChat)
     }
-  }, [groupReplyChatId, pageLoader, caseReplyChatId, caseLoading])
+  }, [groupReplyChatId, pageLoader, caseReplyChatId, caseLoading,allgroups,allCases,setCurrentChat])
   useEffect(() => {
     if (groupChatId && caseChatId && !pageLoader && !caseLoading) {
       const groupChat = allgroups?.find(gch => gch?._id === groupChatId)
@@ -1576,16 +1601,16 @@ const ChatRc = () => {
       setCurrentCase(tempCase)
       setCurrentChat(groupChat)
     }
-  }, [groupChatId, pageLoader, caseChatId, caseLoading])
-  useEffect(() => {
-    if (groupChatId && caseChatId && !pageLoader && !caseLoading) {
-      const groupChat = allgroups?.find(gch => gch?._id === groupChatId)
-      const tempCase = allSubCases?.find(c => c?._id === caseChatId)
-      setactiveTab("2")
-      setCurrentCase(tempCase)
-      setCurrentChat(groupChat)
-    }
-  }, [groupChatId, pageLoader, caseChatId, caseLoading])
+  }, [groupChatId, pageLoader, caseChatId, caseLoading,allgroups,allCases,setCurrentChat])
+  // useEffect(() => {
+  //   if (groupChatId && caseChatId && !pageLoader && !caseLoading) {
+  //     const groupChat = allgroups?.find(gch => gch?._id === groupChatId)
+  //     const tempCase = allSubCases?.find(c => c?._id === caseChatId)
+  //     setactiveTab("2")
+  //     setCurrentCase(tempCase)
+  //     setCurrentChat(groupChat)
+  //   }
+  // }, [groupChatId, pageLoader, caseChatId, caseLoading,allgroups,allCases,setCurrentChat])
   const handleClientCreatedAt = () => {
     const sortedclients = [...clients].sort((a, b) => {
       const dateA = new Date(a.createdAt)
@@ -1695,17 +1720,7 @@ const ChatRc = () => {
       }
     }
   }
-  const Locate = () => {
-    const message = [...messages, ...visibleMessages].find(
-      msg => msg._id === msgId
-    )
-    if (message) {
-      const messageElem = document.getElementById(message._id)
-      if (messageElem) {
-        messageElem.scrollIntoView({ behavior: "auto" })
-      }
-    }
-  }
+
   useEffect(() => {
     if (replymsgId) {
       setTimeout(() => {
@@ -2741,11 +2756,9 @@ const ChatRc = () => {
                                       <div
                                         className="ctext-wrap "
                                         style={{
-                                          backgroundColor:
-                                            msg.sender === currentUser.userID &&
-                                              currentChat?.color
-                                              ? currentChat?.color + "33"
-                                              : "#00EE00" + "33"
+                                          backgroundColor: msg.sender === currentUser.userID && currentChat?.color
+    ? `${currentChat?.color}33`
+                                              : "#00EE00033"
                                         }}
                                       >
                                         {/* {msg.isForward ? (
@@ -2886,12 +2899,9 @@ const ChatRc = () => {
                                         <div
                                           className="ctext-wrap "
                                           style={{
-                                            backgroundColor:
-                                              msg.sender ===
-                                                currentUser.userID &&
-                                                currentChat?.color
-                                                ? currentChat?.color + "33"
-                                                : "#00EE00" + "33"
+                                            backgroundColor: msg.sender === currentUser.userID && currentChat?.color
+    ? `${currentChat?.color}33`
+                                                : "#00EE0033"
                                           }}
                                         >
                                           <div className="conversation-name">
