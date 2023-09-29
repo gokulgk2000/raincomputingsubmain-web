@@ -28,7 +28,7 @@ const VerifyEmailPage = () => {
     }
 
     verifyEmailUrl()
-  }, [])
+  })
 
   return (
     <>

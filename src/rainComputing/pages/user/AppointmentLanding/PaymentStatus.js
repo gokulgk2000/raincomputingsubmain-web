@@ -51,6 +51,7 @@ const PaymentStatus = () => {
   useEffect(() => {
     const getUserPaymentData = async () => {
       const res = await getPaymentId({ pi: query.get("payment_intent") })
+      console.log("res",res)
     }
     getUserPaymentData()
   })
