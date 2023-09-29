@@ -94,20 +94,18 @@ const EditSubGroup = ({
 
   useEffect(() => {
     if (subGroup) {
-      const { color, groupName, groupMembers } = subGroup
-      color && setGroupColor(color)
-      groupName && setSubGroupName(groupName)
+      const { color, groupName, groupMembers } = subGroup;
+      color && setGroupColor(color);
+      groupName && setSubGroupName(groupName);
       if (groupMembers?.length > 1) {
         const structuredMembers = groupMembers
-          .filter(c => c?.id?._id !== currentUser?.userID)
-          .map(m => m?.id?._id)
-        setSubGroupMembers(structuredMembers)
+          .filter((c) => c?.id?._id !== currentUser?.userID)
+          .map((m) => m?.id?._id);
+        setSubGroupMembers(structuredMembers);
       }
     }
-    return () => {
-      resetSubGroup(null)
-    }
-  }, [])
+  }, [subGroup, currentUser?.userID, setGroupColor, setSubGroupName, setSubGroupMembers]);
+  
 
   return (
     <>

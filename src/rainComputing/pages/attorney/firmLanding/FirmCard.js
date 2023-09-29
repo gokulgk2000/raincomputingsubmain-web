@@ -4,14 +4,11 @@ import { Link } from "react-router-dom"
 import {
   Card,
   CardBody,
-  CardImg,
   CardText,
   CardTitle,
-  Col,
-  Row,
 } from "reactstrap"
 
-const FirmCard = ({ isMyFirm, firmname, membersCount, ctaLink ,firmid}) => {
+const FirmCard = ({ isMyFirm, firmname, membersCount ,firmid}) => {
   return (
     <Card>
       <CardBody>

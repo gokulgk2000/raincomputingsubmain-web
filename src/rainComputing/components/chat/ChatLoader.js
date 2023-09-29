@@ -1,5 +1,5 @@
 import React from "react"
-import { Card, CardBody, CardText } from "reactstrap"
+import { Card, CardBody } from "reactstrap"
 
 const ChatLoader = () => {
   return (
