@@ -27,7 +27,7 @@ const ProjectsOverview = props => {
   }
   useEffect(() =>{
     getAttorneyinfo()
-  },[])
+  })
 
   return (
     <React.Fragment>

@@ -1,4 +1,3 @@
-import { useNotifications } from "../../../../src/rainComputing/contextProviders/NotificationsProvider"
 import React, { useEffect, useRef, useState } from "react"
 import notification0 from "../../../assets/sound/1.mp3"
 import notification1 from "../../../assets/sound/2.mp3"
@@ -18,8 +17,8 @@ import PropTypes from "prop-types"
 const NotificationSettings = ({ setModalOpen }) => {
   const audioRef = useRef(null);
   const { currentUser, setCurrentUser } = useUser()
-  const { notifications, setNotifications } = useNotifications()
   const [isNotifySound, setIsNotifySound] = useState(false)
+  console.log("isNotifySound",isNotifySound)
     const [isPlaying, setIsPlaying] = useState(false)
   const selectSounds = [
     { name: "Sound 1", url: notification0 },
@@ -51,7 +50,7 @@ const NotificationSettings = ({ setModalOpen }) => {
     audioRef.current.pause();
     setIsPlaying(false);
   };
-  const handleSetNotifySound = async selectedSound => {
+  const handleSetNotifySound = async (selectedSound )=> {
     const payload = {
       _id: currentUser?.userID,
       notificationSound: selectedSound,
@@ -74,7 +73,7 @@ const NotificationSettings = ({ setModalOpen }) => {
     }
 
     handleInitialSetNotifySound()
-  }, [])
+  })
 
   const handleCheckboxChange = async event => {
     const isChecked = event.target.checked

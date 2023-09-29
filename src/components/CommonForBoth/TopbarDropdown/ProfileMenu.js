@@ -1,22 +1,21 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import PropTypes from "prop-types"
 import {
   Dropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Button,
 } from "reactstrap"
 
 import { withTranslation } from "react-i18next"
 // Redux
 import { connect } from "react-redux"
-import { withRouter, Link, useHistory, NavLink } from "react-router-dom"
+import { withRouter, Link, useHistory } from "react-router-dom"
 
 // users
 import user1 from "../../../assets/images/avatar-defult.jpg"
 import { useUser } from "../../../../src/rainComputing/contextProviders/UserProvider"
-import { logoutUser, notifySound } from "../../../../src/rainComputing/helpers/backend_helper"
+import { logoutUser } from "../../../../src/rainComputing/helpers/backend_helper"
 import { useSocket } from "../../../../src/rainComputing/contextProviders/SocketProvider"
 import { useLocation } from "react-router-dom"
 import "../TopbarDropdown/login.scss"

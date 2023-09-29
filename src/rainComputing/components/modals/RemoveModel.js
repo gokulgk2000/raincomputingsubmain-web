@@ -47,7 +47,7 @@ const RemoveModal = ({
       </ModalHeader>
       <ModalBody className="p-3" style={{ backgroundColor: "#fdfdfd" }}>
       <div className="d-flex justify-content-center pb-3" >
-        <img src={add} style={{height:"100px"}}></img>
+        <input type="img" src={add} style={{height:"100px"}}></input>
        
         </div>
         <p className="d-flex justify-content-center">Are you interested in removing an administrator account? </p>

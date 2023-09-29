@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import { Modal } from "reactstrap"
 import PropTypes from "prop-types"
 import { useUser } from "../../../../../src/rainComputing/contextProviders/UserProvider"
 import { allCompletedCases } from "../../../../../src/rainComputing/helpers/backend_helper"

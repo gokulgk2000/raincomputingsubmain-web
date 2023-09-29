@@ -35,7 +35,7 @@ const AttorneyDetails = () => {
 
   useEffect(() => {
     getAttorneys()
-  }, [])
+  }, )
   const handleRemovingAttorney = async () => {
     const payload = {
       regUser: [attorneyDetail?._id],

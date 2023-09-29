@@ -14,16 +14,14 @@ import {
   getCaseIdByIntervals,
   getGroupIdReminders,
 } from "../../../../src/rainComputing/helpers/backend_helper"
-import { useUser } from "../../../../src/rainComputing/contextProviders/UserProvider"
 import EditReminder from "../Calendar/EditReminder"
 import IntervalModel from "../../../../src/rainComputing/components/chat/models/IntervalModel"
 
 const Calender = ({ setcalendarModalOpen, groupId ,caseId}) => {
-  const [selectedday, setSelectedDay] = useState(0)
+  const [selectedday] = useState(0)
   const [getReminders, setGetReminders] = useState([])
   const [selectedEvent, setSelectedEvent] = useState([])
   const [caseIdIntervals, setCaseIdIntervals] = useState([])
-  const { currentUser } = useUser()
 
   const {
     toggleOpen: remainderModelOpen,
@@ -40,30 +38,30 @@ const Calender = ({ setcalendarModalOpen, groupId ,caseId}) => {
     setToggleOpen: setIntervalModelOpen,
     toggleIt: toggleIntervalModelOpen,
   } = useToggle(false)
-  const handleDateClick = arg => {
-    const date = arg["date"]
-    const day = date.getDate()
-    const month = date.getMonth()
-    const year = date.getFullYear()
+  // const handleDateClick = arg => {
+  //   const date = arg["date"]
+  //   const day = date.getDate()
+  //   const month = date.getMonth()
+  //   const year = date.getFullYear()
 
-    const currectDate = new Date()
+  //   const currectDate = new Date()
 
-    const currentHour = currectDate.getHours()
-    const currentMin = currectDate.getMinutes()
-    const currentSec = currectDate.getSeconds()
-    const modifiedDate = new Date(
-      year,
-      month,
-      day,
-      currentHour,
-      currentMin,
-      currentSec
-    )
-    const modifiedData = { ...arg, date: modifiedDate }
+  //   const currentHour = currectDate.getHours()
+  //   const currentMin = currectDate.getMinutes()
+  //   const currentSec = currectDate.getSeconds()
+  //   const modifiedDate = new Date(
+  //     year,
+  //     month,
+  //     day,
+  //     currentHour,
+  //     currentMin,
+  //     currentSec
+  //   )
+  //   const modifiedData = { ...arg, date: modifiedDate }
 
-    setSelectedDay(modifiedData)
-    toggleremainderModelOpen()
-  }
+  //   setSelectedDay(modifiedData)
+  //   toggleremainderModelOpen()
+  // }
   const handleCalendarCancel = () => {
     setcalendarModalOpen(false)
   }
@@ -78,7 +76,7 @@ const Calender = ({ setcalendarModalOpen, groupId ,caseId}) => {
   }
   useEffect(() => {
     getAllReminderById()
-  }, [])
+  },)
   const getCaseIdIntervals = async () => {
     const payload = {
       caseId: caseId,
@@ -90,7 +88,7 @@ const Calender = ({ setcalendarModalOpen, groupId ,caseId}) => {
   }
   useEffect(() => {
     getCaseIdIntervals()
-  },[])
+  },)
   // const calendarEvents = getReminders.map(reminder => {
   //   const startTime = new Date(reminder.scheduledTime)
   //   startTime.setHours(startTime.getHours() - 5)
@@ -118,7 +116,7 @@ const Calender = ({ setcalendarModalOpen, groupId ,caseId}) => {
   })
   const caseIdAllIntervals = [];
   caseIdIntervals.forEach((caseInterval) => {
-    const { caseId, events } = caseInterval;
+    const {  events } = caseInterval;
   
     events.forEach((event) => {
       const { intervals, eventId } = event;
