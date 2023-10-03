@@ -1,6 +1,6 @@
 {
   "name": "raincomputingsubmain-web",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "private": true,
   "dependencies": {
     "@fullcalendar/bootstrap": "^5.10.1",
@@ -9,6 +9,7 @@
     "@fullcalendar/interaction": "^5.10.1",
     "@fullcalendar/react": "^5.10.1",
     "@stripe/react-stripe-js": "^1.10.0",
+    "@stripe/stripe-js": "^2.1.7",
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
