@@ -23,7 +23,7 @@ export function ChatProvider({ socket, children }) {
     } else {
       setChats([]);
     }
-  }, [ setChats,currentUser.userID]);
+  }, [ setChats]);
   
   const handleSendingMessage = useCallback(async (msgData) => {
     setMessageStack((prevState) => [...prevState, msgData]);
