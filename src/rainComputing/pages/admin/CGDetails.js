@@ -1,94 +1,94 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect } from 'react';
 import {
-  Container,
-  Row,
-  Col,
-  Card,
-  CardBody,
-  Form,
-  Table,
-} from "reactstrap"
-import { useQuery } from "../../../../src/rainComputing/helpers/hooks/useQuery"
+    Container,
+    Row,
+    Col,
+    Card,
+    CardBody,
+    Form,
+    Table,
+} from 'reactstrap';
+import { useQuery } from '../../../../src/rainComputing/helpers/hooks/useQuery';
 import {
     getCasesByUserId,
     getGroupsByUserIdandCaseId,
-  } from "../../../../src/rainComputing/helpers/backend_helper"
+} from '../../../../src/rainComputing/helpers/backend_helper';
 
 const CaseGroupDetails = () => {
 
-    const query = useQuery()
-    const [casesById, setCasesById] = useState([])
-    const [ setCurrentCase] = useState([])
-    const [setSubGroupsById] = useState([])
+    const query = useQuery();
+    const [casesById, setCasesById] = useState([]);
+    const [ setCurrentCase] = useState([]);
+    const [setSubGroupsById] = useState([]);
 
     const getAllCases = async () => {
         const res = await getCasesByUserId({
-          userId: query.get("id"),
-        })
+            userId: query.get('id'),
+        });
         if (res.success) {
-          setCasesById(res.cases)
-          setCurrentCase(res?.cases)
+            setCasesById(res.cases);
+            setCurrentCase(res?.cases);
         }
-      }
+    };
    
     const getAllSubGroups = async () => {
-      const payLoad = {
-        caseId: casesById._id,
-        userId: query.get("id"),
-      }
-      const allSubGroupres = await getGroupsByUserIdandCaseId(payLoad)
-      if (allSubGroupres.success){
-        setSubGroupsById(allSubGroupres.groups)
-      }
-    }
+        const payLoad = {
+            caseId: casesById._id,
+            userId: query.get('id'),
+        };
+        const allSubGroupres = await getGroupsByUserIdandCaseId(payLoad);
+        if (allSubGroupres.success){
+            setSubGroupsById(allSubGroupres.groups);
+        }
+    };
 
     useEffect(() => {
-        getAllCases()
-        },)
+        getAllCases();
+    },);
         
     useEffect(()=>{
-      getAllSubGroups()
-    },)
+        getAllSubGroups();
+    },);
 
-  return (
-    <React.Fragment>
-      <div>
-        <Container fluid>
-              <h4 className="card-title mb-4">Case Details</h4>
-              <Card>
-                <CardBody>
-                  <Form>
-                    <Row>
-                      <Col>
-                        <div className="table-responsive">
-                          <Table className="table table-striped mb-0">
-                            <thead>
-                              <tr>
-                                <th scope="col">S No</th>
-                                <th scope="col">Cases</th>
-                                <th scope="col">Sub Groups</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                                {casesById?.map((cg,j) => (
-                                  <tr key={j}>
-                                    <td> {j+1} </td>
-                                    <td>  {cg?.caseName}{"  "} {cg?.caseId}</td>
-                                    <td> </td>
-                                  </tr>
-                                  ))}
-                            </tbody>
-                          </Table>
-                        </div>
-                      </Col>
-                    </Row>
-                  </Form>
-                </CardBody>
-              </Card>
-        </Container>
-      </div>
-    </React.Fragment>
-  )
-}
+    return (
+        <React.Fragment>
+            <div>
+                <Container fluid>
+                    <h4 className="card-title mb-4">Case Details</h4>
+                    <Card>
+                        <CardBody>
+                            <Form>
+                                <Row>
+                                    <Col>
+                                        <div className="table-responsive">
+                                            <Table className="table table-striped mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">S No</th>
+                                                        <th scope="col">Cases</th>
+                                                        <th scope="col">Sub Groups</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {casesById?.map((cg,j) => (
+                                                        <tr key={j}>
+                                                            <td> {j+1} </td>
+                                                            <td>  {cg?.caseName}{'  '} {cg?.caseId}</td>
+                                                            <td> </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </Table>
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </Form>
+                        </CardBody>
+                    </Card>
+                </Container>
+            </div>
+        </React.Fragment>
+    );
+};
 
-export default CaseGroupDetails
+export default CaseGroupDetails;
