@@ -1,11 +1,11 @@
-import React, { useState, useEffect,useCallback  } from "react"
-import { Link, withRouter } from "react-router-dom"
-import { Col, Row } from "reactstrap"
-import illustration from "../../../assets/images/law-illustration.jpg"
-import contact from "../../../assets/images/contact-mail.gif"
+import React, { useState, useEffect,useCallback  } from 'react';
+import { Link, withRouter } from 'react-router-dom';
+import { Col, Row } from 'reactstrap';
+import illustration from '../../../assets/images/law-illustration.jpg';
+import contact from '../../../assets/images/contact-mail.gif';
 
 //Import Card
-import LandingCard from "./LandingCard"
+import LandingCard from './LandingCard';
 
 // //redux
 // import {
@@ -13,120 +13,120 @@ import LandingCard from "./LandingCard"
 //   getAttorneysCount,
 // } from "rainComputing/helpers/backend_helper"
 
-import { getAllRegAttorneys } from "../../../../src/rainComputing/helpers/backend_helper"
+import { getAllRegAttorneys } from '../../../../src/rainComputing/helpers/backend_helper';
 
-import Pagination from "../../../../src/components/pagination/Pagination"
+import Pagination from '../../../../src/components/pagination/Pagination';
 
 const LandingGrid = () => {
-  const [searchText, setSearchText] = useState("")
-  const [loading, setLoading] = useState(true)
-  const [attorneys, setAttorneys] = useState([])
-  const [page, setPage] = useState(1)
-  const [limit] = useState(12)
+    const [searchText, setSearchText] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [attorneys, setAttorneys] = useState([]);
+    const [page, setPage] = useState(1);
+    const [limit] = useState(12);
 
-  const loadAttorney = useCallback(async () => {
-    const res = await getAllRegAttorneys({ page, limit, searchText })
-    if (res.success) {
-      // console.log(first)
-      setAttorneys(res.attorneys)
-    } else {
-      console.log("Error while fetching Attorneys", res)
-    }
-  },[page, limit, searchText])
-  // const loadAttorneyCount = async () => {
-  //   const res = await getAttorneysCount({ searchText })
-  //   if (res.success) {
-  //     setAttorneysCount(res.count)
-  //   } else {
-  //   }
-  // }
+    const loadAttorney = useCallback(async () => {
+        const res = await getAllRegAttorneys({ page, limit, searchText });
+        if (res.success) {
+            // console.log(first)
+            setAttorneys(res.attorneys);
+        } else {
+            console.log('Error while fetching Attorneys', res);
+        }
+    },[page, limit, searchText]);
+    // const loadAttorneyCount = async () => {
+    //   const res = await getAttorneysCount({ searchText })
+    //   if (res.success) {
+    //     setAttorneysCount(res.count)
+    //   } else {
+    //   }
+    // }
 
-  useEffect(() => {
-    const handleLoad = async () => {
-      setLoading(true)
-      await loadAttorney()
-      setLoading(false)
-    }
-    handleLoad()
-  }, [page, limit,loadAttorney])
+    useEffect(() => {
+        const handleLoad = async () => {
+            setLoading(true);
+            await loadAttorney();
+            setLoading(false);
+        };
+        handleLoad();
+    }, [page, limit,loadAttorney]);
 
-  useEffect(() => {
-    setPage(1)
-  }, [searchText])
+    useEffect(() => {
+        setPage(1);
+    }, [searchText]);
 
-  useEffect(() => {
-    const handleLoad = async () => {
-      setLoading(true)
-      // await loadAttorneyCount()
-      await loadAttorney()
-      setLoading(false)
-    }
+    useEffect(() => {
+        const handleLoad = async () => {
+            setLoading(true);
+            // await loadAttorneyCount()
+            await loadAttorney();
+            setLoading(false);
+        };
 
-    handleLoad()
-  }, [searchText,loadAttorney])
+        handleLoad();
+    }, [searchText,loadAttorney]);
 
-  return (
-    <React.Fragment>
-      <div>
-        <div className="" style={{ marginTop: 100 }} id="landinggrid">
-          <div className="mb-2">
-            <div className="app-search ">
-              <input
-                type="text-success"
-                className="form-control "
-                placeholder="Search for Attorney..."
-                value={searchText}
-                onChange={e => setSearchText(e.target.value)}
-              />
-              {/* <span className="bx bx-search-alt mt-3" /> */}
-            </div>
-          </div>
-          {loading ? (
-            <Row>
-              <Col xs="12">
-                <div className="text-center my-3">
-                  <Link to="#" className="text-success">
-                    <i className="bx bx-hourglass bx-spin me-2" />
+    return (
+        <React.Fragment>
+            <div>
+                <div className="" style={{ marginTop: 100 }} id="landinggrid">
+                    <div className="mb-2">
+                        <div className="app-search ">
+                            <input
+                                type="text-success"
+                                className="form-control "
+                                placeholder="Search for Attorney..."
+                                value={searchText}
+                                onChange={e => setSearchText(e.target.value)}
+                            />
+                            {/* <span className="bx bx-search-alt mt-3" /> */}
+                        </div>
+                    </div>
+                    {loading ? (
+                        <Row>
+                            <Col xs="12">
+                                <div className="text-center my-3">
+                                    <Link to="#" className="text-success">
+                                        <i className="bx bx-hourglass bx-spin me-2" />
                     Loading. . .
-                  </Link>
-                </div>
-              </Col>
-            </Row>
-          ) : (
-            <>
-              <Row>
-                {attorneys
-                  ?.filter(
-                    item =>
-                      item?.regUser?.firstname
-                        ?.toString()
-                        .toLowerCase()
-                        .includes(searchText.toString().toLowerCase()) ||
+                                    </Link>
+                                </div>
+                            </Col>
+                        </Row>
+                    ) : (
+                        <>
+                            <Row>
+                                {attorneys
+                                    ?.filter(
+                                        item =>
+                                            item?.regUser?.firstname
+                                                ?.toString()
+                                                .toLowerCase()
+                                                .includes(searchText.toString().toLowerCase()) ||
                       item?.regUser?.lastname
-                        ?.toString()
-                        .toLowerCase()
-                        .includes(searchText.toString().toLowerCase()) ||
+                          ?.toString()
+                          .toLowerCase()
+                          .includes(searchText.toString().toLowerCase()) ||
                       item?.regUser?.firm
-                        ?.toString()
-                        .toLowerCase()
-                        .includes(searchText.toString().toLowerCase())
-                  )
-                  .slice((page - 1) * 12, page * 12)
-                  .map((user, key) => (
-                    <LandingCard user={user} key={"_user_" + key} />
-                  ))}
-              </Row>
-              <div className="d-flex justify-content-center">
-                <Pagination
-                  className="pagination-bar"
-                  currentPage={page}
-                  totalCount={attorneys?.length}
-                  pageSize={limit}
-                  onPageChange={p => setPage(p)}
-                />
-              </div>
+                          ?.toString()
+                          .toLowerCase()
+                          .includes(searchText.toString().toLowerCase())
+                                    )
+                                    .slice((page - 1) * 12, page * 12)
+                                    .map((user, key) => (
+                                        <LandingCard user={user} key={'_user_' + key} />
+                                    ))}
+                            </Row>
+                            <div className="d-flex justify-content-center">
+                                <Pagination
+                                    className="pagination-bar"
+                                    currentPage={page}
+                                    totalCount={attorneys?.length}
+                                    pageSize={limit}
+                                    onPageChange={p => setPage(p)}
+                                />
+                            </div>
 
-              {/* <div>
+                            {/* <div>
          <div  id="bannerimg" className="text-white"> A law firm with a passion for success<br/>
               <div id="rights">Protecting Your<span className="text-primary" id="span"> Rights</span>, Your <span className="text-primary" id="span">Freedom</span>, Your <span className="text-primary" id="span">Future</span></div>
          </div> 
@@ -134,24 +134,24 @@ const LandingGrid = () => {
           <img src= {banner} alt="banner background"  id="banner"/>
            
       </div> */}
-              <section style={{ paddingTop: "50px", paddingBottom: "60px" }}>
-                <div>
-                  <div className="d-flex flex-md-row flex-column">
-                    <div className="col-lg-7 col-sm-6">
-                      <div>
-                        <h2 className=" text-primary mb-5 ">
-                          About Us{" "}
-                          <div
-                            style={{
-                              width: "70px",
-                              height: "3px",
-                              backgroundColor: "#556ee6",
-                              borderRadius: "10px",
-                            }}
-                          ></div>
-                        </h2>
-                      </div>
-                      <p style={{ fontSize: 15 }}>
+                            <section style={{ paddingTop: '50px', paddingBottom: '60px' }}>
+                                <div>
+                                    <div className="d-flex flex-md-row flex-column">
+                                        <div className="col-lg-7 col-sm-6">
+                                            <div>
+                                                <h2 className=" text-primary mb-5 ">
+                          About Us{' '}
+                                                    <div
+                                                        style={{
+                                                            width: '70px',
+                                                            height: '3px',
+                                                            backgroundColor: '#556ee6',
+                                                            borderRadius: '10px',
+                                                        }}
+                                                    ></div>
+                                                </h2>
+                                            </div>
+                                            <p style={{ fontSize: 15 }}>
                         Rain Computing’s ChatPro<sup>TM</sup> provides a Case-Based Instant
                         Messaging (CBIM) platform for professionals, such as,
                         lawyers, accountants, etc., to better manage their cases
@@ -164,83 +164,83 @@ const LandingGrid = () => {
                         intake, due date management, etc. Please feel free to
                         try it out and contact our sales team for corporate
                         accounts.
-                      </p>
-                    </div>
+                                            </p>
+                                        </div>
 
-                    <div className="flex-fill col-lg-5 col-sm-12 d-flex justify-content-end ">
-                      <img
-                        src={illustration}
-                        alt="about illustration"
-                        className="img-fluid"
-                        id="illimage"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </section>
-              <div
-                className=" d-flex flex-md-row flex-column  "
-                style={{ paddingTop: "50px", paddingBottom: "120px" }}
-              >
-                <div className="col-md-6 col-sm-12 text-center ">
-                  {/* <h2 >Contact Us </h2>
+                                        <div className="flex-fill col-lg-5 col-sm-12 d-flex justify-content-end ">
+                                            <img
+                                                src={illustration}
+                                                alt="about illustration"
+                                                className="img-fluid"
+                                                id="illimage"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                            <div
+                                className=" d-flex flex-md-row flex-column  "
+                                style={{ paddingTop: '50px', paddingBottom: '120px' }}
+                            >
+                                <div className="col-md-6 col-sm-12 text-center ">
+                                    {/* <h2 >Contact Us </h2>
                            <div id="contactline"></div> */}
 
-                  <img src={contact} alt="contact info" id="congif" />
+                                    <img src={contact} alt="contact info" id="congif" />
 
-                  <h4>Love to hear from you</h4>
-                  <p>Stay Connected.....</p>
-                </div>
+                                    <h4>Love to hear from you</h4>
+                                    <p>Stay Connected.....</p>
+                                </div>
 
-                <div className="col-md-6 col-sm-12">
-                  <h2>Contact Us </h2>
-                  <div id="contactline"></div>
+                                <div className="col-md-6 col-sm-12">
+                                    <h2>Contact Us </h2>
+                                    <div id="contactline"></div>
 
-                  <div className="formsec">
-                    <form>
-                      <input
-                        type="text"
-                        placeholder="FirstName"
-                        required
-                        id="formcon1"
-                      ></input>
-                      <input
-                        type="text"
-                        placeholder="LastName"
-                        id="formcon"
-                      ></input>
-                      <input
-                        type="email"
-                        placeholder="Mail ID"
-                        required
-                        id="formcon1"
-                      ></input>
+                                    <div className="formsec">
+                                        <form>
+                                            <input
+                                                type="text"
+                                                placeholder="FirstName"
+                                                required
+                                                id="formcon1"
+                                            ></input>
+                                            <input
+                                                type="text"
+                                                placeholder="LastName"
+                                                id="formcon"
+                                            ></input>
+                                            <input
+                                                type="email"
+                                                placeholder="Mail ID"
+                                                required
+                                                id="formcon1"
+                                            ></input>
 
-                      <input
-                        type="tel"
-                        placeholder="Phone no"
-                        id="formcon"
-                      ></input>
-                    </form>
-                    <button type="button" id="formbut">
+                                            <input
+                                                type="tel"
+                                                placeholder="Phone no"
+                                                id="formcon"
+                                            ></input>
+                                        </form>
+                                        <button type="button" id="formbut">
                       Submit
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+                    )}
 
-          {/* <div className="py-5">
+                    {/* <div className="py-5">
             <iframe
               src="https://webchat.botframework.com/embed/testrainbot-bot?s=8ugnF6uTJL4.-geCgZnAB57pnDg_qR3LdDFbCrZ0cQd4ObBVhmNUaSQ"
               style={{ minWidth: "400px", width: "100px", height: "500px" }}
             ></iframe>
           </div> */}
-        </div>
-      </div>
-    </React.Fragment>
-  )
-}
+                </div>
+            </div>
+        </React.Fragment>
+    );
+};
 
-export default withRouter(LandingGrid)
+export default withRouter(LandingGrid);

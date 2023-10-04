@@ -1,14 +1,14 @@
-import { takeEvery, fork, put, all, call } from "redux-saga/effects"
+import { takeEvery, fork, put, all, call } from 'redux-saga/effects';
 
 //Account Redux states
-import { REGISTER_USER} from "./actionTypes"
-import { registerUserSuccessful, registerUserFailed } from "./actions"
+import { REGISTER_USER} from './actionTypes';
+import { registerUserSuccessful, registerUserFailed } from './actions';
 
-import { postRegister } from "../../../helpers/backend_helper"
+import { postRegister } from '../../../helpers/backend_helper';
 
 // Is user register successfull then direct plot user in redux.
 function* registerUser({ payload: { user } }) {
-  try {
+    try {
     // if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
     //   const response = yield call(
     //     fireBaseBackend.registerUser,
@@ -21,19 +21,19 @@ function* registerUser({ payload: { user } }) {
     //   yield put(registerUserSuccessful(response))
     // } else
 
-    const response = yield call(postRegister, user)
-    yield put(registerUserSuccessful(response))
-  } catch (error) {
-    yield put(registerUserFailed(error))
-  }
+        const response = yield call(postRegister, user);
+        yield put(registerUserSuccessful(response));
+    } catch (error) {
+        yield put(registerUserFailed(error));
+    }
 }
 
 export function* watchUserRegister() {
-  yield takeEvery(REGISTER_USER, registerUser)
+    yield takeEvery(REGISTER_USER, registerUser);
 }
 
 function* accountSaga() {
-  yield all([fork(watchUserRegister)])
+    yield all([fork(watchUserRegister)]);
 }
 
-export default accountSaga
+export default accountSaga;

@@ -1,18 +1,18 @@
-import { useState,useEffect } from 'react'
+import { useState,useEffect } from 'react';
 
 const useMediaQuery = (breakpoint) => {
 
- const [width,setWidth]=useState(0)
+    const [width,setWidth]=useState(0);
  
- const updateWidth=()=>setWidth(window.innerWidth)
+    const updateWidth=()=>setWidth(window.innerWidth);
 
- useEffect(() => {
-    updateWidth();
-    window.addEventListener("resize",updateWidth);
-    return ()=> window.removeEventListener("resize",updateWidth)
-  },[]);
+    useEffect(() => {
+        updateWidth();
+        window.addEventListener('resize',updateWidth);
+        return ()=> window.removeEventListener('resize',updateWidth);
+    },[]);
 
-  return breakpoint?[width>=+breakpoint,width]:[width]
-}
+    return breakpoint?[width>=+breakpoint,width]:[width];
+};
 
-export default useMediaQuery
+export default useMediaQuery;
