@@ -1,12 +1,12 @@
-import React, { useState } from "react"
-import PropTypes from "prop-types"
-import {  Row } from "reactstrap"
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import {  Row } from 'reactstrap';
 import { useHistory } from 'react-router-dom';
-import toastr from "toastr"
-import "toastr/build/toastr.min.css"
-import { useUser } from "../../../../src/rainComputing/contextProviders/UserProvider"
-import { initialNewCaseValues } from "../../../../src/rainComputing/helpers/initialFormValues"
-import { createNewClient } from "../../../../src/rainComputing/helpers/backend_helper"
+import toastr from 'toastr';
+import 'toastr/build/toastr.min.css';
+import { useUser } from '../../../../src/rainComputing/contextProviders/UserProvider';
+import { initialNewCaseValues } from '../../../../src/rainComputing/helpers/initialFormValues';
+import { createNewClient } from '../../../../src/rainComputing/helpers/backend_helper';
 
 const CreateClient = ({
     userFormValues,
@@ -15,37 +15,37 @@ const CreateClient = ({
     setModalOpen,
     getAllClients
 }) => {
-    const { currentUser } = useUser()
+    const { currentUser } = useUser();
     const history = useHistory();
-    const [loading, setloading] = useState(false)
+    const [loading, setloading] = useState(false);
   
     toastr.options = {
         progressBar: true,
         closeButton: true,
-    }
+    };
 
     const handleFormValueChange = e => {
-        const { name, value } = e.target
-        setFormValues(prevState => ({ ...prevState, [name]: value }))
-    }
+        const { name, value } = e.target;
+        setFormValues(prevState => ({ ...prevState, [name]: value }));
+    };
 
     const isDisabled = () => {
         if (
             !formValues?.clientName ||
             !formValues?.clientId
         )
-            return true
-        return false
-    }
+            return true;
+        return false;
+    };
 
     const handleClientCreationCancel = () => {
-        setFormValues(initialNewCaseValues)
-        setModalOpen(false)
-    }
+        setFormValues(initialNewCaseValues);
+        setModalOpen(false);
+    };
 
     const handleCreatingClient = async () => {
 
-        setloading(true)
+        setloading(true);
         const payLoad = {
             clientId: formValues?.clientId,
             clientName: formValues?.clientName,
@@ -53,33 +53,33 @@ const CreateClient = ({
             address: formValues?.address,
             // members: [currentUser?.userID, ...filteredMembers],
             userId: currentUser?.userID
-        }
+        };
 
-        const clientRes = await createNewClient(payLoad)
+        const clientRes = await createNewClient(payLoad);
 
         if (clientRes.success) {
 
             toastr.success(
                 `Client ${formValues?.clientName} has been created successfully`,
-                "Client creation success"
-            )
-            history.push(`/chat-rc`)
-            await getAllClients()
+                'Client creation success'
+            );
+            history.push('/chat-rc');
+            await getAllClients();
 
-            handleClientCreationCancel()
+            handleClientCreationCancel();
 
         } else {
 
             toastr.error(
                 ` ${clientRes?.msg} Failed to Create NewClient `,
-                "Client creation failed!!!"
-            )
+                'Client creation failed!!!'
+            );
 
         }
 
-        setloading(false)
+        setloading(false);
 
-    }
+    };
 
 
     return (
@@ -161,7 +161,7 @@ const CreateClient = ({
                         <button
                             type="button"
                             onClick={() => {
-                                handleClientCreationCancel()
+                                handleClientCreationCancel();
                             }}
                             className="btn btn-secondary "
                             data-dismiss="modal"
@@ -171,7 +171,7 @@ const CreateClient = ({
                     )}
                     {loading ? (
                         <button type="button" className="btn btn-dark ">
-                            <i className="bx bx-loader bx-spin font-size-16 align-middle me-2"></i>{" "}
+                            <i className="bx bx-loader bx-spin font-size-16 align-middle me-2"></i>{' '}
                             Loading
                         </button>
                     ) : (
@@ -187,8 +187,8 @@ const CreateClient = ({
                 </div>
             </Row>
         </>
-    )
-}
+    );
+};
 
 CreateClient.propTypes = {
     userFormValues: PropTypes.object,
@@ -197,6 +197,6 @@ CreateClient.propTypes = {
     setModalOpen: PropTypes.func,
     getAllCases: PropTypes.func,
     getAllClients: PropTypes.func,
-}
+};
 
-export default CreateClient
+export default CreateClient;

@@ -1,13 +1,13 @@
 export const initialNewCaseValues = {
-  caseName: "",
-  caseId: "",
-  members: [],
-  admin: "",
-}
+    caseName: '',
+    caseId: '',
+    members: [],
+    admin: '',
+};
 
 export const initialNewClientValues = {
-  clientName: "",
-  clientId: "",
-  email:"",
-  address:"",
-}
+    clientName: '',
+    clientId: '',
+    email:'',
+    address:'',
+};

@@ -1,1880 +1,1880 @@
 import React, {
-  useEffect,
-  useState,
-  lazy,
-  useRef,
-  useCallback
-} from "react"
-import { MetaTags } from "react-meta-tags"
+    useEffect,
+    useState,
+    lazy,
+    useRef,
+    useCallback
+} from 'react';
+import { MetaTags } from 'react-meta-tags';
 import {
-  Button,
-  Card,
-  Col,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  Input,
-  Nav,
-  NavItem,
-  NavLink,
-  Row,
-  TabContent,
-  TabPane,
-  InputGroup,
-  UncontrolledDropdown,
-  Modal,
-  ModalHeader,
-} from "reactstrap"
-import PerfectScrollbar from "react-perfect-scrollbar"
+    Button,
+    Card,
+    Col,
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Input,
+    Nav,
+    NavItem,
+    NavLink,
+    Row,
+    TabContent,
+    TabPane,
+    InputGroup,
+    UncontrolledDropdown,
+    Modal,
+    ModalHeader,
+} from 'reactstrap';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 
 // import fileDownload from "js-file-download"
-import "react-perfect-scrollbar/dist/css/styles.css"
-import toastr from "toastr"
-import "toastr/build/toastr.min.css"
+import 'react-perfect-scrollbar/dist/css/styles.css';
+import toastr from 'toastr';
+import 'toastr/build/toastr.min.css';
 // import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock"
-import { jsPDF } from "jspdf"
-import autoTable from "jspdf-autotable"
-import profile from "../../../../src/assets/images/avatar-defult.jpg"
-import classNames from "classnames"
-import { useUser } from "../../../../src/rainComputing/contextProviders/UserProvider"
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import profile from '../../../../src/assets/images/avatar-defult.jpg';
+import classNames from 'classnames';
+import { useUser } from '../../../../src/rainComputing/contextProviders/UserProvider';
 import {
-  createOnevsOneChat,
-  getAllUsers,
-  getCasesByUserId,
-  getCounts,
-  getGroupsByUserIdandCaseId,
-  getMessagesByUserIdandGroupId,
-  getOnevsOneChat,
-  updateCase,
-  deleteLastMsg,
-  sentEmail,
-  pinMessage,
-  getCaseFiles,
-  completedCase,
-  updateGroup,
-  getClientsByUserId,
-  getAllSubCases,
-  // sentMessageEmail,
-} from "../../../../src/rainComputing/helpers/backend_helper"
-import { Link } from "react-router-dom"
-import DynamicModel from "../../../../src/rainComputing/components/modals/DynamicModal"
-import { useToggle } from "../../../../src/rainComputing/helpers/hooks/useToggle"
-import DynamicSuspense from "../../../../src/rainComputing/components/loader/DynamicSuspense"
-import { initialNewCaseValues, initialNewClientValues } from "../../../../src/rainComputing/helpers/initialFormValues"
-import CaseGrid from "../../../../src/rainComputing/components/chat/CaseGrid"
-import useAccordian from "../../../../src/rainComputing/helpers/hooks/useAccordian"
-import SubgroupBar from "../../../../src/rainComputing/components/chat/SubgroupBar"
-import { useChat } from "../../../../src/rainComputing/contextProviders/ChatProvider"
-import moment from "moment"
-import axios from "axios"
-import { SERVER_URL } from "../../../../src/rainComputing/helpers/configuration"
-import AttachmentViewer from "../../../../src/rainComputing/components/chat/AttachmentViewer"
-import NoChat from "../../../../src/rainComputing/components/chat/NoChat"
-import DeleteModal from "../../../../src/rainComputing/components/modals/DeleteModal"
-import { useNotifications } from "../../../../src/rainComputing/contextProviders/NotificationsProvider"
-import { useQuery } from "../../../../src/rainComputing/helpers/hooks/useQuery"
-import ChatLoader from "../../../../src/rainComputing/components/chat/ChatLoader"
-import EditCase from "../../../../src/rainComputing/components/chat/EditCase"
+    createOnevsOneChat,
+    getAllUsers,
+    getCasesByUserId,
+    getCounts,
+    getGroupsByUserIdandCaseId,
+    getMessagesByUserIdandGroupId,
+    getOnevsOneChat,
+    updateCase,
+    deleteLastMsg,
+    sentEmail,
+    pinMessage,
+    getCaseFiles,
+    completedCase,
+    updateGroup,
+    getClientsByUserId,
+    getAllSubCases,
+    // sentMessageEmail,
+} from '../../../../src/rainComputing/helpers/backend_helper';
+import { Link } from 'react-router-dom';
+import DynamicModel from '../../../../src/rainComputing/components/modals/DynamicModal';
+import { useToggle } from '../../../../src/rainComputing/helpers/hooks/useToggle';
+import DynamicSuspense from '../../../../src/rainComputing/components/loader/DynamicSuspense';
+import { initialNewCaseValues, initialNewClientValues } from '../../../../src/rainComputing/helpers/initialFormValues';
+import CaseGrid from '../../../../src/rainComputing/components/chat/CaseGrid';
+import useAccordian from '../../../../src/rainComputing/helpers/hooks/useAccordian';
+import SubgroupBar from '../../../../src/rainComputing/components/chat/SubgroupBar';
+import { useChat } from '../../../../src/rainComputing/contextProviders/ChatProvider';
+import moment from 'moment';
+import axios from 'axios';
+import { SERVER_URL } from '../../../../src/rainComputing/helpers/configuration';
+import AttachmentViewer from '../../../../src/rainComputing/components/chat/AttachmentViewer';
+import NoChat from '../../../../src/rainComputing/components/chat/NoChat';
+import DeleteModal from '../../../../src/rainComputing/components/modals/DeleteModal';
+import { useNotifications } from '../../../../src/rainComputing/contextProviders/NotificationsProvider';
+import { useQuery } from '../../../../src/rainComputing/helpers/hooks/useQuery';
+import ChatLoader from '../../../../src/rainComputing/components/chat/ChatLoader';
+import EditCase from '../../../../src/rainComputing/components/chat/EditCase';
 // import { useDropzone } from "react-dropzone"
 // import ForwardMsg from "rainComputing/components/chat/ForwardMsg"
-import copy from "copy-to-clipboard"
-import PinnedModels from "../../../../src/rainComputing/components/chat/models/PinnedModels"
-import ReplyMsgModal from "../../../../src/rainComputing/components/chat/models/ReplyMsgModal"
-import ChatRemainder from "../../../../src/rainComputing/components/chat/ChatRemainder"
+import copy from 'copy-to-clipboard';
+import PinnedModels from '../../../../src/rainComputing/components/chat/models/PinnedModels';
+import ReplyMsgModal from '../../../../src/rainComputing/components/chat/models/ReplyMsgModal';
+import ChatRemainder from '../../../../src/rainComputing/components/chat/ChatRemainder';
 // import Reminders from "../reminder"
 // import { getFileFromGFS } from "../../../../src/rainComputing/helpers/backend_helper"
-import Calender from "../../../../src/rainComputing/pages/Calendar/Calendar"
-import RecordRTC from "recordrtc"
-import VoiceMessage from "../../../../src/rainComputing/components/audio"
-import JSZip from "jszip"
-import EditMessageModel from "../../../../src/rainComputing/components/chat/models/EditMessageModel"
-import "react-quill/dist/quill.snow.css"
-import "quill-mention"
-import ReactQuillInput from "../../../../src/rainComputing/components/ReactQuill/ReactQuill"
-import CreateClient from "../../../../src/rainComputing/components/chat/CreateClient"
+import Calender from '../../../../src/rainComputing/pages/Calendar/Calendar';
+import RecordRTC from 'recordrtc';
+import VoiceMessage from '../../../../src/rainComputing/components/audio';
+import JSZip from 'jszip';
+import EditMessageModel from '../../../../src/rainComputing/components/chat/models/EditMessageModel';
+import 'react-quill/dist/quill.snow.css';
+import 'quill-mention';
+import ReactQuillInput from '../../../../src/rainComputing/components/ReactQuill/ReactQuill';
+import CreateClient from '../../../../src/rainComputing/components/chat/CreateClient';
 const CreateCase = lazy(() =>
-  import("../../../../src/rainComputing/components/chat/CreateCase")
-)
-const SubGroups = lazy(() => import("../../../../src/rainComputing/components/chat/SubGroups"))
+    import('../../../../src/rainComputing/components/chat/CreateCase')
+);
+const SubGroups = lazy(() => import('../../../../src/rainComputing/components/chat/SubGroups'));
 
 //Chat left sidebar nav items
-const sidebarNavItems = ["Chat", "Case", "Contact"]
+const sidebarNavItems = ['Chat', 'Case', 'Contact'];
 
 const initialPageCount = {
-  chats: 3,
-  cases: 3,
-  users: 3,
-}
+    chats: 3,
+    cases: 3,
+    users: 3,
+};
 
 const ChatRc = () => {
-  let query = useQuery()
-  const { currentUser } = useUser()
-  const {
-    toggleOpen: newCaseModelOpen,
-    setToggleOpen: setNewCaseModelOpen,
-    toggleIt: toggleNewCaseModelOpen,
-  } = useToggle(false)
-  const {
-    toggleOpen: newClientModelOpen,
-    setToggleOpen: setNewClientModelOpen,
-    toggleIt: toggleNewClientModelOpen,
-  } = useToggle(false)
-  // const {
-  //   toggleOpen: completeCaseModelOpen,
-  //   setToggleOpen: setCompleteCaseModelOpen,
-  //   toggleIt: toggleCompleteCaseModelOpen,
-  // } = useToggle(false)
-  const {
-    toggleOpen: remainderModelOpen,
-    setToggleOpen: setRemainderModelOpen,
-    toggleIt: toggleremainderModelOpen,
-  } = useToggle(false)
-  const {
-    toggleOpen: CalendarModelOpen,
-    setToggleOpen: setCalendarModelOpen,
-    toggleIt: toggleCalendarModelOpen,
-  } = useToggle(false)
-  const {
-    toggleOpen: subGroupModelOpen,
-    setToggleOpen: setSubGroupModelOpen,
-    toggleIt: togglesubGroupModelOpen,
-  } = useToggle(false)
-  const {
-    toggleOpen: chatSettingOpen,
-    // setToggleOpen: setChatSettingOpen,
-    toggleIt: toggleChatSettingOpen,
-  } = useToggle(false)
-  const {
-    toggleOpen: groupIdOpen,
-    // setToggleOpen: setGroupIdOpen,
-    toggleIt: toggleGroupIdOpen,
-  } = useToggle(false)
+    let query = useQuery();
+    const { currentUser } = useUser();
+    const {
+        toggleOpen: newCaseModelOpen,
+        setToggleOpen: setNewCaseModelOpen,
+        toggleIt: toggleNewCaseModelOpen,
+    } = useToggle(false);
+    const {
+        toggleOpen: newClientModelOpen,
+        setToggleOpen: setNewClientModelOpen,
+        toggleIt: toggleNewClientModelOpen,
+    } = useToggle(false);
+    // const {
+    //   toggleOpen: completeCaseModelOpen,
+    //   setToggleOpen: setCompleteCaseModelOpen,
+    //   toggleIt: toggleCompleteCaseModelOpen,
+    // } = useToggle(false)
+    const {
+        toggleOpen: remainderModelOpen,
+        setToggleOpen: setRemainderModelOpen,
+        toggleIt: toggleremainderModelOpen,
+    } = useToggle(false);
+    const {
+        toggleOpen: CalendarModelOpen,
+        setToggleOpen: setCalendarModelOpen,
+        toggleIt: toggleCalendarModelOpen,
+    } = useToggle(false);
+    const {
+        toggleOpen: subGroupModelOpen,
+        setToggleOpen: setSubGroupModelOpen,
+        toggleIt: togglesubGroupModelOpen,
+    } = useToggle(false);
+    const {
+        toggleOpen: chatSettingOpen,
+        // setToggleOpen: setChatSettingOpen,
+        toggleIt: toggleChatSettingOpen,
+    } = useToggle(false);
+    const {
+        toggleOpen: groupIdOpen,
+        // setToggleOpen: setGroupIdOpen,
+        toggleIt: toggleGroupIdOpen,
+    } = useToggle(false);
 
-  const {
-    toggleOpen: clientSortingOpen,
-    // setToggleOpen: setClientSortingOpen,
-    toggleIt: toggleClientSortingOpen,
-  } = useToggle(false)
+    const {
+        toggleOpen: clientSortingOpen,
+        // setToggleOpen: setClientSortingOpen,
+        toggleIt: toggleClientSortingOpen,
+    } = useToggle(false);
 
 
-  const {
-    chats,
-    setChats,
-    currentRoom: currentChat,
-    setCurrentRoom: setCurrentChat,
-    handleSendingMessage,
-    messages,
-    setMessages,
-    messageStack,
-  } = useChat()
+    const {
+        chats,
+        setChats,
+        currentRoom: currentChat,
+        setCurrentRoom: setCurrentChat,
+        handleSendingMessage,
+        messages,
+        setMessages,
+        messageStack,
+    } = useChat();
 
-  const { currentAttorney } = useUser()
-  const privateChatId = query.get("p_id")
-  const privateReplyChatId = query.get("rp_id")
-  const groupChatId = query.get("g_id")
-  const caseChatId = query.get("c_id")
-  const groupReplyChatId = query.get("rg_id")
-  const caseReplyChatId = query.get("rc_id")
-  const replymsgId = query.get("reply_id")
-  const msgId = query.get("msg_id")
-  const { notifications, setNotifications } = useNotifications()
-  // const [forwardMessages, setForwardMessages] = useState([])
-  const { activeAccordian, handleSettingActiveAccordion } = useAccordian(-1)
-  const {
-    toggleOpen: caseDeleteModalOpen,
-    setToggleOpen: setCaseDeleteModalOpen,
-    toggleIt: toggleCaseDeleteModal,
-  } = useToggle(false)
-  const {
-    toggleOpen: chatDeleteModalOpen,
-    setToggleOpen: setChatDeleteModalOpen,
-    toggleIt: toggleChatDeleteModal,
-  } = useToggle(false)
-  const {
-    toggleOpen: MsgDeleteModalOpen,
-    setToggleOpen: setMsgDeleteModalOpen,
-    toggleIt: toggleMsgDeleteModal,
-  } = useToggle(false)
-  const {
-    toggleOpen: completedCaseDelete,
-    setToggleOpen: setCompletedCaseDelete,
-    toggleIt: toggleCompleteCaseDeleteModelOpen,
-  } = useToggle(false)
-  const {
-    toggleOpen: caseEditModalOpen,
-    setToggleOpen: setCaseEditModalOpen,
-    toggleIt: toggleCaseEditModal,
-  } = useToggle(false)
-  const {
-    toggleOpen: messageEditModalOpen,
-    setToggleOpen: setMessageEditModalOpen,
-    toggleIt: toggleMessageEditModal,
-  } = useToggle(false)
-  const {
-    toggleOpen: rplyMessageModalOpen,
-    setToggleOpen: setReplyMsgModalOpen,
-    toggleIt: toggleReplyMessageModal,
-  } = useToggle(false)
+    const { currentAttorney } = useUser();
+    const privateChatId = query.get('p_id');
+    const privateReplyChatId = query.get('rp_id');
+    const groupChatId = query.get('g_id');
+    const caseChatId = query.get('c_id');
+    const groupReplyChatId = query.get('rg_id');
+    const caseReplyChatId = query.get('rc_id');
+    const replymsgId = query.get('reply_id');
+    const msgId = query.get('msg_id');
+    const { notifications, setNotifications } = useNotifications();
+    // const [forwardMessages, setForwardMessages] = useState([])
+    const { activeAccordian, handleSettingActiveAccordion } = useAccordian(-1);
+    const {
+        toggleOpen: caseDeleteModalOpen,
+        setToggleOpen: setCaseDeleteModalOpen,
+        toggleIt: toggleCaseDeleteModal,
+    } = useToggle(false);
+    const {
+        toggleOpen: chatDeleteModalOpen,
+        setToggleOpen: setChatDeleteModalOpen,
+        toggleIt: toggleChatDeleteModal,
+    } = useToggle(false);
+    const {
+        toggleOpen: MsgDeleteModalOpen,
+        setToggleOpen: setMsgDeleteModalOpen,
+        toggleIt: toggleMsgDeleteModal,
+    } = useToggle(false);
+    const {
+        toggleOpen: completedCaseDelete,
+        setToggleOpen: setCompletedCaseDelete,
+        toggleIt: toggleCompleteCaseDeleteModelOpen,
+    } = useToggle(false);
+    const {
+        toggleOpen: caseEditModalOpen,
+        setToggleOpen: setCaseEditModalOpen,
+        toggleIt: toggleCaseEditModal,
+    } = useToggle(false);
+    const {
+        toggleOpen: messageEditModalOpen,
+        setToggleOpen: setMessageEditModalOpen,
+        toggleIt: toggleMessageEditModal,
+    } = useToggle(false);
+    const {
+        toggleOpen: rplyMessageModalOpen,
+        setToggleOpen: setReplyMsgModalOpen,
+        toggleIt: toggleReplyMessageModal,
+    } = useToggle(false);
 
-  const MESSAGE_CHUNK_SIZE = 50
+    const MESSAGE_CHUNK_SIZE = 50;
 
-  // const [isChatScroll, setIsChatScroll] = useState(false)
-  // const [messageBox, setMessageBox] = useState(null)
-  const [pageLoader, setPageLoader] = useState(true)
-  const [chatLoader, setChatLoader] = useState(true)
-  const [activeTab, setactiveTab] = useState("1")
-  const [contacts, setContacts] = useState([])
-  const [contactsLoading, setContactsLoading] = useState(false)
-  const [newCase, setNewCase] = useState(initialNewCaseValues)
-  const [newClient, setNewClient] = useState(initialNewClientValues)
-  const [clients, setClients] = useState([])
-  // const [clientId, setClientId] = useState("")
-  // const [caseClientId, setCaseClientId] = useState(null)
-  const [allCases, setAllCases] = useState([])
-  // const [cases, setCases] = useState([])
-  // const [clientName, setClientName] = useState(initialNewClientValues)
-  const [allSubCases, setAllSubCases] = useState([])
-  const [caseLoading, setCaseLoading] = useState(true)
-  const [currentCase, setCurrentCase] = useState(null)
-  const [allgroups, setAllgroups] = useState([])
-  const [receivers, setReceivers] = useState([])
-  const [isAttachment, setIsAttachment] = useState(false)
-  const [isVoiceMessage, setIsVoiceMessage] = useState(false)
-  const [recorder, setRecorder] = useState([])
-  const [allFiles, setAllFiles] = useState([])
-  const [allVoicemsg, setAllVoicemsg] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [searchText, setSearchText] = useState("")
-  const [totalPages, setTotalPages] = useState(initialPageCount)
-  const [contactPage, setContactPage] = useState(1)
-  const [casePage, setCasePage] = useState(1)
-  const [search_Menu, setsearch_Menu] = useState(false)
-  const [searchMessageText, setSearchMessagesText] = useState("")
-  const [searchedMessages, setSearchedMessages] = useState([])
-  const [mentionsArray, setMentionsArray] = useState([])
-  const [curReplyMessageId, setCurReplyMessageId] = useState(null)
-  const [curEditMessageId, setCurEditMessageId] = useState("")
-  const [curReminderMessageId, setCurReminderMessageId] = useState(null)
-  const [isDeleteMsg, setIsDeleteMsg] = useState(false)
-  console.log("isDeleteMsg",isDeleteMsg)
-  const [emailModal, setEmailModal] = useState(false)
-  const [email, setEmail] = useState("")
-  const [searchIndex, setSearchIndex] = useState(0)
-  const [pinModal, setPinModal] = useState(false)
-  const [pinnedMsg, setPinnedMsg] = useState("")
-  console.log("pinnedMsg",pinnedMsg)
-  // const [getpinnedMsg, setGetPinnedMsg] = useState("")
-  const [msgDelete, setMsgDelete] = useState()
-  const containerRef = useRef(null)
-  const [prevHeight, setPrevHeight] = useState(0)
-  console.log("prevHeight",prevHeight)
-  const [visibleMessages, setVisibleMessages] = useState([])
-  const [blobURL, setBlobURL] = useState(null)
-  const [isSearchTextCleared, setIsSearchTextCleared] = useState(false)
-  const [filteredChats, setFilteredChats] = useState(chats)
-  console.log("filteredChats",filteredChats)
-  const [duration, setDuration] = useState(0)
-  const [durationIntervalId, setDurationIntervalId] = useState(null)
-  const [caseFile, setCaseFile] = useState([])
-  const [modal_scroll, setmodal_scroll] = useState(false)
-  const [curMessage, setcurMessage] = useState("")
-  const [currentChatDelete, setCurrentChatDelete] = useState()
-  // const [isQuil, setIsQuil] = useState(false)
-  const [sortedChats, setSortedChats] = useState([])
-  const [deleteMessage, setDeleteMessage] = useState()
-  console.log("deleteMessage",deleteMessage)
-  const [nonewmessage, setNoNewMessage] = useState([])
-  // const toggle_Quill = () => {
-  //   setIsQuil(!isQuil)
-  // }
-  const [isQuill, setIsQuill] = useState(false)
-  const toggle_Quill = () => {
-    setIsQuill(!isQuill)
-  }
-
-  const startRecording = () => {
-    navigator.mediaDevices
-      .getUserMedia({ audio: true })
-      .then(stream => {
-        const newRecorder = RecordRTC(stream, { type: "audio" })
-        newRecorder.startRecording()
-        setRecorder(newRecorder)
-        // Start updating duration every second
-        const intervalId = setInterval(() => {
-          setDuration(duration => duration + 1)
-        }, 1000)
-        setDuration(0)
-        setDurationIntervalId(intervalId)
-      })
-      .catch(err => console.log(err))
-    setBlobURL(null)
-    setDuration(0)
-  }
-
-  // Stop recording
-  const stopRecording = () => {
-    if (recorder && recorder.state === "recording") {
-      recorder.stopRecording(() => {
-        const blob = recorder.getBlob()
-        const url = URL.createObjectURL(blob)
-        setBlobURL(url)
-        setIsVoiceMessage(true)
-        // send the recorded message as a message here using a messaging API
-      })
-    }
-    // Clear duration interval
-    clearInterval(durationIntervalId)
-    setDurationIntervalId(null)
-  }
-
-  useEffect(() => {
-    return () => {
-      // Clean up the duration interval on component unmount
-      clearInterval(durationIntervalId)
-    }
-  }, [durationIntervalId])
-  const handleScroll = event => {
-    if (event && event.currentTarget) {
-      const { scrollTop, clientHeight, scrollHeight } = event.currentTarget
-
-      if (scrollTop === 0) {
-        setPrevHeight(scrollHeight)
-        const additionalMessages = Math.min(
-          messages.length - visibleMessages.length,
-          MESSAGE_CHUNK_SIZE
-        )
-        setVisibleMessages(prevVisibleMessages =>
-          messages.slice(-prevVisibleMessages.length - additionalMessages)
-        )
-
-        if (visibleMessages.length < messages.length) {
-          event.currentTarget.scrollTop = clientHeight
-        } else if (scrollTop + clientHeight === scrollHeight) {
-          // User has scrolled to the bottom, scroll to bottom automatically
-          event.currentTarget.scrollTop = scrollHeight
-        }
-      }
-    }
-  }
-
-  const scrollToBottom = () => {
-    containerRef.current?.scrollTo({
-      left: 0,
-      top: containerRef.current.scrollHeight,
-      behavior: "auto", // Changing behavior to "auto" will cause the scrolling to happen instantly
-    })
-  }
-  const handlerefreshemail = async () => {
-    setChatLoader(true)
-    const payload = {
-      groupId: currentChat?._id,
-      userId: currentUser?.userID,
-    }
-    const res = await getMessagesByUserIdandGroupId(payload)
-    if (res.success) {
-      setMessages(res.groupMessages)
-    } else {
-      console.log("Failed to fetch Group message", res)
-      setNoNewMessage(res.groupMessages)
-    }
-    setChatLoader(false)
-  }
-  useEffect(() => {
-    if (nonewmessage) {
-      const timer = setTimeout(() => {
-        scrollToBottom()
-      }, 500)
-      return () => clearTimeout(timer)
-    }
-  }, [messages,nonewmessage])
-  const ongetAllChatRooms = useCallback(async () => {
-    const chatRoomsRes = await getOnevsOneChat({ userId: currentUser.userID });
-    if (chatRoomsRes.success) {
-      const updatedChats = chatRoomsRes.groups.map(chat => {
-        const notification = notifications.find(n => n.groupId === chat._id);
-        return {
-          ...chat,
-          notification,
-        };
-      });
-  
-      updatedChats.sort((a, b) => {
-        if (a.notification && b.notification) {
-          return (
-            new Date(b.notification.updatedAt) -
-            new Date(a.notification.updatedAt)
-          );
-        } else if (a.notification) {
-          return -1; // Move chat with notification to the top
-        } else if (b.notification) {
-          return 1; // Move chat with notification to the top
-        } else {
-          return 0; // No notifications for both chats, maintain order
-        }
-      });
-  
-      setChats(updatedChats);
-      setCurrentChat(updatedChats[0]);
-      if (updatedChats.length < 1) {
-        setactiveTab("3");
-      }
-    } else {
-      setChats([]);
-    }
-    setChatLoader(false);
-  }, [currentUser.userID, notifications,setChats,setCurrentChat]);
-  
-  // Use ongetAllChatRooms in your component as before
-  
-
-  const filterChats = useCallback(() => {
-    if (searchText !== "") {
-      const filteredChats = chats?.filter(chat =>
-        chat.groupMembers.some(member =>
-          member?.id?.firstname
-            ?.toLowerCase()
-            .includes(searchText.toLowerCase())
-        )
-      );
-      setFilteredChats(filteredChats);
-      setChats(filteredChats);
-      setIsSearchTextCleared(false);
-    } else {
-      if (!isSearchTextCleared) {
-        ongetAllChatRooms(); // Call the function to get all chats
-        setIsSearchTextCleared(true);
-      }
-    }
-  }, [searchText, chats, isSearchTextCleared, ongetAllChatRooms,setChats]);
-  
-  useEffect(() => {
-    if (searchText === "") {
-      setIsSearchTextCleared(true);
-    }
-    filterChats();
-  }, [searchText, filterChats])
-  const Locate = useCallback(() => {
-    const message = [...messages, ...visibleMessages].find(
-      (msg) => msg._id === msgId
-    );
-    if (message) {
-      const messageElem = document.getElementById(message._id);
-      if (messageElem) {
-        messageElem.scrollIntoView({ behavior: "auto" });
-      }
-    }
-  }, [messages, visibleMessages, msgId]);
-  // useEffect(() => {
-  //   if (messages && visibleMessages?.length < messages?.length) {
-  //     const tempHeight = containerRef?.current?.scrollHeight - prevHeight
-  //     containerRef?.current?.scrollTo({ top: tempHeight, behavior: "auto" }) // Use "auto" instead of "smooth"
-  //   }
-  // }, [visibleMessages?.length, messages])
-  useEffect(() => {
-    // setVisibleMessages(messages.slice(-49))
-    if (replymsgId) {
-      Locate()
-    } else {
-      const timer = setTimeout(() => {
-        scrollToBottom()
-      }, 500)
-      return () => clearTimeout(timer)
-    }
-  }, [replymsgId,Locate])
-
-  //Toaster settings
-  toastr.options = {
-    progressBar: true,
-    closeButton: true,
-  }
-
-  //Handle Body Scrolling
-  // isChatScroll ? disableBodyScroll(document) : enableBodyScroll(document)
-
-  // const depMessages = visibleMessages?.slice()
-
-  // //Scroll to messages bottom on load & message arrives
-
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     if (!isEmpty(visibleMessages)) {
-  //       scrollToBottom()
-  //     }
-  //   }, 500)
-  //   return () => clearTimeout(timer)
-  // }, [depMessages])
-
-  //Toggle Active tab in chat-left-side
-  const toggleTab = tab => {
-    if (activeTab !== tab) {
-      setactiveTab(tab)
-      setCurrentChat(null)
-    }
-  }
-  //copy group Id
-  const copyToClipboard = () => {
-    copy(`[Thread Id: ${currentChat?.threadId}]`)
-    // alert(`You have copied "${currentChat?._id}"`);
-  }
-  const copyToemail = () => {
-    copy(`rpmongotest@gmail.com`)
-    // alert(`You have copied "${currentChat?._id}"`);
-  }
-
-  //Toggle Chat Box Menus
-  const toggleSearch = () => {
-    setsearch_Menu(!search_Menu)
-  }
-  //PinnedMessage
-  const tog_scroll = () => {
-    setPinModal(!pinModal)
-    setmodal_scroll(!modal_scroll)
-  }
-  //Getting Notofication Count
-  const getNotificationCount = id => {
-    const notiCount = notifications.filter(c => c.groupId === id)
-    return notiCount ? notiCount.length : 0
-  }
-  //Getting Notofication for Case
-  const notifyCountforCase = id => {
-    const notiCount = notifications.find(c => c.caseId === id)
-    return notiCount ? true : false
-  }
-
-  // const handleForwardMessage = async msgId => {
-  //   setChatLoader(true)
-  //   const payload = {
-  //     msgId: msgId,
-  //   }
-  //   const res = await getMessageById(payload)
-  //   if (res.success) {
-  //     setForwardMessages(res.Msg)
-  //     //setcurMessage(res.messageData)
-  //   } else {
-  //     console.log("Failed to fetch message", res)
-  //   }
-  //   //setcurMessage(res.messageData)
-  //   setChatLoader(false)
-  // }
-  //Getting all 1vs1 chats
-  useEffect(() => {
-    const getNotificationCount = (id) => {
-      const notiCount = notifications.filter((c) => c.groupId === id);
-      return notiCount ? notiCount.length : 0;
+    // const [isChatScroll, setIsChatScroll] = useState(false)
+    // const [messageBox, setMessageBox] = useState(null)
+    const [pageLoader, setPageLoader] = useState(true);
+    const [chatLoader, setChatLoader] = useState(true);
+    const [activeTab, setactiveTab] = useState('1');
+    const [contacts, setContacts] = useState([]);
+    const [contactsLoading, setContactsLoading] = useState(false);
+    const [newCase, setNewCase] = useState(initialNewCaseValues);
+    const [newClient, setNewClient] = useState(initialNewClientValues);
+    const [clients, setClients] = useState([]);
+    // const [clientId, setClientId] = useState("")
+    // const [caseClientId, setCaseClientId] = useState(null)
+    const [allCases, setAllCases] = useState([]);
+    // const [cases, setCases] = useState([])
+    // const [clientName, setClientName] = useState(initialNewClientValues)
+    const [allSubCases, setAllSubCases] = useState([]);
+    const [caseLoading, setCaseLoading] = useState(true);
+    const [currentCase, setCurrentCase] = useState(null);
+    const [allgroups, setAllgroups] = useState([]);
+    const [receivers, setReceivers] = useState([]);
+    const [isAttachment, setIsAttachment] = useState(false);
+    const [isVoiceMessage, setIsVoiceMessage] = useState(false);
+    const [recorder, setRecorder] = useState([]);
+    const [allFiles, setAllFiles] = useState([]);
+    const [allVoicemsg, setAllVoicemsg] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [searchText, setSearchText] = useState('');
+    const [totalPages, setTotalPages] = useState(initialPageCount);
+    const [contactPage, setContactPage] = useState(1);
+    const [casePage, setCasePage] = useState(1);
+    const [search_Menu, setsearch_Menu] = useState(false);
+    const [searchMessageText, setSearchMessagesText] = useState('');
+    const [searchedMessages, setSearchedMessages] = useState([]);
+    const [mentionsArray, setMentionsArray] = useState([]);
+    const [curReplyMessageId, setCurReplyMessageId] = useState(null);
+    const [curEditMessageId, setCurEditMessageId] = useState('');
+    const [curReminderMessageId, setCurReminderMessageId] = useState(null);
+    const [isDeleteMsg, setIsDeleteMsg] = useState(false);
+    console.log('isDeleteMsg',isDeleteMsg);
+    const [emailModal, setEmailModal] = useState(false);
+    const [email, setEmail] = useState('');
+    const [searchIndex, setSearchIndex] = useState(0);
+    const [pinModal, setPinModal] = useState(false);
+    const [pinnedMsg, setPinnedMsg] = useState('');
+    console.log('pinnedMsg',pinnedMsg);
+    // const [getpinnedMsg, setGetPinnedMsg] = useState("")
+    const [msgDelete, setMsgDelete] = useState();
+    const containerRef = useRef(null);
+    const [prevHeight, setPrevHeight] = useState(0);
+    console.log('prevHeight',prevHeight);
+    const [visibleMessages, setVisibleMessages] = useState([]);
+    const [blobURL, setBlobURL] = useState(null);
+    const [isSearchTextCleared, setIsSearchTextCleared] = useState(false);
+    const [filteredChats, setFilteredChats] = useState(chats);
+    console.log('filteredChats',filteredChats);
+    const [duration, setDuration] = useState(0);
+    const [durationIntervalId, setDurationIntervalId] = useState(null);
+    const [caseFile, setCaseFile] = useState([]);
+    const [modal_scroll, setmodal_scroll] = useState(false);
+    const [curMessage, setcurMessage] = useState('');
+    const [currentChatDelete, setCurrentChatDelete] = useState();
+    // const [isQuil, setIsQuil] = useState(false)
+    const [sortedChats, setSortedChats] = useState([]);
+    const [deleteMessage, setDeleteMessage] = useState();
+    console.log('deleteMessage',deleteMessage);
+    const [nonewmessage, setNoNewMessage] = useState([]);
+    // const toggle_Quill = () => {
+    //   setIsQuil(!isQuil)
+    // }
+    const [isQuill, setIsQuill] = useState(false);
+    const toggle_Quill = () => {
+        setIsQuill(!isQuill);
     };
+
+    const startRecording = () => {
+        navigator.mediaDevices
+            .getUserMedia({ audio: true })
+            .then(stream => {
+                const newRecorder = RecordRTC(stream, { type: 'audio' });
+                newRecorder.startRecording();
+                setRecorder(newRecorder);
+                // Start updating duration every second
+                const intervalId = setInterval(() => {
+                    setDuration(duration => duration + 1);
+                }, 1000);
+                setDuration(0);
+                setDurationIntervalId(intervalId);
+            })
+            .catch(err => console.log(err));
+        setBlobURL(null);
+        setDuration(0);
+    };
+
+    // Stop recording
+    const stopRecording = () => {
+        if (recorder && recorder.state === 'recording') {
+            recorder.stopRecording(() => {
+                const blob = recorder.getBlob();
+                const url = URL.createObjectURL(blob);
+                setBlobURL(url);
+                setIsVoiceMessage(true);
+                // send the recorded message as a message here using a messaging API
+            });
+        }
+        // Clear duration interval
+        clearInterval(durationIntervalId);
+        setDurationIntervalId(null);
+    };
+
+    useEffect(() => {
+        return () => {
+            // Clean up the duration interval on component unmount
+            clearInterval(durationIntervalId);
+        };
+    }, [durationIntervalId]);
+    const handleScroll = event => {
+        if (event && event.currentTarget) {
+            const { scrollTop, clientHeight, scrollHeight } = event.currentTarget;
+
+            if (scrollTop === 0) {
+                setPrevHeight(scrollHeight);
+                const additionalMessages = Math.min(
+                    messages.length - visibleMessages.length,
+                    MESSAGE_CHUNK_SIZE
+                );
+                setVisibleMessages(prevVisibleMessages =>
+                    messages.slice(-prevVisibleMessages.length - additionalMessages)
+                );
+
+                if (visibleMessages.length < messages.length) {
+                    event.currentTarget.scrollTop = clientHeight;
+                } else if (scrollTop + clientHeight === scrollHeight) {
+                    // User has scrolled to the bottom, scroll to bottom automatically
+                    event.currentTarget.scrollTop = scrollHeight;
+                }
+            }
+        }
+    };
+
+    const scrollToBottom = () => {
+        containerRef.current?.scrollTo({
+            left: 0,
+            top: containerRef.current.scrollHeight,
+            behavior: 'auto', // Changing behavior to "auto" will cause the scrolling to happen instantly
+        });
+    };
+    const handlerefreshemail = async () => {
+        setChatLoader(true);
+        const payload = {
+            groupId: currentChat?._id,
+            userId: currentUser?.userID,
+        };
+        const res = await getMessagesByUserIdandGroupId(payload);
+        if (res.success) {
+            setMessages(res.groupMessages);
+        } else {
+            console.log('Failed to fetch Group message', res);
+            setNoNewMessage(res.groupMessages);
+        }
+        setChatLoader(false);
+    };
+    useEffect(() => {
+        if (nonewmessage) {
+            const timer = setTimeout(() => {
+                scrollToBottom();
+            }, 500);
+            return () => clearTimeout(timer);
+        }
+    }, [messages,nonewmessage]);
+    const ongetAllChatRooms = useCallback(async () => {
+        const chatRoomsRes = await getOnevsOneChat({ userId: currentUser.userID });
+        if (chatRoomsRes.success) {
+            const updatedChats = chatRoomsRes.groups.map(chat => {
+                const notification = notifications.find(n => n.groupId === chat._id);
+                return {
+                    ...chat,
+                    notification,
+                };
+            });
   
-    const updatedSortedChats = chats
-      .map((chat) => {
-        const notificationCount = getNotificationCount(chat._id);
-        const recentChat =
+            updatedChats.sort((a, b) => {
+                if (a.notification && b.notification) {
+                    return (
+                        new Date(b.notification.updatedAt) -
+            new Date(a.notification.updatedAt)
+                    );
+                } else if (a.notification) {
+                    return -1; // Move chat with notification to the top
+                } else if (b.notification) {
+                    return 1; // Move chat with notification to the top
+                } else {
+                    return 0; // No notifications for both chats, maintain order
+                }
+            });
+  
+            setChats(updatedChats);
+            setCurrentChat(updatedChats[0]);
+            if (updatedChats.length < 1) {
+                setactiveTab('3');
+            }
+        } else {
+            setChats([]);
+        }
+        setChatLoader(false);
+    }, [currentUser.userID, notifications,setChats,setCurrentChat]);
+  
+    // Use ongetAllChatRooms in your component as before
+  
+
+    const filterChats = useCallback(() => {
+        if (searchText !== '') {
+            const filteredChats = chats?.filter(chat =>
+                chat.groupMembers.some(member =>
+                    member?.id?.firstname
+                        ?.toLowerCase()
+                        .includes(searchText.toLowerCase())
+                )
+            );
+            setFilteredChats(filteredChats);
+            setChats(filteredChats);
+            setIsSearchTextCleared(false);
+        } else {
+            if (!isSearchTextCleared) {
+                ongetAllChatRooms(); // Call the function to get all chats
+                setIsSearchTextCleared(true);
+            }
+        }
+    }, [searchText, chats, isSearchTextCleared, ongetAllChatRooms,setChats]);
+  
+    useEffect(() => {
+        if (searchText === '') {
+            setIsSearchTextCleared(true);
+        }
+        filterChats();
+    }, [searchText, filterChats]);
+    const Locate = useCallback(() => {
+        const message = [...messages, ...visibleMessages].find(
+            (msg) => msg._id === msgId
+        );
+        if (message) {
+            const messageElem = document.getElementById(message._id);
+            if (messageElem) {
+                messageElem.scrollIntoView({ behavior: 'auto' });
+            }
+        }
+    }, [messages, visibleMessages, msgId]);
+    // useEffect(() => {
+    //   if (messages && visibleMessages?.length < messages?.length) {
+    //     const tempHeight = containerRef?.current?.scrollHeight - prevHeight
+    //     containerRef?.current?.scrollTo({ top: tempHeight, behavior: "auto" }) // Use "auto" instead of "smooth"
+    //   }
+    // }, [visibleMessages?.length, messages])
+    useEffect(() => {
+    // setVisibleMessages(messages.slice(-49))
+        if (replymsgId) {
+            Locate();
+        } else {
+            const timer = setTimeout(() => {
+                scrollToBottom();
+            }, 500);
+            return () => clearTimeout(timer);
+        }
+    }, [replymsgId,Locate]);
+
+    //Toaster settings
+    toastr.options = {
+        progressBar: true,
+        closeButton: true,
+    };
+
+    //Handle Body Scrolling
+    // isChatScroll ? disableBodyScroll(document) : enableBodyScroll(document)
+
+    // const depMessages = visibleMessages?.slice()
+
+    // //Scroll to messages bottom on load & message arrives
+
+    // useEffect(() => {
+    //   const timer = setTimeout(() => {
+    //     if (!isEmpty(visibleMessages)) {
+    //       scrollToBottom()
+    //     }
+    //   }, 500)
+    //   return () => clearTimeout(timer)
+    // }, [depMessages])
+
+    //Toggle Active tab in chat-left-side
+    const toggleTab = tab => {
+        if (activeTab !== tab) {
+            setactiveTab(tab);
+            setCurrentChat(null);
+        }
+    };
+    //copy group Id
+    const copyToClipboard = () => {
+        copy(`[Thread Id: ${currentChat?.threadId}]`);
+    // alert(`You have copied "${currentChat?._id}"`);
+    };
+    const copyToemail = () => {
+        copy('rpmongotest@gmail.com');
+    // alert(`You have copied "${currentChat?._id}"`);
+    };
+
+    //Toggle Chat Box Menus
+    const toggleSearch = () => {
+        setsearch_Menu(!search_Menu);
+    };
+    //PinnedMessage
+    const tog_scroll = () => {
+        setPinModal(!pinModal);
+        setmodal_scroll(!modal_scroll);
+    };
+    //Getting Notofication Count
+    const getNotificationCount = id => {
+        const notiCount = notifications.filter(c => c.groupId === id);
+        return notiCount ? notiCount.length : 0;
+    };
+    //Getting Notofication for Case
+    const notifyCountforCase = id => {
+        const notiCount = notifications.find(c => c.caseId === id);
+        return notiCount ? true : false;
+    };
+
+    // const handleForwardMessage = async msgId => {
+    //   setChatLoader(true)
+    //   const payload = {
+    //     msgId: msgId,
+    //   }
+    //   const res = await getMessageById(payload)
+    //   if (res.success) {
+    //     setForwardMessages(res.Msg)
+    //     //setcurMessage(res.messageData)
+    //   } else {
+    //     console.log("Failed to fetch message", res)
+    //   }
+    //   //setcurMessage(res.messageData)
+    //   setChatLoader(false)
+    // }
+    //Getting all 1vs1 chats
+    useEffect(() => {
+        const getNotificationCount = (id) => {
+            const notiCount = notifications.filter((c) => c.groupId === id);
+            return notiCount ? notiCount.length : 0;
+        };
+  
+        const updatedSortedChats = chats
+            .map((chat) => {
+                const notificationCount = getNotificationCount(chat._id);
+                const recentChat =
           chat.notification &&
           chat.notification.updatedAt &&
           new Date(chat.notification.updatedAt);
-        return {
-          chat,
-          notificationCount,
-          recentChat,
+                return {
+                    chat,
+                    notificationCount,
+                    recentChat,
+                };
+            })
+            .sort((a, b) => {
+                if (a.recentChat && b.recentChat) {
+                    return b.recentChat - a.recentChat; // Sort by time in descending order based on recentChat's updatedAt field
+                } else if (a.recentChat) {
+                    return -1; // a has a recent chat, but b doesn't, so a should be placed above b
+                } else if (b.recentChat) {
+                    return 1; // b has a recent chat, but a doesn't, so b should be placed above a
+                } else {
+                    return b.notificationCount - a.notificationCount; // Sort by notification count
+                }
+            });
+        setSortedChats(updatedSortedChats);
+    }, [chats, notifications]);
+  
+
+ 
+    //Creating New ChatRoom
+    const handleCreateChatRoom = async id => {
+        setPageLoader(true);
+        const payload = {
+            members: [currentUser?.userID, id],
         };
-      })
-      .sort((a, b) => {
-        if (a.recentChat && b.recentChat) {
-          return b.recentChat - a.recentChat; // Sort by time in descending order based on recentChat's updatedAt field
-        } else if (a.recentChat) {
-          return -1; // a has a recent chat, but b doesn't, so a should be placed above b
-        } else if (b.recentChat) {
-          return 1; // b has a recent chat, but a doesn't, so b should be placed above a
+        const createdChatRes = await createOnevsOneChat(payload);
+        if (createdChatRes.success) {
+            // toastr.success(`Chat has been created successfully`, "Success")
+            await ongetAllChatRooms();
+            setCurrentChat(createdChatRes.group);
+            setactiveTab('1');
         } else {
-          return b.notificationCount - a.notificationCount; // Sort by notification count
+            // toastr.error(`Failed to create chat`, "Failed!!!")
+            console.log('Failed to create 1vs1 chat ', createdChatRes);
         }
-      });
-    setSortedChats(updatedSortedChats);
-  }, [chats, notifications]);
-  
-
- 
-  //Creating New ChatRoom
-  const handleCreateChatRoom = async id => {
-    setPageLoader(true)
-    const payload = {
-      members: [currentUser?.userID, id],
-    }
-    const createdChatRes = await createOnevsOneChat(payload)
-    if (createdChatRes.success) {
-      // toastr.success(`Chat has been created successfully`, "Success")
-      await ongetAllChatRooms()
-      setCurrentChat(createdChatRes.group)
-      setactiveTab("1")
-    } else {
-      // toastr.error(`Failed to create chat`, "Failed!!!")
-      console.log("Failed to create 1vs1 chat ", createdChatRes)
-    }
-    setPageLoader(false)
-  }
-
-  //Getting 1vs1 chat name
-  const getChatName = members => {
-    const chatMember = members.filter(
-      member => member.id?._id !== currentUser.userID
-    )
-    if (chatMember.length > 0)
-      return chatMember[0].id?.firstname + " " + chatMember[0].id?.lastname
-    return "Guest Chat"
-  }
-
-  //Getting 1vs1 chat name
-  const getChatEmail = members => {
-    const chatMember = members.find(
-      member => member.id?._id !== currentUser.userID
-    )
-    if (chatMember) return chatMember.id?.email
-    return "Guest Chat"
-  }
-
-  //getting 1vs1 chat profilePic
-  const getChatProfilePic = members => {
-    const chatMember = members.filter(
-      member => member.id?._id !== currentUser.userID
-    )
-    if (chatMember.length > 0)
-      return chatMember[0].id?.profilePic
-        ? chatMember[0].id?.profilePic
-        : profile
-
-    return profile
-  }
-
-  //getting 1vs1 chat sender name
-  const getSenderOneChat = senderId => {
-    const chatMember = currentChat?.groupMembers.find(
-      member => member.id?._id === senderId
-    )
-    if (chatMember)
-      return chatMember.id?.firstname + " " + chatMember.id?.lastname
-    return senderId
-  }
-
-  // get All clientNames
-  const onGetAllClientNames = useCallback(async () => {
-    const allClientNamesRes = await getClientsByUserId({
-      userId: currentUser.userID,
-    });
-  
-    if (allClientNamesRes.success) {
-      setClients(allClientNamesRes?.clients);
-    }
-  }, [currentUser.userID, setClients]);
-  
-  useEffect(() => {
-    onGetAllClientNames();
-  }, [onGetAllClientNames]);
-  
-
-  //Getting all the cases
-  const ongetAllCases = async ({ isSet = false, isSearch = false }) => {
-    setCaseLoading(true)
-    const allCasesRes = await getCasesByUserId({
-      userId: currentUser.userID,
-      page: isSearch ? 1 : casePage,
-      searchText,
-    })
-
-    if (allCasesRes.success) {
-      // Filter out cases that are not subcases
-      // const filteredCases = allCasesRes.cases.filter(ca => !ca.isSubcase)
-
-      // Sort the filtered cases array by createdAt in descending order
-      const sortedCases = allCasesRes.cases.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-      )
-
-      setAllCases(sortedCases)
-
-      if (isSet) {
-        setCurrentCase(sortedCases[0])
-      }
-    } else {
-      setAllCases([])
-      setCurrentCase(null)
-      setAllgroups(null)
-    }
-
-    setCaseLoading(false)
-  }
-  const onGetAllSubCases = async () => {
-    const payload = {
-      isSubcase: true,
-    }
-    const res = await getAllSubCases(payload)
-    if (res.success) {
-      setAllSubCases(res?.allsubCases)
-    }
-  }
-  useEffect(() => {
-    onGetAllSubCases()
-  }, [])
-  //Fetching user,case,group count
-  const ongetCounts = async () => {
-    const countRes = await getCounts({ userId: currentUser?.userID })
-    if (countRes?.success) {
-      const limit = 50
-      const { userCount, chatCount, caseCount } = countRes
-      setTotalPages({
-        ...totalPages,
-        chats: Math.ceil(chatCount / limit),
-        users: Math.ceil(userCount / limit),
-        cases: Math.ceil(caseCount / limit),
-      })
-    }
-  }
-
-  //Viewing Message
-  // const prettifyMsg = comment => {
-  //   let regex = /@\[.+?\]\(.+?\)/gm
-  //   let displayRegex = /@\[.+?\]/g
-  //   let idRegex = /\(.+?\)/g
-  //   let matches = comment?.match(regex)
-  //   let arr = []
-  //   matches &&
-  //     matches.forEach(m => {
-  //       let id = m.match(idRegex)[0].replace("(", "").replace(")", "")
-  //       let display = m.match(displayRegex)[0].replace("[", "").replace("]", "")
-
-  //       arr.push({ id: id, display: display })
-  //     })
-  //   let newComment = comment?.split(regex)
-  //   let output = ""
-  //   for (let i = 0; i < newComment?.length; i++) {
-  //     const c = newComment[i]
-  //     if (i === newComment?.length - 1) {
-  //       output += c
-  //     } else {
-  //       output += c + `${arr[i].display}`
-  //     }
-  //   }
-  //   return output
-  // }
-
-  //Fetching Contacts
-  const onGetEmailContacts = useCallback(async () => {
-    const userRes = await getAllUsers({
-      userID: currentUser.userID,
-      email: currentUser?.email,
-    });
-  
-    if (userRes.success) {
-      setContacts([...userRes.users]);
-    } else {
-      setContacts(userRes?.users);
-    }
-  }, [currentUser.userID, currentUser.email, setContacts]);
-  const onGetContacts = useCallback(
-    async ({ isSearch = false }) => {
-      if (searchText === "") {
-        await onGetEmailContacts();
-      } else {
-        setContactsLoading(true);
-        const userRes = await getAllUsers({
-          userID: currentUser.userID,
-          page: isSearch ? 1 : contactPage,
-          searchText,
-        });
-        if (userRes.success) {
-          if (!isSearch) {
-            setContacts([...contacts, ...userRes.users]);
-          } else {
-            setContacts(userRes?.users);
-          }
-        } else {
-          setContacts([]);
-        }
-        setContactsLoading(false);
-      }
-    },
-    [searchText, onGetEmailContacts, currentUser.userID, contactPage, contacts]
-  );
-  //send message to email
-  // const onSendMessageEmail = async (msg) => {
-  //   const membersEmail = currentCase?.caseMembers.map((member) => member?.id?.email);
-  //   const payLoad = {
-  //     messageData: msg?.messageData,
-  //     chatRoomId: currentChat?._id,
-  //     caseName: currentCase?.caseName ? currentCase?.caseName : "PrivateChat",
-  //     groupName: currentChat?.isGroup
-  //       ? currentChat?.groupName
-  //       : getChatName(currentChat?.groupMembers),
-  //     membersEmail: membersEmail
-  //   }
-  //   const mailRes = await sentMessageEmail(payLoad)
-  //   toastr.success(`Mail has been Send successfully`, "Success")
-  //   setEmail(mailRes.true)
-  // }
-
- 
-  
-  useEffect(() => {
-    if (activeTab === "3" && searchText === "") {
-      // Call onGetEmailContacts and clear searchText
-      onGetEmailContacts();
-      setSearchText("");
-    }
-  }, [activeTab, searchText, onGetEmailContacts]);
-  
-  //Selecting current case
-  const onSelectingCase = cas => {
-    setCurrentCase(cas)
-  }
-
-  //pinned Message
-  const onPinnedMessage = async msgid => {
-    const payload = { Id: msgid }
-    const res = await pinMessage(payload)
-    if (res.success) {
-      const updatedMessages = messages.map(msg => {
-        if (msg._id === res.message._id) {
-          return {
-            ...msg,
-            isPinned: true,
-          }
-        } else {
-          return msg
-        }
-      })
-      setMessages(updatedMessages)
-      setPinnedMsg(res.message)
-    }
-  }
-  //Deleting Case
-  const onDeletingCase = async () => {
-    const payload = {
-      id: currentCase?._id,
-      deleteIt: true,
-    }
-    const res = await updateCase(payload)
-    if (res.success) {
-      toastr.success(
-        `Case ${res?.caseId} has been Deleted successfully`,
-        "Success"
-      )
-      setCurrentCase(null)
-      await ongetAllChatRooms()
-      await ongetAllCases({ isSet: false })
-    } else {
-      toastr.error("Failed to delete case", "Failed!!!")
-    }
-    setCaseDeleteModalOpen(false)
-  }
-  const handleCaseDelete = () => {
-    setCaseDeleteModalOpen(true)
-  }
-
-  // Deleting Chat
-  const onDeletingChat = async () => {
-    const payload = {
-      groupId: currentChatDelete,
-      deleteIt: true,
-    }
-    const res = await updateGroup(payload)
-    if (res.success) {
-      await ongetAllChatRooms()
-      toastr.success(`Chat has been Deleted successfully`, "Success")
-      setCurrentChatDelete(null)
-    } else {
-      toastr.error("Failed to delete chat", "Failed!!!")
-    }
-    setChatDeleteModalOpen(false)
-  }
-  const handleChatDelete = id => {
-    setChatDeleteModalOpen(true)
-    setCurrentChatDelete(id)
-  }
-
-  //Deleting Last Message
-  const onDeletingMsg = async () => {
-    const payload = {
-      id: msgDelete?._id,
-      deleteIt: true,
-      createdAt: msgDelete.createdAt,
-    }
-    const res = await deleteLastMsg(payload)
-    if (res.success) {
-      const payload = {
-        groupId: currentChat._id,
-        userId: currentUser.userID,
-      }
-      setDeleteMessage(res)
-      setIsDeleteMsg(true)
-      toastr.success(`Message  has been Deleted successfully`, "Success")
-      //setDelMsg()
-      const res1 = await getMessagesByUserIdandGroupId(payload)
-      if (res1.success) {
-        setMessages(res1.groupMessages)
-      }
-    } else {
-      toastr.error("Unable to delete Message after 1 min", "Failed!!!")
-    }
-    setMsgDeleteModalOpen(false)
-  }
-  const handleDelete = msg => {
-    setMsgDelete(msg)
-    setMsgDeleteModalOpen(true)
-  }
-  //Textbox empty or spaces
-  const isEmptyOrSpaces = () => {
-    if (isAttachment) {
-      return false
-    } else if (isVoiceMessage) {
-      return false
-    }
-
-    return curMessage === null || curMessage.match(/^ *$/) !== null
-  }
-  const toggle_emailModal = () => {
-    setEmailModal(!emailModal)
-    document.body.classList.add("no_padding")
-  }
-  useEffect(() => {
-    if (isVoiceMessage === true) {
-      setAllVoicemsg([recorder])
-    }
-  }, [recorder, isVoiceMessage])
-
-  //Sending Message
-  const handleSendMessage = async () => {
-    setLoading(true)
-    if (isEmptyOrSpaces()) {
-      console.log("You can't send empty message")
-    } else {
-      let voiceMessageId = []
-      let attachmentsId = []
-      let payLoad = {
-        caseId: currentCase?._id,
-        groupId: currentChat?._id,
-        sender: currentUser?.userID,
-        clientName: currentCase?.clientName,
-        receivers,
-        messageData: curMessage,
-        isAttachment,
-        isVoiceMessage,
-        isForward: false,
-        maincaseId: currentCase?.maincaseId,
-        threadId: currentCase?.threadId,
-        // isPinned: false,
-      }
-      if (isAttachment) {
-        const formData = new FormData()
-        for (var i = 0; i < allFiles.length; i++) {
-          formData.append("file", allFiles[i])
-        }
-        // formData.append("file", allFiles)
-        const fileUploadRes = await axios.post(
-          `${SERVER_URL}/upload`,
-          formData,
-          {
-            headers: {
-              "Content-Type": `multipart/form-data`,
-            },
-          }
-        )
-        const { data } = fileUploadRes
-        if (data.success) {
-          await data.files?.map(file =>
-            attachmentsId.push({
-              type: file.contentType,
-              size: file.size,
-              id: file.id,
-              name: file.originalname,
-              dbName: file.filename,
-              aflag: true,
-            })
-          )
-        } else {
-          setLoading(false)
-        }
-      } else if (isVoiceMessage) {
-        const formData = new FormData()
-
-        for (let i = 0; i < allVoicemsg.length; i++) {
-          const audioBlob = new Blob([allVoicemsg[i].getBlob()], {
-            type: "audio/webm",
-          })
-
-          formData.append("file", audioBlob, `audio-${i}.webm`)
-        }
-
-        const fileUploadRes = await axios.post(
-          `${SERVER_URL}/upload`,
-          formData,
-          {
-            headers: {
-              "Content-Type": `multipart/form-data`,
-            },
-          }
-        )
-
-        const { data } = fileUploadRes
-        if (data.success) {
-          await data?.files?.map(file =>
-            voiceMessageId.push({
-              type: file?.contentType,
-              size: file?.size,
-              id: file.id,
-              name: file.originalname,
-              dbName: file.filename,
-              aflag: true,
-            })
-          )
-        } else {
-          setLoading(false)
-        }
-      }
-      payLoad.attachments = attachmentsId
-      payLoad.voiceMessage = voiceMessageId
-      handleSendingMessage(payLoad)
-      setAllFiles([])
-      setAllVoicemsg([])
-      setcurMessage("")
-      setIsAttachment(false)
-      setIsVoiceMessage(false)
-      setRecorder([])
-      setBlobURL(null)
-    }
-    setLoading(false)
-  }
-  // const { getRootProps, getInputProps } = useDropzone({
-  //   accept:
-  //     ".png, .jpg, .jpeg,.pdf,.doc,.xls,.docx,.xlsx,.zip,.mp3,.webm,.ogg,.wav ",
-  //   onDrop: acceptedFiles => {
-  //     setAllFiles(
-  //       acceptedFiles.map(allFiles =>
-  //         Object.assign(allFiles, {
-  //           preview: URL.createObjectURL(allFiles),
-  //         })
-  //       )
-  //     )
-  //     // const updatedVoicemsg = recorder.map(allVoicemsg => Object.assign(allVoicemsg, {
-  //     //   preview: URL.createObjectURL(allVoicemsg),
-  //     // }));
-  //     // setAllVoicemsg(updatedVoicemsg);
-  //     // setRecorder(updatedVoicemsg);
-  //   },
-  // })
-
-  const onChange = (content, delta, source, editor) => {
-    // Remove <p> and <br> tags from the content
-    const strippedContent = content.replace(/<p><br><\/p>/gi, "")
-
-    setcurMessage(strippedContent)
-  }
-
-  //Detecting Enter key Press in textbox
-  const onKeyPress = event => {
-    if (event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault()
-      handleSendMessage()
-    }
-  }
-
-  //Getting sender name
-  const getMemberName = id => {
-    const caseArray = [...allCases, ...allSubCases] // Combine all cases and subcases
-    const memberName = caseArray
-      .find(cas => cas._id === currentCase?._id)
-      ?.caseMembers?.find(member => member?.id?._id === id)
-
-    if (memberName) {
-      return memberName?.id?.firstname + " " + memberName?.id?.lastname
-    }
-    return id
-  }
-
-  //Scrolling to bottom of message
-  // const scrollToBottom = () => {
-  //   if (messageBox) {
-  //     messageBox.scrollTop = messageBox.scrollHeight + messageBox?.offsetHeight
-  //   }
-  // }
-  // useEffect(()=>{
-  //   if(containerRef.current){
-  //     containerRef.current.scrollTop = containerRef.current.scrollHeight;
-  //   }
-  // },[messages])
-  // useEffect(() => {
-  //   if (messageBox) {
-  //     messageBox.scrollTop = messageBox.scrollHeight
-  //   }
-  // }, [messageBox?.scrollHeight])
-
-  //Handling File change
-  const handleFileChange = e => {
-    const selectedFiles = e.target.files
-    if (selectedFiles.length + allFiles.length > 10) {
-      // Display warning message here
-      toastr.error("You can select a maximum of 10 files.", "Warning")
-      return
-    }
-    const updatedFiles = [...allFiles, ...selectedFiles]
-    setAllFiles(updatedFiles)
-  }
-  const handleFileRemove = fileName => {
-    const updatedFiles = allFiles.filter(file => file.name !== fileName)
-    setAllFiles(updatedFiles)
-  }
-
-  //Fetching SubGroups
-  const onGettingSubgroups = async () => {
-    setChatLoader(true)
-    const payLoad = {
-      caseId: currentCase._id,
-      userId: currentUser.userID,
-    }
-    const subGroupsRes = await getGroupsByUserIdandCaseId(payLoad)
-    if (subGroupsRes.success) {
-      setAllgroups(subGroupsRes.groups)
-      setCurrentChat(subGroupsRes.groups[0])
-    }
-    setChatLoader(false)
-  }
-
-  const handleFetchFiles = useCallback(async () => {
-    try {
-      const filesRes = await getCaseFiles(currentCase?._id);
-      if (filesRes.success && filesRes?.files?.length > 0) {
-        const updatedFiles = filesRes.files.map((file) => {
-          const sendAt = moment(file.time).format("DD-MM-YY HH:mm");
-          return { ...file, time: sendAt, isDownloading: true };
-        });
-        setCaseFile(updatedFiles);
-      } else {
-        setCaseFile([]);
-      }
-    } catch (error) {
-      console.error(`Error fetching case files: ${error}`);
-      setCaseFile([]);
-    }
-  }, [currentCase, setCaseFile]);
-  
-  useEffect(() => {
-    handleFetchFiles();
-    return () => {
-      setCaseFile([]);
+        setPageLoader(false);
     };
-  }, [handleFetchFiles]);
+
+    //Getting 1vs1 chat name
+    const getChatName = members => {
+        const chatMember = members.filter(
+            member => member.id?._id !== currentUser.userID
+        );
+        if (chatMember.length > 0)
+            return chatMember[0].id?.firstname + ' ' + chatMember[0].id?.lastname;
+        return 'Guest Chat';
+    };
+
+    //Getting 1vs1 chat name
+    const getChatEmail = members => {
+        const chatMember = members.find(
+            member => member.id?._id !== currentUser.userID
+        );
+        if (chatMember) return chatMember.id?.email;
+        return 'Guest Chat';
+    };
+
+    //getting 1vs1 chat profilePic
+    const getChatProfilePic = members => {
+        const chatMember = members.filter(
+            member => member.id?._id !== currentUser.userID
+        );
+        if (chatMember.length > 0)
+            return chatMember[0].id?.profilePic
+                ? chatMember[0].id?.profilePic
+                : profile;
+
+        return profile;
+    };
+
+    //getting 1vs1 chat sender name
+    const getSenderOneChat = senderId => {
+        const chatMember = currentChat?.groupMembers.find(
+            member => member.id?._id === senderId
+        );
+        if (chatMember)
+            return chatMember.id?.firstname + ' ' + chatMember.id?.lastname;
+        return senderId;
+    };
+
+    // get All clientNames
+    const onGetAllClientNames = useCallback(async () => {
+        const allClientNamesRes = await getClientsByUserId({
+            userId: currentUser.userID,
+        });
   
-  // Archive Chat
-  const onArchievingChat = async () => {
-    setChatLoader(true)
-    // Get chat transcript
-    const doc = new jsPDF()
-    const header = [
-      ["Sender", "Message", "Time", "Group Name", "Case Name", "Attachments"],
-    ]
-    let rows = []
-    const caseName = currentCase?.caseName ?? "-"
-    const groupName = currentChat?.isGroup
-      ? currentChat?.groupName
-      : getChatName(currentChat?.groupMembers)
-    messages.forEach(m => {
-      const sender = m?.caseId
-        ? getMemberName(m?.sender)
-        : getSenderOneChat(m?.sender)
-      const message = m?.messageData
-      const time = moment(m?.createdAt).format("DD-MM-YY HH:mm")
-      const attachments =
-        m.isAttachment && m.attachments[0].id
-          ? { url: `${SERVER_URL}/file/${m.attachments[0].id}` }
-          : "-"
-      const tempRow = [
-        sender,
-        message,
-        time,
-        groupName,
-        caseName,
-        attachments?.url,
-        typeof attachments === "object" && attachments?.url
-          ? {
-            url: attachments.url,
-            content: "View Attachment",
-          }
-          : "-",
-      ]
-      rows.push(tempRow)
-    })
-    autoTable(doc, {
-      bodyStyles: { valign: "top" },
-      margin: { top: 30 },
-      head: header,
-      body: rows,
-      theme: "grid",
-      columnStyles: {
-        0: { cellWidth: 30, cellHeight: 50 },
-        1: { cellWidth: 30, cellHeight: 50 },
-        2: { cellWidth: 20, cellHeight: 50 },
-        3: { cellWidth: 20, cellHeight: 50 },
-        4: { cellWidth: 20, cellHeight: 50 },
-        5: { halign: "center", cellWidth: 90 },
-        6: {
-          // halign: "center",
-          cellWidth: 100,
-          // valign: "middle",
-          fillColor: [250, 250, 250],
-          textColor: [0, 0, 0],
-          fontSize: 8,
+        if (allClientNamesRes.success) {
+            setClients(allClientNamesRes?.clients);
+        }
+    }, [currentUser.userID, setClients]);
+  
+    useEffect(() => {
+        onGetAllClientNames();
+    }, [onGetAllClientNames]);
+  
+
+    //Getting all the cases
+    const ongetAllCases = async ({ isSet = false, isSearch = false }) => {
+        setCaseLoading(true);
+        const allCasesRes = await getCasesByUserId({
+            userId: currentUser.userID,
+            page: isSearch ? 1 : casePage,
+            searchText,
+        });
+
+        if (allCasesRes.success) {
+            // Filter out cases that are not subcases
+            // const filteredCases = allCasesRes.cases.filter(ca => !ca.isSubcase)
+
+            // Sort the filtered cases array by createdAt in descending order
+            const sortedCases = allCasesRes.cases.sort(
+                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+            );
+
+            setAllCases(sortedCases);
+
+            if (isSet) {
+                setCurrentCase(sortedCases[0]);
+            }
+        } else {
+            setAllCases([]);
+            setCurrentCase(null);
+            setAllgroups(null);
+        }
+
+        setCaseLoading(false);
+    };
+    const onGetAllSubCases = async () => {
+        const payload = {
+            isSubcase: true,
+        };
+        const res = await getAllSubCases(payload);
+        if (res.success) {
+            setAllSubCases(res?.allsubCases);
+        }
+    };
+    useEffect(() => {
+        onGetAllSubCases();
+    }, []);
+    //Fetching user,case,group count
+    const ongetCounts = async () => {
+        const countRes = await getCounts({ userId: currentUser?.userID });
+        if (countRes?.success) {
+            const limit = 50;
+            const { userCount, chatCount, caseCount } = countRes;
+            setTotalPages({
+                ...totalPages,
+                chats: Math.ceil(chatCount / limit),
+                users: Math.ceil(userCount / limit),
+                cases: Math.ceil(caseCount / limit),
+            });
+        }
+    };
+
+    //Viewing Message
+    // const prettifyMsg = comment => {
+    //   let regex = /@\[.+?\]\(.+?\)/gm
+    //   let displayRegex = /@\[.+?\]/g
+    //   let idRegex = /\(.+?\)/g
+    //   let matches = comment?.match(regex)
+    //   let arr = []
+    //   matches &&
+    //     matches.forEach(m => {
+    //       let id = m.match(idRegex)[0].replace("(", "").replace(")", "")
+    //       let display = m.match(displayRegex)[0].replace("[", "").replace("]", "")
+
+    //       arr.push({ id: id, display: display })
+    //     })
+    //   let newComment = comment?.split(regex)
+    //   let output = ""
+    //   for (let i = 0; i < newComment?.length; i++) {
+    //     const c = newComment[i]
+    //     if (i === newComment?.length - 1) {
+    //       output += c
+    //     } else {
+    //       output += c + `${arr[i].display}`
+    //     }
+    //   }
+    //   return output
+    // }
+
+    //Fetching Contacts
+    const onGetEmailContacts = useCallback(async () => {
+        const userRes = await getAllUsers({
+            userID: currentUser.userID,
+            email: currentUser?.email,
+        });
+  
+        if (userRes.success) {
+            setContacts([...userRes.users]);
+        } else {
+            setContacts(userRes?.users);
+        }
+    }, [currentUser.userID, currentUser.email, setContacts]);
+    const onGetContacts = useCallback(
+        async ({ isSearch = false }) => {
+            if (searchText === '') {
+                await onGetEmailContacts();
+            } else {
+                setContactsLoading(true);
+                const userRes = await getAllUsers({
+                    userID: currentUser.userID,
+                    page: isSearch ? 1 : contactPage,
+                    searchText,
+                });
+                if (userRes.success) {
+                    if (!isSearch) {
+                        setContacts([...contacts, ...userRes.users]);
+                    } else {
+                        setContacts(userRes?.users);
+                    }
+                } else {
+                    setContacts([]);
+                }
+                setContactsLoading(false);
+            }
         },
-      },
-      headStyles: {
-        fillColor: [0, 0, 230],
-        fontSize: 12,
-        fontStyle: "bold",
-        font: "courier",
-        halign: "center",
-      },
-      willDrawCell: data => {
-        if (
-          data.section === "body" &&
-          data.column.index === 5 &&
-          data.cell.raw !== "-"
-        ) {
-          data.doc.setFillColor("green")
-          data.doc.setTextColor("black")
+        [searchText, onGetEmailContacts, currentUser.userID, contactPage, contacts]
+    );
+    //send message to email
+    // const onSendMessageEmail = async (msg) => {
+    //   const membersEmail = currentCase?.caseMembers.map((member) => member?.id?.email);
+    //   const payLoad = {
+    //     messageData: msg?.messageData,
+    //     chatRoomId: currentChat?._id,
+    //     caseName: currentCase?.caseName ? currentCase?.caseName : "PrivateChat",
+    //     groupName: currentChat?.isGroup
+    //       ? currentChat?.groupName
+    //       : getChatName(currentChat?.groupMembers),
+    //     membersEmail: membersEmail
+    //   }
+    //   const mailRes = await sentMessageEmail(payLoad)
+    //   toastr.success(`Mail has been Send successfully`, "Success")
+    //   setEmail(mailRes.true)
+    // }
+
+ 
+  
+    useEffect(() => {
+        if (activeTab === '3' && searchText === '') {
+            // Call onGetEmailContacts and clear searchText
+            onGetEmailContacts();
+            setSearchText('');
         }
-      },
-      didDrawPage: data => {
-        doc.setFontSize(20)
-        doc.setTextColor(40)
-        doc.text(
-          `${currentCase?.caseName ?? "Private Chat"} - ${groupName}`,
-          data.settings.margin.left,
-          20
-        )
-      },
-    })
-    const chatDocName = `${currentCase?.caseName ?? "Private Chat"
-      } - ${groupName} - ${moment(Date.now()).format("DD-MM-YY HH:mm")}`
-    const chatDocBlob = doc.output("blob")
-    const zip = new JSZip()
-    zip.file(`${chatDocName}.pdf`, chatDocBlob)
-    const caseFolder = zip.folder(currentCase?.caseName ?? "Private Chat")
-    // Loop through each case file and add it to the ZIP file
-    for (const file of caseFile) {
-      try {
-        // Fetch the file from MongoDB
-        const res = await fetch(`${SERVER_URL}/file/${file.id}`)
-        const blob = await res.blob()
-        caseFolder.file(file.name, blob)
-      } catch (err) {
-        console.error(`Error fetching case file ${file.name}: ${err}`)
-      }
-    }
-    // Generate the ZIP file and download it
-    zip
-      .generateAsync({ type: "blob" })
-      .then(content => {
+    }, [activeTab, searchText, onGetEmailContacts]);
+  
+    //Selecting current case
+    const onSelectingCase = cas => {
+        setCurrentCase(cas);
+    };
+
+    //pinned Message
+    const onPinnedMessage = async msgid => {
+        const payload = { Id: msgid };
+        const res = await pinMessage(payload);
+        if (res.success) {
+            const updatedMessages = messages.map(msg => {
+                if (msg._id === res.message._id) {
+                    return {
+                        ...msg,
+                        isPinned: true,
+                    };
+                } else {
+                    return msg;
+                }
+            });
+            setMessages(updatedMessages);
+            setPinnedMsg(res.message);
+        }
+    };
+    //Deleting Case
+    const onDeletingCase = async () => {
+        const payload = {
+            id: currentCase?._id,
+            deleteIt: true,
+        };
+        const res = await updateCase(payload);
+        if (res.success) {
+            toastr.success(
+                `Case ${res?.caseId} has been Deleted successfully`,
+                'Success'
+            );
+            setCurrentCase(null);
+            await ongetAllChatRooms();
+            await ongetAllCases({ isSet: false });
+        } else {
+            toastr.error('Failed to delete case', 'Failed!!!');
+        }
+        setCaseDeleteModalOpen(false);
+    };
+    const handleCaseDelete = () => {
+        setCaseDeleteModalOpen(true);
+    };
+
+    // Deleting Chat
+    const onDeletingChat = async () => {
+        const payload = {
+            groupId: currentChatDelete,
+            deleteIt: true,
+        };
+        const res = await updateGroup(payload);
+        if (res.success) {
+            await ongetAllChatRooms();
+            toastr.success('Chat has been Deleted successfully', 'Success');
+            setCurrentChatDelete(null);
+        } else {
+            toastr.error('Failed to delete chat', 'Failed!!!');
+        }
+        setChatDeleteModalOpen(false);
+    };
+    const handleChatDelete = id => {
+        setChatDeleteModalOpen(true);
+        setCurrentChatDelete(id);
+    };
+
+    //Deleting Last Message
+    const onDeletingMsg = async () => {
+        const payload = {
+            id: msgDelete?._id,
+            deleteIt: true,
+            createdAt: msgDelete.createdAt,
+        };
+        const res = await deleteLastMsg(payload);
+        if (res.success) {
+            const payload = {
+                groupId: currentChat._id,
+                userId: currentUser.userID,
+            };
+            setDeleteMessage(res);
+            setIsDeleteMsg(true);
+            toastr.success('Message  has been Deleted successfully', 'Success');
+            //setDelMsg()
+            const res1 = await getMessagesByUserIdandGroupId(payload);
+            if (res1.success) {
+                setMessages(res1.groupMessages);
+            }
+        } else {
+            toastr.error('Unable to delete Message after 1 min', 'Failed!!!');
+        }
+        setMsgDeleteModalOpen(false);
+    };
+    const handleDelete = msg => {
+        setMsgDelete(msg);
+        setMsgDeleteModalOpen(true);
+    };
+    //Textbox empty or spaces
+    const isEmptyOrSpaces = () => {
+        if (isAttachment) {
+            return false;
+        } else if (isVoiceMessage) {
+            return false;
+        }
+
+        return curMessage === null || curMessage.match(/^ *$/) !== null;
+    };
+    const toggle_emailModal = () => {
+        setEmailModal(!emailModal);
+        document.body.classList.add('no_padding');
+    };
+    useEffect(() => {
+        if (isVoiceMessage === true) {
+            setAllVoicemsg([recorder]);
+        }
+    }, [recorder, isVoiceMessage]);
+
+    //Sending Message
+    const handleSendMessage = async () => {
+        setLoading(true);
+        if (isEmptyOrSpaces()) {
+            console.log('You can\'t send empty message');
+        } else {
+            let voiceMessageId = [];
+            let attachmentsId = [];
+            let payLoad = {
+                caseId: currentCase?._id,
+                groupId: currentChat?._id,
+                sender: currentUser?.userID,
+                clientName: currentCase?.clientName,
+                receivers,
+                messageData: curMessage,
+                isAttachment,
+                isVoiceMessage,
+                isForward: false,
+                maincaseId: currentCase?.maincaseId,
+                threadId: currentCase?.threadId,
+                // isPinned: false,
+            };
+            if (isAttachment) {
+                const formData = new FormData();
+                for (var i = 0; i < allFiles.length; i++) {
+                    formData.append('file', allFiles[i]);
+                }
+                // formData.append("file", allFiles)
+                const fileUploadRes = await axios.post(
+                    `${SERVER_URL}/upload`,
+                    formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    }
+                );
+                const { data } = fileUploadRes;
+                if (data.success) {
+                    await data.files?.map(file =>
+                        attachmentsId.push({
+                            type: file.contentType,
+                            size: file.size,
+                            id: file.id,
+                            name: file.originalname,
+                            dbName: file.filename,
+                            aflag: true,
+                        })
+                    );
+                } else {
+                    setLoading(false);
+                }
+            } else if (isVoiceMessage) {
+                const formData = new FormData();
+
+                for (let i = 0; i < allVoicemsg.length; i++) {
+                    const audioBlob = new Blob([allVoicemsg[i].getBlob()], {
+                        type: 'audio/webm',
+                    });
+
+                    formData.append('file', audioBlob, `audio-${i}.webm`);
+                }
+
+                const fileUploadRes = await axios.post(
+                    `${SERVER_URL}/upload`,
+                    formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    }
+                );
+
+                const { data } = fileUploadRes;
+                if (data.success) {
+                    await data?.files?.map(file =>
+                        voiceMessageId.push({
+                            type: file?.contentType,
+                            size: file?.size,
+                            id: file.id,
+                            name: file.originalname,
+                            dbName: file.filename,
+                            aflag: true,
+                        })
+                    );
+                } else {
+                    setLoading(false);
+                }
+            }
+            payLoad.attachments = attachmentsId;
+            payLoad.voiceMessage = voiceMessageId;
+            handleSendingMessage(payLoad);
+            setAllFiles([]);
+            setAllVoicemsg([]);
+            setcurMessage('');
+            setIsAttachment(false);
+            setIsVoiceMessage(false);
+            setRecorder([]);
+            setBlobURL(null);
+        }
+        setLoading(false);
+    };
+    // const { getRootProps, getInputProps } = useDropzone({
+    //   accept:
+    //     ".png, .jpg, .jpeg,.pdf,.doc,.xls,.docx,.xlsx,.zip,.mp3,.webm,.ogg,.wav ",
+    //   onDrop: acceptedFiles => {
+    //     setAllFiles(
+    //       acceptedFiles.map(allFiles =>
+    //         Object.assign(allFiles, {
+    //           preview: URL.createObjectURL(allFiles),
+    //         })
+    //       )
+    //     )
+    //     // const updatedVoicemsg = recorder.map(allVoicemsg => Object.assign(allVoicemsg, {
+    //     //   preview: URL.createObjectURL(allVoicemsg),
+    //     // }));
+    //     // setAllVoicemsg(updatedVoicemsg);
+    //     // setRecorder(updatedVoicemsg);
+    //   },
+    // })
+
+    const onChange = (content, delta, source, editor) => {
+    // Remove <p> and <br> tags from the content
+        const strippedContent = content.replace(/<p><br><\/p>/gi, '');
+
+        setcurMessage(strippedContent);
+    };
+
+    //Detecting Enter key Press in textbox
+    const onKeyPress = event => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            handleSendMessage();
+        }
+    };
+
+    //Getting sender name
+    const getMemberName = id => {
+        const caseArray = [...allCases, ...allSubCases]; // Combine all cases and subcases
+        const memberName = caseArray
+            .find(cas => cas._id === currentCase?._id)
+            ?.caseMembers?.find(member => member?.id?._id === id);
+
+        if (memberName) {
+            return memberName?.id?.firstname + ' ' + memberName?.id?.lastname;
+        }
+        return id;
+    };
+
+    //Scrolling to bottom of message
+    // const scrollToBottom = () => {
+    //   if (messageBox) {
+    //     messageBox.scrollTop = messageBox.scrollHeight + messageBox?.offsetHeight
+    //   }
+    // }
+    // useEffect(()=>{
+    //   if(containerRef.current){
+    //     containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    //   }
+    // },[messages])
+    // useEffect(() => {
+    //   if (messageBox) {
+    //     messageBox.scrollTop = messageBox.scrollHeight
+    //   }
+    // }, [messageBox?.scrollHeight])
+
+    //Handling File change
+    const handleFileChange = e => {
+        const selectedFiles = e.target.files;
+        if (selectedFiles.length + allFiles.length > 10) {
+            // Display warning message here
+            toastr.error('You can select a maximum of 10 files.', 'Warning');
+            return;
+        }
+        const updatedFiles = [...allFiles, ...selectedFiles];
+        setAllFiles(updatedFiles);
+    };
+    const handleFileRemove = fileName => {
+        const updatedFiles = allFiles.filter(file => file.name !== fileName);
+        setAllFiles(updatedFiles);
+    };
+
+    //Fetching SubGroups
+    const onGettingSubgroups = useCallback(async () => {
+        setChatLoader(true);
+        const payLoad = {
+            caseId: currentCase._id,
+            userId: currentUser.userID,
+        };
+        const subGroupsRes = await getGroupsByUserIdandCaseId(payLoad);
+        if (subGroupsRes.success) {
+            setAllgroups(subGroupsRes.groups);
+            setCurrentChat(subGroupsRes.groups[0]);
+        }
+        setChatLoader(false);
+    }, [currentCase, currentUser,setCurrentChat]);
+
+    const handleFetchFiles = useCallback(async () => {
         try {
-          // Create a URL for the ZIP blob
-          const zipURL = window.URL.createObjectURL(content)
-          // Create an <a> element with the URL and download attributes
-          const downloadLink = document.createElement("a")
-          downloadLink.href = zipURL
-          downloadLink.download = `${chatDocName} + Case Files.zip`
-          // Simulate a click on the download link to trigger the download
-          document.body.appendChild(downloadLink)
-          downloadLink.click()
-          // Clean up the <a> element and the URL object
-          document.body.removeChild(downloadLink)
-          window.URL.revokeObjectURL(zipURL)
-        } catch (err) {
-          console.error(`Error creating download link: ${err}`)
+            const filesRes = await getCaseFiles(currentCase?._id);
+            if (filesRes.success && filesRes?.files?.length > 0) {
+                const updatedFiles = filesRes.files.map((file) => {
+                    const sendAt = moment(file.time).format('DD-MM-YY HH:mm');
+                    return { ...file, time: sendAt, isDownloading: true };
+                });
+                setCaseFile(updatedFiles);
+            } else {
+                setCaseFile([]);
+            }
+        } catch (error) {
+            console.error(`Error fetching case files: ${error}`);
+            setCaseFile([]);
         }
-      })
-      .catch(err => {
-        console.error(`Error generating ZIP file: ${err}`)
-      })
-    setChatLoader(false)
-  }
-  //Handle sending email
-  const onSendEmail = async () => {
-    const payLoad = {
-      mail: email,
-      chatRoomId: currentChat?._id,
-      caseName: currentCase?.caseName ? currentCase?.caseName : "PrivateChat",
-      groupName: currentChat?.isGroup
-        ? currentChat?.groupName
-        : getChatName(currentChat?.groupMembers),
-    }
-    const mailRes = await sentEmail(payLoad)
-    toastr.success(`Mail has been Send successfully`, "Success")
-    setEmail(mailRes.true)
-    setEmailModal(false)
-  }
+    }, [currentCase, setCaseFile]);
+  
+    useEffect(() => {
+        handleFetchFiles();
+        return () => {
+            setCaseFile([]);
+        };
+    }, [handleFetchFiles]);
+  
+    // Archive Chat
+    const onArchievingChat = async () => {
+        setChatLoader(true);
+        // Get chat transcript
+        const doc = new jsPDF();
+        const header = [
+            ['Sender', 'Message', 'Time', 'Group Name', 'Case Name', 'Attachments'],
+        ];
+        let rows = [];
+        const caseName = currentCase?.caseName ?? '-';
+        const groupName = currentChat?.isGroup
+            ? currentChat?.groupName
+            : getChatName(currentChat?.groupMembers);
+        messages.forEach(m => {
+            const sender = m?.caseId
+                ? getMemberName(m?.sender)
+                : getSenderOneChat(m?.sender);
+            const message = m?.messageData;
+            const time = moment(m?.createdAt).format('DD-MM-YY HH:mm');
+            const attachments =
+        m.isAttachment && m.attachments[0].id
+            ? { url: `${SERVER_URL}/file/${m.attachments[0].id}` }
+            : '-';
+            const tempRow = [
+                sender,
+                message,
+                time,
+                groupName,
+                caseName,
+                attachments?.url,
+                typeof attachments === 'object' && attachments?.url
+                    ? {
+                        url: attachments.url,
+                        content: 'View Attachment',
+                    }
+                    : '-',
+            ];
+            rows.push(tempRow);
+        });
+        autoTable(doc, {
+            bodyStyles: { valign: 'top' },
+            margin: { top: 30 },
+            head: header,
+            body: rows,
+            theme: 'grid',
+            columnStyles: {
+                0: { cellWidth: 30, cellHeight: 50 },
+                1: { cellWidth: 30, cellHeight: 50 },
+                2: { cellWidth: 20, cellHeight: 50 },
+                3: { cellWidth: 20, cellHeight: 50 },
+                4: { cellWidth: 20, cellHeight: 50 },
+                5: { halign: 'center', cellWidth: 90 },
+                6: {
+                    // halign: "center",
+                    cellWidth: 100,
+                    // valign: "middle",
+                    fillColor: [250, 250, 250],
+                    textColor: [0, 0, 0],
+                    fontSize: 8,
+                },
+            },
+            headStyles: {
+                fillColor: [0, 0, 230],
+                fontSize: 12,
+                fontStyle: 'bold',
+                font: 'courier',
+                halign: 'center',
+            },
+            willDrawCell: data => {
+                if (
+                    data.section === 'body' &&
+          data.column.index === 5 &&
+          data.cell.raw !== '-'
+                ) {
+                    data.doc.setFillColor('green');
+                    data.doc.setTextColor('black');
+                }
+            },
+            didDrawPage: data => {
+                doc.setFontSize(20);
+                doc.setTextColor(40);
+                doc.text(
+                    `${currentCase?.caseName ?? 'Private Chat'} - ${groupName}`,
+                    data.settings.margin.left,
+                    20
+                );
+            },
+        });
+        const chatDocName = `${currentCase?.caseName ?? 'Private Chat'
+        } - ${groupName} - ${moment(Date.now()).format('DD-MM-YY HH:mm')}`;
+        const chatDocBlob = doc.output('blob');
+        const zip = new JSZip();
+        zip.file(`${chatDocName}.pdf`, chatDocBlob);
+        const caseFolder = zip.folder(currentCase?.caseName ?? 'Private Chat');
+        // Loop through each case file and add it to the ZIP file
+        for (const file of caseFile) {
+            try {
+                // Fetch the file from MongoDB
+                const res = await fetch(`${SERVER_URL}/file/${file.id}`);
+                const blob = await res.blob();
+                caseFolder.file(file.name, blob);
+            } catch (err) {
+                console.error(`Error fetching case file ${file.name}: ${err}`);
+            }
+        }
+        // Generate the ZIP file and download it
+        zip
+            .generateAsync({ type: 'blob' })
+            .then(content => {
+                try {
+                    // Create a URL for the ZIP blob
+                    const zipURL = window.URL.createObjectURL(content);
+                    // Create an <a> element with the URL and download attributes
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = zipURL;
+                    downloadLink.download = `${chatDocName} + Case Files.zip`;
+                    // Simulate a click on the download link to trigger the download
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    // Clean up the <a> element and the URL object
+                    document.body.removeChild(downloadLink);
+                    window.URL.revokeObjectURL(zipURL);
+                } catch (err) {
+                    console.error(`Error creating download link: ${err}`);
+                }
+            })
+            .catch(err => {
+                console.error(`Error generating ZIP file: ${err}`);
+            });
+        setChatLoader(false);
+    };
+    //Handle sending email
+    const onSendEmail = async () => {
+        const payLoad = {
+            mail: email,
+            chatRoomId: currentChat?._id,
+            caseName: currentCase?.caseName ? currentCase?.caseName : 'PrivateChat',
+            groupName: currentChat?.isGroup
+                ? currentChat?.groupName
+                : getChatName(currentChat?.groupMembers),
+        };
+        const mailRes = await sentEmail(payLoad);
+        toastr.success('Mail has been Send successfully', 'Success');
+        setEmail(mailRes.true);
+        setEmailModal(false);
+    };
 
-  //Contacts infiniteScroll
-  const handleContactScroll = t => {
-    if (
-      t.clientHeight + t.scrollTop + 1 >= t.scrollHeight &&
+    //Contacts infiniteScroll
+    const handleContactScroll = t => {
+        if (
+            t.clientHeight + t.scrollTop + 1 >= t.scrollHeight &&
       contactPage <= totalPages?.users
-    ) {
-      setContactPage(contactPage + 1)
-    }
-  }
+        ) {
+            setContactPage(contactPage + 1);
+        }
+    };
 
-  //Cases infiniteScroll
-  // const handleCaseScroll = t => {
-  //   if (
-  //     t.clientHeight + t.scrollTop + 1 >= t.scrollHeight &&
-  //     casePage <= totalPages?.cases
-  //   ) {
-  //     setCasePage(casePage + 1)
-  //   }
-  // }
-  //Message ScrollintoView
-  const handleShow = () => {
-    setSearchIndex(searchIndex + 1)
-  }
-  const handleShowTop = () => {
-    setSearchIndex(searchIndex - 1)
-  }
+    //Cases infiniteScroll
+    // const handleCaseScroll = t => {
+    //   if (
+    //     t.clientHeight + t.scrollTop + 1 >= t.scrollHeight &&
+    //     casePage <= totalPages?.cases
+    //   ) {
+    //     setCasePage(casePage + 1)
+    //   }
+    // }
+    //Message ScrollintoView
+    const handleShow = () => {
+        setSearchIndex(searchIndex + 1);
+    };
+    const handleShowTop = () => {
+        setSearchIndex(searchIndex - 1);
+    };
 
-  //Message search
-  // useEffect(() => {
-  //   if (searchMessageText) {
-  //     setSearchedMessages(
-  //       visibleMessages?.filter(m =>
-  //         m?.messageData.toLowerCase().includes(searchMessageText.toLowerCase())
-  //       )
-  //     )
-  //   } else {
-  //     setSearchedMessages([])
-  //   }
-  //   return () => {
-  //     setSearchedMessages([])
-  //   }
-  // }, [searchMessageText])
-  useEffect(() => {
-    if (searchMessageText) {
-      setSearchedMessages(
-        messages?.filter(m =>
-          m?.messageData.toLowerCase().includes(searchMessageText.toLowerCase())
-        )
-      )
-    } else {
-      setSearchedMessages([])
-    }
-    return () => {
-      setSearchedMessages([])
-    }
-  }, [searchMessageText,messages])
+    //Message search
+    // useEffect(() => {
+    //   if (searchMessageText) {
+    //     setSearchedMessages(
+    //       visibleMessages?.filter(m =>
+    //         m?.messageData.toLowerCase().includes(searchMessageText.toLowerCase())
+    //       )
+    //     )
+    //   } else {
+    //     setSearchedMessages([])
+    //   }
+    //   return () => {
+    //     setSearchedMessages([])
+    //   }
+    // }, [searchMessageText])
+    useEffect(() => {
+        if (searchMessageText) {
+            setSearchedMessages(
+                messages?.filter(m =>
+                    m?.messageData.toLowerCase().includes(searchMessageText.toLowerCase())
+                )
+            );
+        } else {
+            setSearchedMessages([]);
+        }
+        return () => {
+            setSearchedMessages([]);
+        };
+    }, [searchMessageText,messages]);
 
-  // const handleFileDownload = async ({ id, filename }) => {
-  //   getFileFromGFS(
-  //     { id },
-  //     {
-  //       responseType: "blob",
-  //     }
-  //   ).then(res => {
-  //     fileDownload(res, filename)
-  //   })
-  // }
+    // const handleFileDownload = async ({ id, filename }) => {
+    //   getFileFromGFS(
+    //     { id },
+    //     {
+    //       responseType: "blob",
+    //     }
+    //   ).then(res => {
+    //     fileDownload(res, filename)
+    //   })
+    // }
 
-  useEffect(() => {
-    if (searchedMessages?.length > 0) {
-      const elementid = searchedMessages[0]?._id
-      document.getElementById(elementid)?.scrollIntoView(false)
-    } else {
-      setSearchIndex(0)
-    }
-  }, [searchedMessages])
+    useEffect(() => {
+        if (searchedMessages?.length > 0) {
+            const elementid = searchedMessages[0]?._id;
+            document.getElementById(elementid)?.scrollIntoView(false);
+        } else {
+            setSearchIndex(0);
+        }
+    }, [searchedMessages]);
 
-  //Text Convert into Link URL
-  // const stringFormatter = txt => {
-  //   if (txt.includes("http" || "www")) {
-  //     const firstIndex = txt.indexOf("http")
-  //     const linkEnd = txt.indexOf(" ", firstIndex) //find the end of link
-  //     const firstTextSection = txt.slice(0, firstIndex)
-  //     const linkSection = txt.slice(
-  //       firstIndex,
-  //       linkEnd !== -1 ? linkEnd : txt.length
-  //     )
-  //     const secondSection = txt.slice(linkEnd !== -1 ? linkEnd : txt.length)
-  //     return (
-  //       <p>
-  //         {firstTextSection}{" "}
-  //         <a href={linkSection} target="_blank" rel="noreferrer">
-  //           {linkSection}
-  //         </a>
-  //         {secondSection}
-  //       </p>
-  //     )
-  //   } else {
-  //     return <p>{txt}</p>
-  //   }
-  // }
+    //Text Convert into Link URL
+    // const stringFormatter = txt => {
+    //   if (txt.includes("http" || "www")) {
+    //     const firstIndex = txt.indexOf("http")
+    //     const linkEnd = txt.indexOf(" ", firstIndex) //find the end of link
+    //     const firstTextSection = txt.slice(0, firstIndex)
+    //     const linkSection = txt.slice(
+    //       firstIndex,
+    //       linkEnd !== -1 ? linkEnd : txt.length
+    //     )
+    //     const secondSection = txt.slice(linkEnd !== -1 ? linkEnd : txt.length)
+    //     return (
+    //       <p>
+    //         {firstTextSection}{" "}
+    //         <a href={linkSection} target="_blank" rel="noreferrer">
+    //           {linkSection}
+    //         </a>
+    //         {secondSection}
+    //       </p>
+    //     )
+    //   } else {
+    //     return <p>{txt}</p>
+    //   }
+    // }
 
-  useEffect(() => {
-    if (searchIndex >= 0) {
-      const elementid = searchedMessages[searchIndex]?._id
-      document.getElementById(elementid)?.scrollIntoView(false)
-    }
-  }, [searchIndex,searchedMessages])
+    useEffect(() => {
+        if (searchIndex >= 0) {
+            const elementid = searchedMessages[searchIndex]?._id;
+            document.getElementById(elementid)?.scrollIntoView(false);
+        }
+    }, [searchIndex,searchedMessages]);
 
-  //Resetting page whiule changing Tab
-  useEffect(() => {
-    setContactPage(1)
-    setCasePage(1)
+    //Resetting page whiule changing Tab
+    useEffect(() => {
+        setContactPage(1);
+        setCasePage(1);
     // if (activeTab === "3") onGetContacts({ isSearch: true })
     // if (activeTab === "2") ongetAllCases({ isSearch: true })
-  }, [activeTab])
+    }, [activeTab]);
 
-  //SideEffect for setting isAttachment
-  useEffect(() => {
-    if (Array.from(allFiles)?.length > 0) {
-      setIsAttachment(true)
-    } else {
-      setIsAttachment(false)
-    }
-  }, [allFiles])
-  useEffect(() => {
-    if (Array.from(recorder)?.length > 0) {
-      setIsVoiceMessage(true)
-    } else {
-      setIsVoiceMessage(false)
-    }
-  }, [recorder])
-
-  //SideEffect for fetching Subgroups after case selected
-  useEffect(() => {
-    if (currentCase) {
-      onGettingSubgroups()
-    }
-  }, [currentCase])
-
-  useEffect(() => {
-    if (currentChat) {
-      setRecorder([])
-      setcurMessage("")
-      setMentionsArray(
-        currentChat.groupMembers
-          .filter(m => m?.id?._id) // filter out members with null IDs
-          .map(m => ({
-            id: m?.id?._id,
-            display: m?.id?.firstname + " " + m?.id?.lastname,
-          }))
-      )
-      setReceivers(
-        currentChat.groupMembers
-          .filter(m => m?.id?._id && m.id?._id !== currentUser.userID) // filter out members with null IDs and current user
-          .map(r => r.id?._id)
-      )
-      // const filteredNotifications1 = notifications?.filter(
-      //   n =>{
-      //   const a = n?.groupId !== currentChat?._id
-      //    return  a
-      // }
-      // )
-      // console.log("FN1:",filteredNotifications1)
-      // const filteredNotifications = filteredNotifications1?.filter(
-      //   n =>{
-      //     const b = n?.currentChat?._id !== currentChat?._id
-      //     console.log("b ",n?.currentChat?._id,currentChat?._id)
-      //    return  b
-      // }
-      // )
-      // console.log("FN:",filteredNotifications)
-
-      // setNotifications(filteredNotifications)
-      setNotifications(
-        notifications.filter(n => n.groupId !== currentChat?._id)
-      )
-
-      const onGettingGroupMessages = async () => {
-        setChatLoader(true)
-        const payload = {
-          groupId: currentChat?._id,
-          userId: currentUser?.userID,
-        }
-        const res = await getMessagesByUserIdandGroupId(payload)
-        if (res.success) {
-          setMessages(res.groupMessages)
+    //SideEffect for setting isAttachment
+    useEffect(() => {
+        if (Array.from(allFiles)?.length > 0) {
+            setIsAttachment(true);
         } else {
-          console.log("Failed to fetch Group message", res)
+            setIsAttachment(false);
         }
-        setChatLoader(false)
-      }
-      onGettingGroupMessages()
-    }
-  }, [currentChat, currentUser?.userID])
+    }, [allFiles]);
+    useEffect(() => {
+        if (Array.from(recorder)?.length > 0) {
+            setIsVoiceMessage(true);
+        } else {
+            setIsVoiceMessage(false);
+        }
+    }, [recorder]);
 
-  //SideEffect while contact page changes
-  useEffect(() => {
-    const fetchData = async () => {
-      if (activeTab === "3" && contactPage !== 1 && contactPage <= totalPages?.users) {
-        await onGetContacts({ isSearch: false });
-      }
-      if (activeTab === "3" && contactPage === 1) {
-        await onGetContacts({ isSearch: true });
-      }
+    //SideEffect for fetching Subgroups after case selected
+    useEffect(() => {
+        if (currentCase) {
+            onGettingSubgroups();
+        }
+    }, [currentCase, onGettingSubgroups]);
+
+    useEffect(() => {
+        if (currentChat) {
+            setRecorder([]);
+            setcurMessage('');
+            setMentionsArray(
+                currentChat.groupMembers
+                    .filter(m => m?.id?._id) // filter out members with null IDs
+                    .map(m => ({
+                        id: m?.id?._id,
+                        display: m?.id?.firstname + ' ' + m?.id?.lastname,
+                    }))
+            );
+            setReceivers(
+                currentChat.groupMembers
+                    .filter(m => m?.id?._id && m.id?._id !== currentUser.userID) // filter out members with null IDs and current user
+                    .map(r => r.id?._id)
+            );
+            // const filteredNotifications1 = notifications?.filter(
+            //   n =>{
+            //   const a = n?.groupId !== currentChat?._id
+            //    return  a
+            // }
+            // )
+            // console.log("FN1:",filteredNotifications1)
+            // const filteredNotifications = filteredNotifications1?.filter(
+            //   n =>{
+            //     const b = n?.currentChat?._id !== currentChat?._id
+            //     console.log("b ",n?.currentChat?._id,currentChat?._id)
+            //    return  b
+            // }
+            // )
+            // console.log("FN:",filteredNotifications)
+
+            // setNotifications(filteredNotifications)
+            setNotifications(
+                notifications.filter(n => n.groupId !== currentChat?._id)
+            );
+
+            const onGettingGroupMessages = async () => {
+                setChatLoader(true);
+                const payload = {
+                    groupId: currentChat?._id,
+                    userId: currentUser?.userID,
+                };
+                const res = await getMessagesByUserIdandGroupId(payload);
+                if (res.success) {
+                    setMessages(res.groupMessages);
+                } else {
+                    console.log('Failed to fetch Group message', res);
+                }
+                setChatLoader(false);
+            };
+            onGettingGroupMessages();
+        }
+    }, [currentChat, currentUser?.userID]);
+
+    //SideEffect while contact page changes
+    useEffect(() => {
+        const fetchData = async () => {
+            if (activeTab === '3' && contactPage !== 1 && contactPage <= totalPages?.users) {
+                await onGetContacts({ isSearch: false });
+            }
+            if (activeTab === '3' && contactPage === 1) {
+                await onGetContacts({ isSearch: true });
+            }
+        };
+  
+        fetchData();
+    }, [activeTab, contactPage, totalPages?.users]);
+  
+
+    //SideEffect while case page changes
+    useEffect(() => {
+        if (activeTab === '2' && casePage !== 1 && casePage <= totalPages?.cases) {
+            // onGetContacts({ isSearch: false })
+            ongetAllCases({ isSearch: false });
+        }
+        if (activeTab === '3' && casePage === 1) {
+            // onGetContacts({ isSearch: true })
+            ongetAllCases({ isSearch: true });
+        }
+    }, [casePage]);
+
+    useEffect(() => {
+        if (searchText === '') {
+            if (activeTab === '3') setContactPage(1);
+            if (activeTab === '2') setCasePage(1);
+        }
+        if (activeTab === '3') {
+            onGetContacts({ isSearch: true });
+        }
+        if (activeTab === '2') {
+            ongetAllCases({ isSet: true, isSearch: true });
+        }
+    }, [searchText]);
+
+    useEffect(() => {
+        const userid = query.get('uid');
+        if (userid && userid !== currentUser?.userID) {
+            const onCreateOneonOneChat = async () => {
+                await handleCreateChatRoom(userid);
+            };
+            onCreateOneonOneChat();
+        }
+        const handleAllAsyncReq = async () => {
+            setPageLoader(true);
+            await ongetCounts();
+            await ongetAllChatRooms();
+            setPageLoader(false);
+            // await onGetContacts({ isSearch: false })
+            await ongetAllCases({ isSet: false, isSearch: false });
+        };
+        handleAllAsyncReq();
+
+        return () => {
+            setChats([]);
+            setCurrentChat(null);
+            setMessages([]);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (privateChatId && !pageLoader) {
+            const tempChat = chats?.find(ch => ch?._id === privateChatId);
+            setactiveTab('1');
+            setCurrentChat(tempChat);
+        }
+    }, [privateChatId, pageLoader,chats,setCurrentChat]);
+    useEffect(() => {
+        if (privateReplyChatId && !pageLoader) {
+            const tempChat = chats?.find(ch => ch?._id === privateReplyChatId);
+            setactiveTab('1');
+            setCurrentChat(tempChat);
+        }
+    }, [privateReplyChatId, pageLoader,chats,setCurrentChat]);
+
+    useEffect(() => {
+        if (groupReplyChatId && caseReplyChatId && !pageLoader && !caseLoading) {
+            const groupChat = allgroups?.find(gch => gch?._id === groupReplyChatId);
+            const tempCase = allCases?.find(c => c?._id === caseReplyChatId);
+            setactiveTab('2');
+            setCurrentCase(tempCase);
+            setCurrentChat(groupChat);
+        }
+    }, [groupReplyChatId, pageLoader, caseReplyChatId, caseLoading,allgroups,allCases,setCurrentChat]);
+    useEffect(() => {
+        if (groupChatId && caseChatId && !pageLoader && !caseLoading) {
+            const groupChat = allgroups?.find(gch => gch?._id === groupChatId);
+            const tempCase = allCases?.find(c => c?._id === caseChatId);
+            setactiveTab('2');
+            setCurrentCase(tempCase);
+            setCurrentChat(groupChat);
+        }
+    }, [groupChatId, pageLoader, caseChatId, caseLoading,allgroups,allCases,setCurrentChat]);
+    // useEffect(() => {
+    //   if (groupChatId && caseChatId && !pageLoader && !caseLoading) {
+    //     const groupChat = allgroups?.find(gch => gch?._id === groupChatId)
+    //     const tempCase = allSubCases?.find(c => c?._id === caseChatId)
+    //     setactiveTab("2")
+    //     setCurrentCase(tempCase)
+    //     setCurrentChat(groupChat)
+    //   }
+    // }, [groupChatId, pageLoader, caseChatId, caseLoading,allgroups,allCases,setCurrentChat])
+    const handleClientCreatedAt = () => {
+        const sortedclients = [...clients].sort((a, b) => {
+            const dateA = new Date(a.createdAt);
+            const dateB = new Date(b.createdAt);
+            return dateB - dateA; // Compare date objects in descending order
+        });
+        setClients(sortedclients); // Update the component state with the sorted allCases array
     };
-  
-    fetchData();
-  }, [activeTab, contactPage, totalPages?.users]);
-  
 
-  //SideEffect while case page changes
-  useEffect(() => {
-    if (activeTab === "2" && casePage !== 1 && casePage <= totalPages?.cases) {
-      // onGetContacts({ isSearch: false })
-      ongetAllCases({ isSearch: false })
-    }
-    if (activeTab === "3" && casePage === 1) {
-      // onGetContacts({ isSearch: true })
-      ongetAllCases({ isSearch: true })
-    }
-  }, [casePage])
+    const handleClientName = () => {
+        const sortedclients = [...clients].sort((a, b) => {
+            const caseNameA = a.clientName.toUpperCase(); // Convert case names to uppercase for case-insensitive sorting
+            const caseNameB = b.clientName.toUpperCase();
 
-  useEffect(() => {
-    if (searchText === "") {
-      if (activeTab === "3") setContactPage(1)
-      if (activeTab === "2") setCasePage(1)
-    }
-    if (activeTab === "3") {
-      onGetContacts({ isSearch: true })
-    }
-    if (activeTab === "2") {
-      ongetAllCases({ isSet: true, isSearch: true })
-    }
-  }, [searchText])
-
-  useEffect(() => {
-    const userid = query.get("uid")
-    if (userid && userid !== currentUser?.userID) {
-      const onCreateOneonOneChat = async () => {
-        await handleCreateChatRoom(userid)
-      }
-      onCreateOneonOneChat()
-    }
-    const handleAllAsyncReq = async () => {
-      setPageLoader(true)
-      await ongetCounts()
-      await ongetAllChatRooms()
-      setPageLoader(false)
-      // await onGetContacts({ isSearch: false })
-      await ongetAllCases({ isSet: false, isSearch: false })
-    }
-    handleAllAsyncReq()
-
-    return () => {
-      setChats([])
-      setCurrentChat(null)
-      setMessages([])
-    }
-  }, [])
-
-  useEffect(() => {
-    if (privateChatId && !pageLoader) {
-      const tempChat = chats?.find(ch => ch?._id === privateChatId)
-      setactiveTab("1")
-      setCurrentChat(tempChat)
-    }
-  }, [privateChatId, pageLoader,chats,setCurrentChat])
-  useEffect(() => {
-    if (privateReplyChatId && !pageLoader) {
-      const tempChat = chats?.find(ch => ch?._id === privateReplyChatId)
-      setactiveTab("1")
-      setCurrentChat(tempChat)
-    }
-  }, [privateReplyChatId, pageLoader,chats,setCurrentChat])
-
-  useEffect(() => {
-    if (groupReplyChatId && caseReplyChatId && !pageLoader && !caseLoading) {
-      const groupChat = allgroups?.find(gch => gch?._id === groupReplyChatId)
-      const tempCase = allCases?.find(c => c?._id === caseReplyChatId)
-      setactiveTab("2")
-      setCurrentCase(tempCase)
-      setCurrentChat(groupChat)
-    }
-  }, [groupReplyChatId, pageLoader, caseReplyChatId, caseLoading,allgroups,allCases,setCurrentChat])
-  useEffect(() => {
-    if (groupChatId && caseChatId && !pageLoader && !caseLoading) {
-      const groupChat = allgroups?.find(gch => gch?._id === groupChatId)
-      const tempCase = allCases?.find(c => c?._id === caseChatId)
-      setactiveTab("2")
-      setCurrentCase(tempCase)
-      setCurrentChat(groupChat)
-    }
-  }, [groupChatId, pageLoader, caseChatId, caseLoading,allgroups,allCases,setCurrentChat])
-  // useEffect(() => {
-  //   if (groupChatId && caseChatId && !pageLoader && !caseLoading) {
-  //     const groupChat = allgroups?.find(gch => gch?._id === groupChatId)
-  //     const tempCase = allSubCases?.find(c => c?._id === caseChatId)
-  //     setactiveTab("2")
-  //     setCurrentCase(tempCase)
-  //     setCurrentChat(groupChat)
-  //   }
-  // }, [groupChatId, pageLoader, caseChatId, caseLoading,allgroups,allCases,setCurrentChat])
-  const handleClientCreatedAt = () => {
-    const sortedclients = [...clients].sort((a, b) => {
-      const dateA = new Date(a.createdAt)
-      const dateB = new Date(b.createdAt)
-      return dateB - dateA // Compare date objects in descending order
-    })
-    setClients(sortedclients) // Update the component state with the sorted allCases array
-  }
-
-  const handleClientName = () => {
-    const sortedclients = [...clients].sort((a, b) => {
-      const caseNameA = a.clientName.toUpperCase() // Convert case names to uppercase for case-insensitive sorting
-      const caseNameB = b.clientName.toUpperCase()
-
-      if (caseNameA < caseNameB) {
-        return -1
-      }
-      if (caseNameA > caseNameB) {
-        return 1
-      }
-      return 0
-    })
-    setClients(sortedclients) // Update the component state with
+            if (caseNameA < caseNameB) {
+                return -1;
+            }
+            if (caseNameA > caseNameB) {
+                return 1;
+            }
+            return 0;
+        });
+        setClients(sortedclients); // Update the component state with
     // Use the sortedCases array for further processing
-  }
+    };
 
-  const handleClientId = () => {
-    const sortedclients = [...clients].sort((a, b) => {
-      const caseNameA = a.clientId.toUpperCase() // Convert case names to uppercase for case-insensitive sorting
-      const caseNameB = b.clientId.toUpperCase()
+    const handleClientId = () => {
+        const sortedclients = [...clients].sort((a, b) => {
+            const caseNameA = a.clientId.toUpperCase(); // Convert case names to uppercase for case-insensitive sorting
+            const caseNameB = b.clientId.toUpperCase();
 
-      if (caseNameA < caseNameB) {
-        return -1
-      }
-      if (caseNameA > caseNameB) {
-        return 1
-      }
-      return 0
-    })
-    setClients(sortedclients)
-  }
-  const handlecreatedAt = () => {
-    const sortedCases = [...allCases].sort((a, b) => {
-      const dateA = new Date(a.createdAt)
-      const dateB = new Date(b.createdAt)
-      return dateB - dateA // Compare date objects in descending order
-    })
-    setAllCases(sortedCases) // Update the component state with the sorted allCases array
-  }
-  const handlecaseName = () => {
-    const sortedCases = [...allCases].sort((a, b) => {
-      const caseNameA = a.caseName.toUpperCase() // Convert case names to uppercase for case-insensitive sorting
-      const caseNameB = b.caseName.toUpperCase()
+            if (caseNameA < caseNameB) {
+                return -1;
+            }
+            if (caseNameA > caseNameB) {
+                return 1;
+            }
+            return 0;
+        });
+        setClients(sortedclients);
+    };
+    const handlecreatedAt = () => {
+        const sortedCases = [...allCases].sort((a, b) => {
+            const dateA = new Date(a.createdAt);
+            const dateB = new Date(b.createdAt);
+            return dateB - dateA; // Compare date objects in descending order
+        });
+        setAllCases(sortedCases); // Update the component state with the sorted allCases array
+    };
+    const handlecaseName = () => {
+        const sortedCases = [...allCases].sort((a, b) => {
+            const caseNameA = a.caseName.toUpperCase(); // Convert case names to uppercase for case-insensitive sorting
+            const caseNameB = b.caseName.toUpperCase();
 
-      if (caseNameA < caseNameB) {
-        return -1
-      }
-      if (caseNameA > caseNameB) {
-        return 1
-      }
-      return 0
-    })
-    setAllCases(sortedCases) // Update the component state with
+            if (caseNameA < caseNameB) {
+                return -1;
+            }
+            if (caseNameA > caseNameB) {
+                return 1;
+            }
+            return 0;
+        });
+        setAllCases(sortedCases); // Update the component state with
     // Use the sortedCases array for further processing
-  }
+    };
 
-  const handleCaseId = () => {
-    const sortedCases = [...allCases].sort((a, b) => {
-      const caseNameA = a.caseId.toUpperCase() // Convert case names to uppercase for case-insensitive sorting
-      const caseNameB = b.caseId.toUpperCase()
+    const handleCaseId = () => {
+        const sortedCases = [...allCases].sort((a, b) => {
+            const caseNameA = a.caseId.toUpperCase(); // Convert case names to uppercase for case-insensitive sorting
+            const caseNameB = b.caseId.toUpperCase();
 
-      if (caseNameA < caseNameB) {
-        return -1
-      }
-      if (caseNameA > caseNameB) {
-        return 1
-      }
-      return 0
-    })
-    setAllCases(sortedCases)
-  }
-  const handleCompletedCase = async () => {
-    const payload = {
-      caseId: currentCase?._id,
-    }
-    const res = await completedCase(payload)
-    if (res.success) {
-      await ongetAllCases({ isSet: false })
-      toastr.success(`case completed  successfully`, "Success")
-    }
-    setCompletedCaseDelete(false)
-  }
-  const handleCaseCompleted = () => {
-    setCompletedCaseDelete(true)
-  }
-  const handleLocateMessage = messageId => {
-    const message = [...messages, ...visibleMessages].find(
-      msg => msg._id === messageId
-    )
-    if (message) {
-      // Scroll to the message if found
-      const messageElem = document.getElementById(message._id)
-      if (messageElem) {
-        messageElem.scrollIntoView({ behavior: "auto" })
-        messageElem.classList.add("highlighted")
-        messageElem.style.backgroundColor = "#FFD700"
-      }
-    }
-  }
+            if (caseNameA < caseNameB) {
+                return -1;
+            }
+            if (caseNameA > caseNameB) {
+                return 1;
+            }
+            return 0;
+        });
+        setAllCases(sortedCases);
+    };
+    const handleCompletedCase = async () => {
+        const payload = {
+            caseId: currentCase?._id,
+        };
+        const res = await completedCase(payload);
+        if (res.success) {
+            await ongetAllCases({ isSet: false });
+            toastr.success('case completed  successfully', 'Success');
+        }
+        setCompletedCaseDelete(false);
+    };
+    const handleCaseCompleted = () => {
+        setCompletedCaseDelete(true);
+    };
+    const handleLocateMessage = messageId => {
+        const message = [...messages, ...visibleMessages].find(
+            msg => msg._id === messageId
+        );
+        if (message) {
+            // Scroll to the message if found
+            const messageElem = document.getElementById(message._id);
+            if (messageElem) {
+                messageElem.scrollIntoView({ behavior: 'auto' });
+                messageElem.classList.add('highlighted');
+                messageElem.style.backgroundColor = '#FFD700';
+            }
+        }
+    };
 
-  useEffect(() => {
-    if (replymsgId) {
-      setTimeout(() => {
-        Locate()
-      }, 0)
-    }
-  })
+    useEffect(() => {
+        if (replymsgId) {
+            setTimeout(() => {
+                Locate();
+            }, 0);
+        }
+    });
 
-  const attorneycases = [...clients, ...allCases]
-  const uniqueClientAndCaseNames = new Set();
-  const filteredCases = attorneycases.filter(user => {
+    const attorneycases = [...clients, ...allCases];
+    const uniqueClientAndCaseNames = new Set();
+    const filteredCases = attorneycases.filter(user => {
     // const key = user.clientName + user.caseName;
-    if (!uniqueClientAndCaseNames.has(user.clientName)) {
-      uniqueClientAndCaseNames.add(user.clientName);
-      return true;
-    }
-    return false;
-  });
+        if (!uniqueClientAndCaseNames.has(user.clientName)) {
+            uniqueClientAndCaseNames.add(user.clientName);
+            return true;
+        }
+        return false;
+    });
   
 
-  return (
-    <div className="page-contents " style={{ marginTop: 100 }}>
-      <>
-        {pageLoader ? (
-          <Row>
-            <Col xs="12">
-              <div className="text-center my-3">
-                <Link to="#" className="text-success">
-                  <i className="bx bx-hourglass bx-spin me-2" />
+    return (
+        <div className="page-contents " style={{ marginTop: 100 }}>
+            <>
+                {pageLoader ? (
+                    <Row>
+                        <Col xs="12">
+                            <div className="text-center my-3">
+                                <Link to="#" className="text-success">
+                                    <i className="bx bx-hourglass bx-spin me-2" />
                   Loading. . .
-                </Link>
-              </div>
-            </Col>
-          </Row>
-        ) : (
-          <>
-            {/*modal for Email*/}
-            <Modal
-              isOpen={emailModal}
-              centered
-              data-toggle="modal"
-              toggle={() => {
-                toggle_emailModal()
-              }}
-            >
-              <div>
-                <ModalHeader
-                  className="border-bottom-0"
-                  toggle={() => {
-                    setEmailModal(!emailModal)
-                  }}
-                ></ModalHeader>
-              </div>
-              <div className="modal-body">
-                <div className="text-center mb-4">
-                  <div className="avatar-md mx-auto mb-4">
-                    <div className="avatar-title bg-light  rounded-circle text-primary h1">
-                      <i className="mdi mdi-email-open"></i>
-                    </div>
-                  </div>
-
-                  <div className="row justify-content-center">
-                    <div className="col-xl-10">
-                      <h4 className="text-primary">Email !</h4>
-                      <div className="input-group rounded bg-light">
-                        <Input
-                          type="email"
-                          className="form-control bg-transparent border-0"
-                          placeholder="Enter Email address"
-                          value={email}
-                          onChange={e => setEmail(e.target.value)}
-                        />
-                        <Button
-                          color="primary"
-                          type="button"
-                          id="button-addon2"
-                          onClick={() => onSendEmail()}
+                                </Link>
+                            </div>
+                        </Col>
+                    </Row>
+                ) : (
+                    <>
+                        {/*modal for Email*/}
+                        <Modal
+                            isOpen={emailModal}
+                            centered
+                            data-toggle="modal"
+                            toggle={() => {
+                                toggle_emailModal();
+                            }}
                         >
-                          <i className="bx bxs-paper-plane"></i>
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Modal>
-            {/* Model for Remainder*/}
-            <DynamicModel
-              open={remainderModelOpen}
-              toggle={toggleremainderModelOpen}
-              size="md"
-              modalTitle="NEW REMINDER"
-              footer={false}
-            >
-              <DynamicSuspense>
-                <ChatRemainder
-                  setModalOpen={setRemainderModelOpen}
-                  curMessageId={curReminderMessageId?._id}
-                />
-              </DynamicSuspense>
-            </DynamicModel>
-            <DynamicModel
-              open={CalendarModelOpen}
-              toggle={toggleCalendarModelOpen}
-              size="xl"
-              footer={false}
-            >
-              <DynamicSuspense>
-                <Calender
-                  setcalendarModalOpen={setCalendarModelOpen}
-                  groupId={currentChat?._id}
-                  caseId={currentChat?.caseId}
-                />
-              </DynamicSuspense>
-            </DynamicModel>
-            {/* Model for creating case*/}
-            <DynamicModel
-              open={newCaseModelOpen}
-              toggle={toggleNewCaseModelOpen}
-              size="lg"
-              modalTitle="Create Case"
-              footer={false}
-            >
-              <DynamicSuspense>
-                <CreateCase
-                  formValues={newCase}
-                  setFormValues={setNewCase}
-                  contacts={contacts}
-                  setModalOpen={setNewCaseModelOpen}
-                  getAllCases={ongetAllCases}
-                />
-              </DynamicSuspense>
-            </DynamicModel>
-            {/* Model for creating client*/}
-            <DynamicModel
-              open={newClientModelOpen}
-              toggle={toggleNewClientModelOpen}
-              size="lg"
-              modalTitle="Create NewClient"
-              footer={false}
-            >
-              <DynamicSuspense>
-                <CreateClient
-                  userFormValues={newCase}
-                  formValues={newClient}
-                  setFormValues={setNewClient}
-                  contacts={contacts}
-                  setModalOpen={setNewClientModelOpen}
-                  getAllCases={ongetAllCases}
-                  getAllClients={onGetAllClientNames}
-                />
-              </DynamicSuspense>
-            </DynamicModel>
-            {/* <DynamicModel
+                            <div>
+                                <ModalHeader
+                                    className="border-bottom-0"
+                                    toggle={() => {
+                                        setEmailModal(!emailModal);
+                                    }}
+                                ></ModalHeader>
+                            </div>
+                            <div className="modal-body">
+                                <div className="text-center mb-4">
+                                    <div className="avatar-md mx-auto mb-4">
+                                        <div className="avatar-title bg-light  rounded-circle text-primary h1">
+                                            <i className="mdi mdi-email-open"></i>
+                                        </div>
+                                    </div>
+
+                                    <div className="row justify-content-center">
+                                        <div className="col-xl-10">
+                                            <h4 className="text-primary">Email !</h4>
+                                            <div className="input-group rounded bg-light">
+                                                <Input
+                                                    type="email"
+                                                    className="form-control bg-transparent border-0"
+                                                    placeholder="Enter Email address"
+                                                    value={email}
+                                                    onChange={e => setEmail(e.target.value)}
+                                                />
+                                                <Button
+                                                    color="primary"
+                                                    type="button"
+                                                    id="button-addon2"
+                                                    onClick={() => onSendEmail()}
+                                                >
+                                                    <i className="bx bxs-paper-plane"></i>
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </Modal>
+                        {/* Model for Remainder*/}
+                        <DynamicModel
+                            open={remainderModelOpen}
+                            toggle={toggleremainderModelOpen}
+                            size="md"
+                            modalTitle="NEW REMINDER"
+                            footer={false}
+                        >
+                            <DynamicSuspense>
+                                <ChatRemainder
+                                    setModalOpen={setRemainderModelOpen}
+                                    curMessageId={curReminderMessageId?._id}
+                                />
+                            </DynamicSuspense>
+                        </DynamicModel>
+                        <DynamicModel
+                            open={CalendarModelOpen}
+                            toggle={toggleCalendarModelOpen}
+                            size="xl"
+                            footer={false}
+                        >
+                            <DynamicSuspense>
+                                <Calender
+                                    setcalendarModalOpen={setCalendarModelOpen}
+                                    groupId={currentChat?._id}
+                                    caseId={currentChat?.caseId}
+                                />
+                            </DynamicSuspense>
+                        </DynamicModel>
+                        {/* Model for creating case*/}
+                        <DynamicModel
+                            open={newCaseModelOpen}
+                            toggle={toggleNewCaseModelOpen}
+                            size="lg"
+                            modalTitle="Create Case"
+                            footer={false}
+                        >
+                            <DynamicSuspense>
+                                <CreateCase
+                                    formValues={newCase}
+                                    setFormValues={setNewCase}
+                                    contacts={contacts}
+                                    setModalOpen={setNewCaseModelOpen}
+                                    getAllCases={ongetAllCases}
+                                />
+                            </DynamicSuspense>
+                        </DynamicModel>
+                        {/* Model for creating client*/}
+                        <DynamicModel
+                            open={newClientModelOpen}
+                            toggle={toggleNewClientModelOpen}
+                            size="lg"
+                            modalTitle="Create NewClient"
+                            footer={false}
+                        >
+                            <DynamicSuspense>
+                                <CreateClient
+                                    userFormValues={newCase}
+                                    formValues={newClient}
+                                    setFormValues={setNewClient}
+                                    contacts={contacts}
+                                    setModalOpen={setNewClientModelOpen}
+                                    getAllCases={ongetAllCases}
+                                    getAllClients={onGetAllClientNames}
+                                />
+                            </DynamicSuspense>
+                        </DynamicModel>
+                        {/* <DynamicModel
               open={completeCaseModelOpen}
               toggle={toggleCompleteCaseModelOpen}
               size="md"
@@ -1888,60 +1888,60 @@ const ChatRc = () => {
               </DynamicSuspense>
             </DynamicModel> */}
 
-            {/* Model for creating subgroup */}
-            {allgroups && (
-              <DynamicModel
-                open={subGroupModelOpen}
-                toggle={togglesubGroupModelOpen}
-                modalTitle="Subgroup Setting"
-                modalSubtitle={`You have ${allgroups.filter(a => !a.isParent)?.length || 0
-                  } subgroups`}
-                footer={true}
-                size="lg"
-              >
-                <DynamicSuspense>
-                  <SubGroups
-                    currentCaseId={currentCase?._id}
-                    caseMembers={currentCase?.caseMembers}
-                    groups={allgroups.filter(a => !a.isParent)}
-                    getSubGroups={onGettingSubgroups}
-                  />
-                </DynamicSuspense>
-              </DynamicModel>
-            )}
+                        {/* Model for creating subgroup */}
+                        {allgroups && (
+                            <DynamicModel
+                                open={subGroupModelOpen}
+                                toggle={togglesubGroupModelOpen}
+                                modalTitle="Subgroup Setting"
+                                modalSubtitle={`You have ${allgroups.filter(a => !a.isParent)?.length || 0
+                                } subgroups`}
+                                footer={true}
+                                size="lg"
+                            >
+                                <DynamicSuspense>
+                                    <SubGroups
+                                        currentCaseId={currentCase?._id}
+                                        caseMembers={currentCase?.caseMembers}
+                                        groups={allgroups.filter(a => !a.isParent)}
+                                        getSubGroups={onGettingSubgroups}
+                                    />
+                                </DynamicSuspense>
+                            </DynamicModel>
+                        )}
 
-            {/* Modal for Editing Case*/}
-            {currentCase && (
-              <EditCase
-                open={caseEditModalOpen}
-                setOpen={setCaseEditModalOpen}
-                toggleOpen={toggleCaseEditModal}
-                currentCase={currentCase}
-                getAllCases={ongetAllCases}
-                getSubGroups={onGettingSubgroups}
-                allCases={allCases}
-                setAllCases={setAllCases}
-              />
-            )}
+                        {/* Modal for Editing Case*/}
+                        {currentCase && (
+                            <EditCase
+                                open={caseEditModalOpen}
+                                setOpen={setCaseEditModalOpen}
+                                toggleOpen={toggleCaseEditModal}
+                                currentCase={currentCase}
+                                getAllCases={ongetAllCases}
+                                getSubGroups={onGettingSubgroups}
+                                allCases={allCases}
+                                setAllCases={setAllCases}
+                            />
+                        )}
 
-            <EditMessageModel
-              open={messageEditModalOpen}
-              setOpen={setMessageEditModalOpen}
-              toggleOpen={toggleMessageEditModal}
-              curMessageId={curEditMessageId}
-              msgData={curEditMessageId?.messageData}
-            />
+                        <EditMessageModel
+                            open={messageEditModalOpen}
+                            setOpen={setMessageEditModalOpen}
+                            toggleOpen={toggleMessageEditModal}
+                            curMessageId={curEditMessageId}
+                            msgData={curEditMessageId?.messageData}
+                        />
 
-            <ReplyMsgModal
-              open={rplyMessageModalOpen}
-              setOpen={setReplyMsgModalOpen}
-              toggleOpen={toggleReplyMessageModal}
-              curMessageId={curReplyMessageId}
-              receivers={receivers}
-              currentChat={currentChat}
-              caseId={currentCase?._id}
-            />
-            {/* {contacts && (
+                        <ReplyMsgModal
+                            open={rplyMessageModalOpen}
+                            setOpen={setReplyMsgModalOpen}
+                            toggleOpen={toggleReplyMessageModal}
+                            curMessageId={curReplyMessageId}
+                            receivers={receivers}
+                            currentChat={currentChat}
+                            caseId={currentCase?._id}
+                        />
+                        {/* {contacts && (
               <ForwardMsg
                 open={forwardModalOpen}
                 setOpen={setForwardModalOpen}
@@ -1950,245 +1950,245 @@ const ChatRc = () => {
               />
             )} */}
 
-            {/* Modal for deleting Case*/}
-            <DeleteModal
-              show={caseDeleteModalOpen}
-              onDeleteClick={() => onDeletingCase()}
-              confirmText="Yes,Remove"
-              cancelText="Cancel"
-              onCloseClick={toggleCaseDeleteModal}
-            />
+                        {/* Modal for deleting Case*/}
+                        <DeleteModal
+                            show={caseDeleteModalOpen}
+                            onDeleteClick={() => onDeletingCase()}
+                            confirmText="Yes,Remove"
+                            cancelText="Cancel"
+                            onCloseClick={toggleCaseDeleteModal}
+                        />
 
-            <DeleteModal
-              show={chatDeleteModalOpen}
-              onDeleteClick={() => onDeletingChat()}
-              confirmText="Yes,Remove"
-              cancelText="Cancel"
-              onCloseClick={toggleChatDeleteModal}
-            />
+                        <DeleteModal
+                            show={chatDeleteModalOpen}
+                            onDeleteClick={() => onDeletingChat()}
+                            confirmText="Yes,Remove"
+                            cancelText="Cancel"
+                            onCloseClick={toggleChatDeleteModal}
+                        />
 
-            <DeleteModal
-              show={MsgDeleteModalOpen}
-              onDeleteClick={onDeletingMsg}
-              confirmText="Yes,Remove"
-              cancelText="Cancel"
-              onCloseClick={toggleMsgDeleteModal}
-            />
+                        <DeleteModal
+                            show={MsgDeleteModalOpen}
+                            onDeleteClick={onDeletingMsg}
+                            confirmText="Yes,Remove"
+                            cancelText="Cancel"
+                            onCloseClick={toggleMsgDeleteModal}
+                        />
 
-            <DeleteModal
-              show={completedCaseDelete}
-              onDeleteClick={handleCompletedCase}
-              confirmText="Yes,Remove"
-              cancelText="Cancel"
-              onCloseClick={toggleCompleteCaseDeleteModelOpen}
-            />
+                        <DeleteModal
+                            show={completedCaseDelete}
+                            onDeleteClick={handleCompletedCase}
+                            confirmText="Yes,Remove"
+                            cancelText="Cancel"
+                            onCloseClick={toggleCompleteCaseDeleteModelOpen}
+                        />
 
-            <MetaTags>
-              <title>Chat RC</title>
-            </MetaTags>
+                        <MetaTags>
+                            <title>Chat RC</title>
+                        </MetaTags>
 
-            <Row>
-              <Col xs="12" lg="4">
-                <div className="pb-2 px-2 border-bottom">
-                  <Link className="d-flex" to="/profile">
-                    <div className="align-self-center me-3">
-                      <img
-                        src={
-                          currentUser?.profilePic
-                            ? currentUser?.profilePic
-                            : profile
-                        }
-                        className="avatar-sm rounded-circle"
-                        alt=""
-                        style={{ objectFit: "cover" }}
-                      />
-                    </div>
-                    <div className="flex-grow-1">
-                      <h5 className="font-size-14 mt-0 mb-1">
-                        {currentUser?.firstname + " " + currentUser?.lastname}
-                      </h5>
-                      <p className="text-muted mb-0">
-                        <i className="mdi mdi-circle text-success align-middle me-1" />
+                        <Row>
+                            <Col xs="12" lg="4">
+                                <div className="pb-2 px-2 border-bottom">
+                                    <Link className="d-flex" to="/profile">
+                                        <div className="align-self-center me-3">
+                                            <img
+                                                src={
+                                                    currentUser?.profilePic
+                                                        ? currentUser?.profilePic
+                                                        : profile
+                                                }
+                                                className="avatar-sm rounded-circle"
+                                                alt=""
+                                                style={{ objectFit: 'cover' }}
+                                            />
+                                        </div>
+                                        <div className="flex-grow-1">
+                                            <h5 className="font-size-14 mt-0 mb-1">
+                                                {currentUser?.firstname + ' ' + currentUser?.lastname}
+                                            </h5>
+                                            <p className="text-muted mb-0">
+                                                <i className="mdi mdi-circle text-success align-middle me-1" />
                         Active
-                      </p>
-                    </div>
-                    {/* <UserDropdown /> */}
-                  </Link>
-                </div>
-                {activeTab !== "1" && (
-                  <div className="mx-2 mt-2  border-bottom">
-                    <input
-                      className="form-control"
-                      type="text"
-                      id="user-search-text"
-                      placeholder="Search here"
-                      value={searchText}
-                      name="searchText"
-                      onChange={e => setSearchText(e.target.value)}
-                    />
-                  </div>
-                )}
-                {activeTab === "1" && (
-                  <div className="mx-2 mt-2  border-bottom">
-                    <input
-                      className="form-control"
-                      type="text"
-                      id="user-search-text"
-                      placeholder="Search here"
-                      value={searchText}
-                      name="searchText"
-                      onChange={e => {
-                        setSearchText(e.target.value)
-                        setIsSearchTextCleared(false)
-                      }}
-                    />
-                  </div>
-                )}
-
-                <div className="my-1 px-2" style={{ paddingBottom: "60px" }}>
-                  <Nav pills justified>
-                    {sidebarNavItems.map((navItem, n) => (
-                      <NavItem key={n}>
-                        <NavLink
-                          className={classNames({
-                            active: activeTab === JSON.stringify(n + 1),
-                          })}
-                          onClick={() => {
-                            toggleTab(JSON.stringify(n + 1))
-                          }}
-                        >
-                          {navItem}
-                          {navItem === "Chat"}
-                        </NavLink>
-                      </NavItem>
-                    ))}
-                  </Nav>
-                  <TabContent activeTab={activeTab} className="py-1">
-                    <TabPane tabId="1">
-                      <ul className="list-unstyled chat-list" id="recent-list">
-                        <PerfectScrollbar style={{ height: "500px" }}>
-                          {sortedChats.map(chat => (
-                            <li
-                              key={chat.chat._id}
-                              className={
-                                currentChat && currentChat._id === chat.chat._id
-                                  ? "active"
-                                  : ""
-                              }
-                            >
-                              <Link
-                                to="#"
-                                onClick={() => {
-                                  setCurrentCase(null)
-                                  setCurrentChat(chat.chat)
-                                }}
-                              >
-                                <div className="d-flex">
-                                  <div className="align-self-center me-3">
-                                    <img
-                                      src={
-                                        chat.chat.isGroup
-                                          ? profile
-                                          : getChatProfilePic(
-                                            chat.chat.groupMembers
-                                          )
-                                      }
-                                      className="rounded-circle avatar-sm"
-                                      alt=""
-                                      style={{ objectFit: "cover" }}
-                                    />
-                                  </div>
-
-                                  <div className="flex-grow-1 overflow-hidden align-self-center">
-                                    <h5 className="text-truncate font-size-14 mb-1">
-                                      {chat.chat.isGroup
-                                        ? chat.chat.groupName
-                                        : getChatName(chat.chat.groupMembers)}
-                                    </h5>
-                                    <p className="font-size-12 mb-1 text-primary">
-                                      {getChatEmail(chat?.chat?.groupMembers)}
-                                    </p>
-                                  </div>
-                                  <div className="font-size-11">
-                                    <div>
-                                      {moment(chat.chat.updatedAt).format(
-                                        "DD-MM-YY HH:mm"
-                                      )}
-                                    </div>
-                                    {chat.notificationCount > 0 && (
-                                      <div className="badge bg-danger font-size-14 my-1">
-                                        {chat.notificationCount}
-                                      </div>
-                                    )}
-                                  </div>
+                                            </p>
+                                        </div>
+                                        {/* <UserDropdown /> */}
+                                    </Link>
                                 </div>
-                              </Link>
-                            </li>
-                          ))}
-                        </PerfectScrollbar>
-                      </ul>
-                    </TabPane>
-                    <TabPane tabId="2">
-                      <div className="d-flex  gap-2 my-2">
-                       {currentAttorney && <button
-                          type="button"
-                          className="btn btn-info btn-rounded mb-2 col-6"
-                          onClick={() => setNewClientModelOpen(true)}
-                        >
-                          Create NewClient
-                          <i className="bx bx-pencil font-size-16 align-middle me-2 mx-2"></i>
-                        </button>}
+                                {activeTab !== '1' && (
+                                    <div className="mx-2 mt-2  border-bottom">
+                                        <input
+                                            className="form-control"
+                                            type="text"
+                                            id="user-search-text"
+                                            placeholder="Search here"
+                                            value={searchText}
+                                            name="searchText"
+                                            onChange={e => setSearchText(e.target.value)}
+                                        />
+                                    </div>
+                                )}
+                                {activeTab === '1' && (
+                                    <div className="mx-2 mt-2  border-bottom">
+                                        <input
+                                            className="form-control"
+                                            type="text"
+                                            id="user-search-text"
+                                            placeholder="Search here"
+                                            value={searchText}
+                                            name="searchText"
+                                            onChange={e => {
+                                                setSearchText(e.target.value);
+                                                setIsSearchTextCleared(false);
+                                            }}
+                                        />
+                                    </div>
+                                )}
 
-                        <div className="d-flex justify-content-center align-items-center">
-                          <Dropdown
-                            isOpen={clientSortingOpen}
-                            toggle={() =>
-                              toggleClientSortingOpen(!clientSortingOpen)
-                            }
-                          >
-                            <DropdownToggle
-                              className="btn nav-btn d-flex"
-                              tag="i"
-                            >
-                              <div className="d-flex  justify-content-end align-items-center gap-2 ">
-                                <i
-                                  className="mdi mdi-sort-variant font-size-24 mr-2"
-                                  title="Filter"
-                                />
-                                <label className="mb-0  font-size-16">
+                                <div className="my-1 px-2" style={{ paddingBottom: '60px' }}>
+                                    <Nav pills justified>
+                                        {sidebarNavItems.map((navItem, n) => (
+                                            <NavItem key={n}>
+                                                <NavLink
+                                                    className={classNames({
+                                                        active: activeTab === JSON.stringify(n + 1),
+                                                    })}
+                                                    onClick={() => {
+                                                        toggleTab(JSON.stringify(n + 1));
+                                                    }}
+                                                >
+                                                    {navItem}
+                                                    {navItem === 'Chat'}
+                                                </NavLink>
+                                            </NavItem>
+                                        ))}
+                                    </Nav>
+                                    <TabContent activeTab={activeTab} className="py-1">
+                                        <TabPane tabId="1">
+                                            <ul className="list-unstyled chat-list" id="recent-list">
+                                                <PerfectScrollbar style={{ height: '500px' }}>
+                                                    {sortedChats.map(chat => (
+                                                        <li
+                                                            key={chat.chat._id}
+                                                            className={
+                                                                currentChat && currentChat._id === chat.chat._id
+                                                                    ? 'active'
+                                                                    : ''
+                                                            }
+                                                        >
+                                                            <Link
+                                                                to="#"
+                                                                onClick={() => {
+                                                                    setCurrentCase(null);
+                                                                    setCurrentChat(chat.chat);
+                                                                }}
+                                                            >
+                                                                <div className="d-flex">
+                                                                    <div className="align-self-center me-3">
+                                                                        <img
+                                                                            src={
+                                                                                chat.chat.isGroup
+                                                                                    ? profile
+                                                                                    : getChatProfilePic(
+                                                                                        chat.chat.groupMembers
+                                                                                    )
+                                                                            }
+                                                                            className="rounded-circle avatar-sm"
+                                                                            alt=""
+                                                                            style={{ objectFit: 'cover' }}
+                                                                        />
+                                                                    </div>
+
+                                                                    <div className="flex-grow-1 overflow-hidden align-self-center">
+                                                                        <h5 className="text-truncate font-size-14 mb-1">
+                                                                            {chat.chat.isGroup
+                                                                                ? chat.chat.groupName
+                                                                                : getChatName(chat.chat.groupMembers)}
+                                                                        </h5>
+                                                                        <p className="font-size-12 mb-1 text-primary">
+                                                                            {getChatEmail(chat?.chat?.groupMembers)}
+                                                                        </p>
+                                                                    </div>
+                                                                    <div className="font-size-11">
+                                                                        <div>
+                                                                            {moment(chat.chat.updatedAt).format(
+                                                                                'DD-MM-YY HH:mm'
+                                                                            )}
+                                                                        </div>
+                                                                        {chat.notificationCount > 0 && (
+                                                                            <div className="badge bg-danger font-size-14 my-1">
+                                                                                {chat.notificationCount}
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            </Link>
+                                                        </li>
+                                                    ))}
+                                                </PerfectScrollbar>
+                                            </ul>
+                                        </TabPane>
+                                        <TabPane tabId="2">
+                                            <div className="d-flex  gap-2 my-2">
+                                                {currentAttorney && <button
+                                                    type="button"
+                                                    className="btn btn-info btn-rounded mb-2 col-6"
+                                                    onClick={() => setNewClientModelOpen(true)}
+                                                >
+                          Create NewClient
+                                                    <i className="bx bx-pencil font-size-16 align-middle me-2 mx-2"></i>
+                                                </button>}
+
+                                                <div className="d-flex justify-content-center align-items-center">
+                                                    <Dropdown
+                                                        isOpen={clientSortingOpen}
+                                                        toggle={() =>
+                                                            toggleClientSortingOpen(!clientSortingOpen)
+                                                        }
+                                                    >
+                                                        <DropdownToggle
+                                                            className="btn nav-btn d-flex"
+                                                            tag="i"
+                                                        >
+                                                            <div className="d-flex  justify-content-end align-items-center gap-2 ">
+                                                                <i
+                                                                    className="mdi mdi-sort-variant font-size-24 mr-2"
+                                                                    title="Filter"
+                                                                />
+                                                                <label className="mb-0  font-size-16">
                                   Sort By
-                                </label>
-                              </div>
-                            </DropdownToggle>
-                            {currentAttorney ? (
-                              <DropdownMenu>
-                                <DropdownItem onClick={handleClientId}>
+                                                                </label>
+                                                            </div>
+                                                        </DropdownToggle>
+                                                        {currentAttorney ? (
+                                                            <DropdownMenu>
+                                                                <DropdownItem onClick={handleClientId}>
                                   Client Id
-                                </DropdownItem>
-                                <DropdownItem onClick={handleClientName}>
+                                                                </DropdownItem>
+                                                                <DropdownItem onClick={handleClientName}>
                                   Client Name
-                                </DropdownItem>
-                                <DropdownItem onClick={handleClientCreatedAt}>
+                                                                </DropdownItem>
+                                                                <DropdownItem onClick={handleClientCreatedAt}>
                                   Client Date
-                                </DropdownItem>
-                              </DropdownMenu>
-                            ) : (
-                              <DropdownMenu>
-                                <DropdownItem onClick={handleCaseId}>
+                                                                </DropdownItem>
+                                                            </DropdownMenu>
+                                                        ) : (
+                                                            <DropdownMenu>
+                                                                <DropdownItem onClick={handleCaseId}>
                                   Case Id
-                                </DropdownItem>
-                                <DropdownItem onClick={handlecaseName}>
+                                                                </DropdownItem>
+                                                                <DropdownItem onClick={handlecaseName}>
                                   Case Name
-                                </DropdownItem>
-                                <DropdownItem onClick={handlecreatedAt}>
+                                                                </DropdownItem>
+                                                                <DropdownItem onClick={handlecreatedAt}>
                                   Case Date
-                                </DropdownItem>
-                              </DropdownMenu>
-                            )
-                            }
-                          </Dropdown>
-                        </div>
-                        {/* {allCases.some(group =>
+                                                                </DropdownItem>
+                                                            </DropdownMenu>
+                                                        )
+                                                        }
+                                                    </Dropdown>
+                                                </div>
+                                                {/* {allCases.some(group =>
                           group.admins.includes(currentUser?.userID)
                         ) && (
                           <i
@@ -2201,485 +2201,485 @@ const ChatRc = () => {
                             onClick={() => setCompleteCaseModelOpen(true)}
                           ></i>
                         )} */}
-                      </div>
-
-                      {caseLoading ? (
-                        <ChatLoader />
-                      ) : (
-                        <PerfectScrollbar style={{ height: "500px" }}>
-                       <ul className="list-unstyled chat-list">
-  {currentAttorney ? (
-    filteredCases
-      .map(caseData => ({
-        caseData,
-        notifyCount: notifyCountforCase(caseData._id),
-      }))
-      .sort((a, b) => {
-        const notifyCountDiff = b.notifyCount - a.notifyCount;
-        return notifyCountDiff !== 0 ? notifyCountDiff : 0; // Return 0 if notifyCountDiff is 0
-      })
-      .map(({ caseData, notifyCount }, index) => (
-        <React.Fragment key={caseData._id}>
-          <CaseGrid
-            caseData={caseData}
-            notifyCount={notifyCount}
-            key={caseData._id}
-            active={activeAccordian}
-            onAccordionButtonClick={handleSettingActiveAccordion}
-            handleSelectingCase={onSelectingCase}
-            selected={currentCase?._id === caseData?._id}
-            notifyCountforCase={notifyCountforCase}
-            ongetAllCases={ongetAllCases}
-            onGetAllClientNames={onGetAllClientNames}
-          />
-        </React.Fragment>
-      ))
-  ) : (
-    <>
-      {allCases
-        .map(caseData => ({
-          caseData,
-          notifyCount: notifyCountforCase(caseData._id),
-        }))
-        .sort((a, b) => {
-          const notifyCountDiff = b.notifyCount - a.notifyCount;
-          return notifyCountDiff !== 0 ? notifyCountDiff : 0; // Return 0 if notifyCountDiff is 0
-        })
-        .map(({ caseData, notifyCount }, index) => (
-          <CaseGrid
-            caseData={caseData}
-            index={index}
-            key={index}
-            active={activeAccordian}
-            onAccordionButtonClick={handleSettingActiveAccordion}
-            handleSelectingCase={onSelectingCase}
-            selected={currentCase?._id === caseData?._id}
-            notifyCountforCase={notifyCountforCase}
-            ongetAllCases={ongetAllCases}
-            onGetAllClientNames={onGetAllClientNames}
-          />
-        ))
-      }
-    </>
-  )}
-</ul>
-
-                        </PerfectScrollbar>
-                      )}
-                    </TabPane>
-                    <TabPane tabId="3">
-                      <div className="my-2">
-                        {contactsLoading ? (
-                          <ChatLoader />
-                        ) : (
-                          <PerfectScrollbar
-                            style={{ height: "500px" }}
-                            onScroll={e => handleContactScroll(e?.target)}
-                          >
-                            {searchText === "" && <p>Suggestions :</p>}
-                            {contacts &&
-                              contacts.map((contact, i) => (
-                                <ul key={i} className="list-unstyled chat-list">
-                                  <li>
-                                    <Link
-                                      to="#"
-                                      onClick={() => {
-                                        setCurrentCase(null)
-                                        handleCreateChatRoom(contact._id)
-                                      }}
-                                    >
-                                      <div className="d-flex justify-content-between">
-                                        <div className="align-self-center d-flex align-items-center me-3">
-                                          <img
-                                            src={
-                                              contact?.profilePic
-                                                ? contact?.profilePic
-                                                : profile
-                                            }
-                                            className="avatar-xs rounded-circle"
-                                            alt=""
-                                            style={{ objectFit: "cover" }}
-                                          />
-                                        </div>
-                                        <div className="flex-grow-1 overflow-hidden align-self-center me-3">
-                                          <h5 className="text-truncate font-size-14 mb-1">
-                                            {contact.firstname}{" "}
-                                            {contact.lastname}
-                                            { }
-                                          </h5>
-                                          <p className="font-size-12 mb-1 text-primary ">
-                                            {contact.email}
-                                          </p>
-                                        </div>
-                                        <i className="font-size-24 bx bxl-messenger me-2" />
-                                      </div>
-                                    </Link>
-                                  </li>
-                                </ul>
-                              ))}
-                          </PerfectScrollbar>
-                        )}
-                      </div>
-                    </TabPane>
-                  </TabContent>
-                </div>
-              </Col>
-              <Col xs="12" lg="8" className="align-self-center">
-                <div className="w-100 ">
-                  {currentChat ? (
-                    chatLoader ? (
-                      <Row>
-                        <Col xs="12">
-                          <Card className="">
-                            <div className="text-center my-3 text-success align-self-center col-12 col-lg-8">
-                              <i className="bx bx-hourglass bx-spin me-2" />
-                              Loading. . .
-                            </div>
-                          </Card>
-                        </Col>
-                      </Row>
-                    ) : (
-                      <Card className="chat-card ">
-                        <div className="py-2 px-3 border-bottom">
-                          <Row>
-                            <Col md="4" xs="8">
-                              <h5 className="font-size-15 mb-1 text-sm-primary">
-                                {currentChat.isGroup
-                                  ? currentCase?.caseName || "Case Chat"
-                                  : getChatName(currentChat.groupMembers)}
-                              </h5>
-                              <h5 className="font-size-12 mb-1 text-primary">
-                                {!currentChat.isGroup &&
-                                  getChatEmail(currentChat.groupMembers)}
-                              </h5>
-                              {currentChat?.isGroup && (
-                                <span
-                                  style={{
-                                    color: currentChat?.color
-                                      ? currentChat?.color
-                                      : "#0000FF",
-                                  }}
-                                >
-                                  {currentChat?.groupName}
-                                </span>
-                              )}
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col md="12" xs="3">
-                              <ul className="list-inline user-chat-nav d-flex justify-content-sm-end text-end mb-0">
-                                {currentChat?.isGroup && (
-                                  <li
-                                    className="list-inline-item "
-                                    title="Refresh to get Email "
-                                  >
-                                    <Dropdown toggle={handlerefreshemail}>
-                                      <DropdownToggle
-                                        className="btn nav-btn"
-                                        tag="i"
-                                      >
-                                        <i class="bi bi-arrow-clockwise"></i>
-                                      </DropdownToggle>
-                                    </Dropdown>
-                                  </li>
-                                )}
-                                {currentChat?.isGroup && (
-                                  <li
-                                    className="list-inline-item "
-                                    title="Send Email "
-                                  >
-                                    <Dropdown
-                                      isOpen={groupIdOpen}
-                                      toggle={() => toggleGroupIdOpen(!groupIdOpen)}
-                                    >
-                                      <DropdownToggle
-                                        className="btn nav-btn"
-                                        tag="i"
-                                      >
-                                        <i className="bx bx-info-circle" />
-                                      </DropdownToggle>
-
-                                      <DropdownMenu>
-                                        <DropdownItem>
-                                          <span
-                                            style={{
-                                              color: currentChat?.color
-                                                ? currentChat?.color
-                                                : "#0000FF",
-                                            }}
-                                          >
-                                            <h6 className="fw-bold">
-                                              Email{" "}
-                                              <i
-                                                className="bx bx-copy ms-2"
-                                                onClick={copyToemail}
-                                              />
-                                            </h6>
-                                            {`rpmongotest@gmail.com`}
-                                          </span>
-                                        </DropdownItem>
-                                        <DropdownItem className="mt-4">
-                                          <span
-                                            style={{
-                                              color: currentChat?.color
-                                                ? currentChat?.color
-                                                : "#0000FF",
-                                            }}
-                                          >
-                                            <h6 className="fw-bold">
-                                              Thread ID{" "}
-                                              <i
-                                                className="bx bx-copy ms-2"
-                                                onClick={copyToClipboard}
-                                              />
-                                            </h6>
-                                            {`[Thread Id: ${currentChat?.threadId}]`}
-                                          </span>
-                                        </DropdownItem>
-                                      </DropdownMenu>
-                                    </Dropdown>
-                                  </li>
-                                )}
-                                <li className="list-inline-item ">
-                                  <Dropdown
-                                    toggle={() => toggleCalendarModelOpen(true)}
-                                  >
-                                    <DropdownToggle
-                                      className="btn nav-btn"
-                                      tag="i"
-                                    >
-                                      <i
-                                        className="bi bi-calendar"
-                                        title="Reminder"
-                                      />
-                                    </DropdownToggle>
-                                  </Dropdown>
-                                </li>
-                                <li
-                                  className="list-inline-item d-sm-flex"
-                                  title="Pinned Messages"
-                                >
-                                  <Dropdown
-                                    isOpen={pinModal}
-                                    toggle={tog_scroll}
-                                  >
-                                    <PinnedModels
-                                      handleLocateMessage={handleLocateMessage}
-                                      closeModal={() => setPinModal(false)}
-                                    />
-                                  </Dropdown>
-                                </li>
-                                <li
-                                  className="list-inline-item"
-                                  title="Search Messages"
-                                >
-                                  <Dropdown
-                                    isOpen={search_Menu}
-                                    toggle={toggleSearch}
-                                  >
-                                    <DropdownToggle
-                                      className="btn nav-btn"
-                                      tag="i"
-                                    >
-                                      <i className="bx bx-search-alt-2" />
-                                    </DropdownToggle>
-                                    <DropdownMenu className="dropdown-menu-md">
-                                      {searchMessageText &&
-                                        searchedMessages?.length > 1 ? (
-                                        <span className="ps-3 fw-bold">
-                                          {searchedMessages?.length} results
-                                          found
-                                          <i
-                                            className="mdi mdi-chevron-down-circle-outline mdi-18px ps-4 text-primary"
-                                            onClick={() => handleShow()}
-                                          />
-                                          <i
-                                            className="mdi mdi-chevron-up-circle-outline mdi-18px ps-2 text-primary"
-                                            onClick={() => handleShowTop()}
-                                          />
-                                        </span>
-                                      ) : (
-                                        ""
-                                      )}
-                                      <InputGroup>
-                                        <Input
-                                          type="text"
-                                          className="form-control"
-                                          placeholder="Search ..."
-                                          aria-label="Recipient's username"
-                                          value={searchMessageText}
-                                          onChange={e =>
-                                            setSearchMessagesText(
-                                              e.target.value
-                                            )
-                                          }
-                                        />
-                                        {/* <InputGroupAddon addonType="append"> */}
-                                        <Button color="primary" type="submit">
-                                          <i className="mdi mdi-magnify" />
-                                        </Button>
-                                        {/* </InputGroupAddon> */}
-                                      </InputGroup>
-                                    </DropdownMenu>
-                                  </Dropdown>
-                                </li>
-                                <li
-                                  className="list-inline-item align-middle"
-                                  title="Manage Case"
-                                >
-                                  <Dropdown
-                                    isOpen={chatSettingOpen}
-                                    toggle={() => toggleChatSettingOpen(!chatSettingOpen)}
-                                    className="float-end me-2"
-                                  >
-                                    {" "}
-                                    {currentCase?.admins?.includes(
-                                      currentUser?.userID
-                                    ) ? (
-                                      <DropdownToggle
-                                        className="btn nav-btn"
-                                        tag="i"
-                                      >
-                                        <div>
-                                          <i className="bx bx-cog" />
-                                        </div>
-                                      </DropdownToggle>
-                                    ) : (
-                                      currentChat &&
-                                      currentChat?.admins?.includes(
-                                        currentUser?.userID
-                                      ) && (
-                                        <div className="conversation-name">
-                                          <DropdownToggle
-                                            className="btn nav-btn"
-                                            tag="i"
-                                          >
-                                            <div>
-                                              <i className="bx bx-cog" />
                                             </div>
-                                          </DropdownToggle>
-                                        </div>
-                                      )
-                                    )}
-                                    {currentCase?.admins?.includes(
-                                      currentUser?.userID
-                                    ) ? (
-                                      <DropdownMenu>
-                                        <DropdownItem
-                                          href="#"
-                                          onClick={() => onArchievingChat()}
-                                        >
-                                          Archive Chat
-                                        </DropdownItem>
-                                        <DropdownItem
-                                          href="#"
-                                          onClick={() =>
-                                            setCaseEditModalOpen(true)
-                                          }
-                                        >
-                                          Manage Case
-                                        </DropdownItem>
-                                        <DropdownItem
-                                          href="#"
-                                          onClick={() =>
-                                            toggle_emailModal(true)
-                                          }
-                                        >
-                                          Email
-                                        </DropdownItem>
-                                        <DropdownItem
-                                          href="#"
-                                          onClick={() => handleCaseDelete()}
-                                        >
-                                          Delete case
-                                        </DropdownItem>
-                                        <DropdownItem
-                                          href="#"
-                                          onClick={() => handleCaseCompleted()}
-                                        >
-                                          Completed case
-                                        </DropdownItem>
-                                      </DropdownMenu>
-                                    ) : (
-                                      currentChat &&
-                                      currentChat?.admins?.includes(
-                                        currentUser?.userID
-                                      ) && (
-                                        <DropdownMenu>
-                                          <DropdownItem
-                                            href="#"
-                                            onClick={() => onArchievingChat()}
+
+                                            {caseLoading ? (
+                                                <ChatLoader />
+                                            ) : (
+                                                <PerfectScrollbar style={{ height: '500px' }}>
+                                                    <ul className="list-unstyled chat-list">
+                                                        {currentAttorney ? (
+                                                            filteredCases
+                                                                .map(caseData => ({
+                                                                    caseData,
+                                                                    notifyCount: notifyCountforCase(caseData._id),
+                                                                }))
+                                                                .sort((a, b) => {
+                                                                    const notifyCountDiff = b.notifyCount - a.notifyCount;
+                                                                    return notifyCountDiff !== 0 ? notifyCountDiff : 0; // Return 0 if notifyCountDiff is 0
+                                                                })
+                                                                .map(({ caseData, notifyCount }, index) => (
+                                                                    <React.Fragment key={caseData._id}>
+                                                                        <CaseGrid
+                                                                            caseData={caseData}
+                                                                            notifyCount={notifyCount}
+                                                                            key={caseData._id}
+                                                                            active={activeAccordian}
+                                                                            onAccordionButtonClick={handleSettingActiveAccordion}
+                                                                            handleSelectingCase={onSelectingCase}
+                                                                            selected={currentCase?._id === caseData?._id}
+                                                                            notifyCountforCase={notifyCountforCase}
+                                                                            ongetAllCases={ongetAllCases}
+                                                                            onGetAllClientNames={onGetAllClientNames}
+                                                                        />
+                                                                    </React.Fragment>
+                                                                ))
+                                                        ) : (
+                                                            <>
+                                                                {allCases
+                                                                    .map(caseData => ({
+                                                                        caseData,
+                                                                        notifyCount: notifyCountforCase(caseData._id),
+                                                                    }))
+                                                                    .sort((a, b) => {
+                                                                        const notifyCountDiff = b.notifyCount - a.notifyCount;
+                                                                        return notifyCountDiff !== 0 ? notifyCountDiff : 0; // Return 0 if notifyCountDiff is 0
+                                                                    })
+                                                                    .map(({ caseData, notifyCount }, index) => (
+                                                                        <CaseGrid
+                                                                            caseData={caseData}
+                                                                            index={index}
+                                                                            key={index}
+                                                                            active={activeAccordian}
+                                                                            onAccordionButtonClick={handleSettingActiveAccordion}
+                                                                            handleSelectingCase={onSelectingCase}
+                                                                            selected={currentCase?._id === caseData?._id}
+                                                                            notifyCountforCase={notifyCountforCase}
+                                                                            ongetAllCases={ongetAllCases}
+                                                                            onGetAllClientNames={onGetAllClientNames}
+                                                                        />
+                                                                    ))
+                                                                }
+                                                            </>
+                                                        )}
+                                                    </ul>
+
+                                                </PerfectScrollbar>
+                                            )}
+                                        </TabPane>
+                                        <TabPane tabId="3">
+                                            <div className="my-2">
+                                                {contactsLoading ? (
+                                                    <ChatLoader />
+                                                ) : (
+                                                    <PerfectScrollbar
+                                                        style={{ height: '500px' }}
+                                                        onScroll={e => handleContactScroll(e?.target)}
+                                                    >
+                                                        {searchText === '' && <p>Suggestions :</p>}
+                                                        {contacts &&
+                              contacts.map((contact, i) => (
+                                  <ul key={i} className="list-unstyled chat-list">
+                                      <li>
+                                          <Link
+                                              to="#"
+                                              onClick={() => {
+                                                  setCurrentCase(null);
+                                                  handleCreateChatRoom(contact._id);
+                                              }}
                                           >
-                                            Archive Chat
-                                          </DropdownItem>
-                                          <DropdownItem
-                                            href="#"
-                                            onClick={() =>
-                                              toggle_emailModal(true)
-                                            }
-                                          >
-                                            Email
-                                          </DropdownItem>
-                                          <DropdownItem
-                                            href="#"
-                                            onClick={() =>
-                                              handleChatDelete(currentChat?._id)
-                                            }
-                                          >
-                                            Delete chat
-                                          </DropdownItem>
-                                        </DropdownMenu>
-                                      )
-                                    )}
-                                  </Dropdown>
-                                </li>
-                              </ul>
+                                              <div className="d-flex justify-content-between">
+                                                  <div className="align-self-center d-flex align-items-center me-3">
+                                                      <img
+                                                          src={
+                                                              contact?.profilePic
+                                                                  ? contact?.profilePic
+                                                                  : profile
+                                                          }
+                                                          className="avatar-xs rounded-circle"
+                                                          alt=""
+                                                          style={{ objectFit: 'cover' }}
+                                                      />
+                                                  </div>
+                                                  <div className="flex-grow-1 overflow-hidden align-self-center me-3">
+                                                      <h5 className="text-truncate font-size-14 mb-1">
+                                                          {contact.firstname}{' '}
+                                                          {contact.lastname}
+                                                          { }
+                                                      </h5>
+                                                      <p className="font-size-12 mb-1 text-primary ">
+                                                          {contact.email}
+                                                      </p>
+                                                  </div>
+                                                  <i className="font-size-24 bx bxl-messenger me-2" />
+                                              </div>
+                                          </Link>
+                                      </li>
+                                  </ul>
+                              ))}
+                                                    </PerfectScrollbar>
+                                                )}
+                                            </div>
+                                        </TabPane>
+                                    </TabContent>
+                                </div>
                             </Col>
-                          </Row>
-                        </div>
-                        <div>
-                          <div className="chat-conversation px-3 py-1">
-                            <ul className="list-unstyled">
-                              <div
-                                ref={containerRef}
-                                onScroll={event => handleScroll(event)}
-                                style={{
-                                  height: "50vh",
-                                  overflowY: "scroll",
-                                }}
-                              >
-                                {messages.map((msg, m) => (
-                                  <li
-                                    key={"test_k" + m}
-                                    className={
-                                      msg.sender === currentUser.userID
-                                        ? "right"
-                                        : ""
-                                    }
-                                  >
-                                    <div
-                                      className="conversation-list"
-                                      id={msg?._id}
-                                      style={{
-                                        maxWidth: "80%",
-                                        color:
+                            <Col xs="12" lg="8" className="align-self-center">
+                                <div className="w-100 ">
+                                    {currentChat ? (
+                                        chatLoader ? (
+                                            <Row>
+                                                <Col xs="12">
+                                                    <Card className="">
+                                                        <div className="text-center my-3 text-success align-self-center col-12 col-lg-8">
+                                                            <i className="bx bx-hourglass bx-spin me-2" />
+                              Loading. . .
+                                                        </div>
+                                                    </Card>
+                                                </Col>
+                                            </Row>
+                                        ) : (
+                                            <Card className="chat-card ">
+                                                <div className="py-2 px-3 border-bottom">
+                                                    <Row>
+                                                        <Col md="4" xs="8">
+                                                            <h5 className="font-size-15 mb-1 text-sm-primary">
+                                                                {currentChat.isGroup
+                                                                    ? currentCase?.caseName || 'Case Chat'
+                                                                    : getChatName(currentChat.groupMembers)}
+                                                            </h5>
+                                                            <h5 className="font-size-12 mb-1 text-primary">
+                                                                {!currentChat.isGroup &&
+                                  getChatEmail(currentChat.groupMembers)}
+                                                            </h5>
+                                                            {currentChat?.isGroup && (
+                                                                <span
+                                                                    style={{
+                                                                        color: currentChat?.color
+                                                                            ? currentChat?.color
+                                                                            : '#0000FF',
+                                                                    }}
+                                                                >
+                                                                    {currentChat?.groupName}
+                                                                </span>
+                                                            )}
+                                                        </Col>
+                                                    </Row>
+                                                    <Row>
+                                                        <Col md="12" xs="3">
+                                                            <ul className="list-inline user-chat-nav d-flex justify-content-sm-end text-end mb-0">
+                                                                {currentChat?.isGroup && (
+                                                                    <li
+                                                                        className="list-inline-item "
+                                                                        title="Refresh to get Email "
+                                                                    >
+                                                                        <Dropdown toggle={handlerefreshemail}>
+                                                                            <DropdownToggle
+                                                                                className="btn nav-btn"
+                                                                                tag="i"
+                                                                            >
+                                                                                <i className="bi bi-arrow-clockwise"></i>
+                                                                            </DropdownToggle>
+                                                                        </Dropdown>
+                                                                    </li>
+                                                                )}
+                                                                {currentChat?.isGroup && (
+                                                                    <li
+                                                                        className="list-inline-item "
+                                                                        title="Send Email "
+                                                                    >
+                                                                        <Dropdown
+                                                                            isOpen={groupIdOpen}
+                                                                            toggle={() => toggleGroupIdOpen(!groupIdOpen)}
+                                                                        >
+                                                                            <DropdownToggle
+                                                                                className="btn nav-btn"
+                                                                                tag="i"
+                                                                            >
+                                                                                <i className="bx bx-info-circle" />
+                                                                            </DropdownToggle>
+
+                                                                            <DropdownMenu>
+                                                                                <DropdownItem>
+                                                                                    <span
+                                                                                        style={{
+                                                                                            color: currentChat?.color
+                                                                                                ? currentChat?.color
+                                                                                                : '#0000FF',
+                                                                                        }}
+                                                                                    >
+                                                                                        <h6 className="fw-bold">
+                                              Email{' '}
+                                                                                            <i
+                                                                                                className="bx bx-copy ms-2"
+                                                                                                onClick={copyToemail}
+                                                                                            />
+                                                                                        </h6>
+                                                                                        {'rpmongotest@gmail.com'}
+                                                                                    </span>
+                                                                                </DropdownItem>
+                                                                                <DropdownItem className="mt-4">
+                                                                                    <span
+                                                                                        style={{
+                                                                                            color: currentChat?.color
+                                                                                                ? currentChat?.color
+                                                                                                : '#0000FF',
+                                                                                        }}
+                                                                                    >
+                                                                                        <h6 className="fw-bold">
+                                              Thread ID{' '}
+                                                                                            <i
+                                                                                                className="bx bx-copy ms-2"
+                                                                                                onClick={copyToClipboard}
+                                                                                            />
+                                                                                        </h6>
+                                                                                        {`[Thread Id: ${currentChat?.threadId}]`}
+                                                                                    </span>
+                                                                                </DropdownItem>
+                                                                            </DropdownMenu>
+                                                                        </Dropdown>
+                                                                    </li>
+                                                                )}
+                                                                <li className="list-inline-item ">
+                                                                    <Dropdown
+                                                                        toggle={() => toggleCalendarModelOpen(true)}
+                                                                    >
+                                                                        <DropdownToggle
+                                                                            className="btn nav-btn"
+                                                                            tag="i"
+                                                                        >
+                                                                            <i
+                                                                                className="bi bi-calendar"
+                                                                                title="Reminder"
+                                                                            />
+                                                                        </DropdownToggle>
+                                                                    </Dropdown>
+                                                                </li>
+                                                                <li
+                                                                    className="list-inline-item d-sm-flex"
+                                                                    title="Pinned Messages"
+                                                                >
+                                                                    <Dropdown
+                                                                        isOpen={pinModal}
+                                                                        toggle={tog_scroll}
+                                                                    >
+                                                                        <PinnedModels
+                                                                            handleLocateMessage={handleLocateMessage}
+                                                                            closeModal={() => setPinModal(false)}
+                                                                        />
+                                                                    </Dropdown>
+                                                                </li>
+                                                                <li
+                                                                    className="list-inline-item"
+                                                                    title="Search Messages"
+                                                                >
+                                                                    <Dropdown
+                                                                        isOpen={search_Menu}
+                                                                        toggle={toggleSearch}
+                                                                    >
+                                                                        <DropdownToggle
+                                                                            className="btn nav-btn"
+                                                                            tag="i"
+                                                                        >
+                                                                            <i className="bx bx-search-alt-2" />
+                                                                        </DropdownToggle>
+                                                                        <DropdownMenu className="dropdown-menu-md">
+                                                                            {searchMessageText &&
+                                        searchedMessages?.length > 1 ? (
+                                                                                    <span className="ps-3 fw-bold">
+                                                                                        {searchedMessages?.length} results
+                                          found
+                                                                                        <i
+                                                                                            className="mdi mdi-chevron-down-circle-outline mdi-18px ps-4 text-primary"
+                                                                                            onClick={() => handleShow()}
+                                                                                        />
+                                                                                        <i
+                                                                                            className="mdi mdi-chevron-up-circle-outline mdi-18px ps-2 text-primary"
+                                                                                            onClick={() => handleShowTop()}
+                                                                                        />
+                                                                                    </span>
+                                                                                ) : (
+                                                                                    ''
+                                                                                )}
+                                                                            <InputGroup>
+                                                                                <Input
+                                                                                    type="text"
+                                                                                    className="form-control"
+                                                                                    placeholder="Search ..."
+                                                                                    aria-label="Recipient's username"
+                                                                                    value={searchMessageText}
+                                                                                    onChange={e =>
+                                                                                        setSearchMessagesText(
+                                                                                            e.target.value
+                                                                                        )
+                                                                                    }
+                                                                                />
+                                                                                {/* <InputGroupAddon addonType="append"> */}
+                                                                                <Button color="primary" type="submit">
+                                                                                    <i className="mdi mdi-magnify" />
+                                                                                </Button>
+                                                                                {/* </InputGroupAddon> */}
+                                                                            </InputGroup>
+                                                                        </DropdownMenu>
+                                                                    </Dropdown>
+                                                                </li>
+                                                                <li
+                                                                    className="list-inline-item align-middle"
+                                                                    title="Manage Case"
+                                                                >
+                                                                    <Dropdown
+                                                                        isOpen={chatSettingOpen}
+                                                                        toggle={() => toggleChatSettingOpen(!chatSettingOpen)}
+                                                                        className="float-end me-2"
+                                                                    >
+                                                                        {' '}
+                                                                        {currentCase?.admins?.includes(
+                                                                            currentUser?.userID
+                                                                        ) ? (
+                                                                                <DropdownToggle
+                                                                                    className="btn nav-btn"
+                                                                                    tag="i"
+                                                                                >
+                                                                                    <div>
+                                                                                        <i className="bx bx-cog" />
+                                                                                    </div>
+                                                                                </DropdownToggle>
+                                                                            ) : (
+                                                                                currentChat &&
+                                      currentChat?.admins?.includes(
+                                          currentUser?.userID
+                                      ) && (
+                                                                                    <div className="conversation-name">
+                                                                                        <DropdownToggle
+                                                                                            className="btn nav-btn"
+                                                                                            tag="i"
+                                                                                        >
+                                                                                            <div>
+                                                                                                <i className="bx bx-cog" />
+                                                                                            </div>
+                                                                                        </DropdownToggle>
+                                                                                    </div>
+                                                                                )
+                                                                            )}
+                                                                        {currentCase?.admins?.includes(
+                                                                            currentUser?.userID
+                                                                        ) ? (
+                                                                                <DropdownMenu>
+                                                                                    <DropdownItem
+                                                                                        href="#"
+                                                                                        onClick={() => onArchievingChat()}
+                                                                                    >
+                                          Archive Chat
+                                                                                    </DropdownItem>
+                                                                                    <DropdownItem
+                                                                                        href="#"
+                                                                                        onClick={() =>
+                                                                                            setCaseEditModalOpen(true)
+                                                                                        }
+                                                                                    >
+                                          Manage Case
+                                                                                    </DropdownItem>
+                                                                                    <DropdownItem
+                                                                                        href="#"
+                                                                                        onClick={() =>
+                                                                                            toggle_emailModal(true)
+                                                                                        }
+                                                                                    >
+                                          Email
+                                                                                    </DropdownItem>
+                                                                                    <DropdownItem
+                                                                                        href="#"
+                                                                                        onClick={() => handleCaseDelete()}
+                                                                                    >
+                                          Delete case
+                                                                                    </DropdownItem>
+                                                                                    <DropdownItem
+                                                                                        href="#"
+                                                                                        onClick={() => handleCaseCompleted()}
+                                                                                    >
+                                          Completed case
+                                                                                    </DropdownItem>
+                                                                                </DropdownMenu>
+                                                                            ) : (
+                                                                                currentChat &&
+                                      currentChat?.admins?.includes(
+                                          currentUser?.userID
+                                      ) && (
+                                                                                    <DropdownMenu>
+                                                                                        <DropdownItem
+                                                                                            href="#"
+                                                                                            onClick={() => onArchievingChat()}
+                                                                                        >
+                                            Archive Chat
+                                                                                        </DropdownItem>
+                                                                                        <DropdownItem
+                                                                                            href="#"
+                                                                                            onClick={() =>
+                                                                                                toggle_emailModal(true)
+                                                                                            }
+                                                                                        >
+                                            Email
+                                                                                        </DropdownItem>
+                                                                                        <DropdownItem
+                                                                                            href="#"
+                                                                                            onClick={() =>
+                                                                                                handleChatDelete(currentChat?._id)
+                                                                                            }
+                                                                                        >
+                                            Delete chat
+                                                                                        </DropdownItem>
+                                                                                    </DropdownMenu>
+                                                                                )
+                                                                            )}
+                                                                    </Dropdown>
+                                                                </li>
+                                                            </ul>
+                                                        </Col>
+                                                    </Row>
+                                                </div>
+                                                <div>
+                                                    <div className="chat-conversation px-3 py-1">
+                                                        <ul className="list-unstyled">
+                                                            <div
+                                                                ref={containerRef}
+                                                                onScroll={event => handleScroll(event)}
+                                                                style={{
+                                                                    height: '50vh',
+                                                                    overflowY: 'scroll',
+                                                                }}
+                                                            >
+                                                                {messages.map((msg, m) => (
+                                                                    <li
+                                                                        key={'test_k' + m}
+                                                                        className={
+                                                                            msg.sender === currentUser.userID
+                                                                                ? 'right'
+                                                                                : ''
+                                                                        }
+                                                                    >
+                                                                        <div
+                                                                            className="conversation-list"
+                                                                            id={msg?._id}
+                                                                            style={{
+                                                                                maxWidth: '80%',
+                                                                                color:
                                           searchedMessages?.includes(msg) &&
-                                          "white",
-                                        backgroundColor:
+                                          'white',
+                                                                                backgroundColor:
                                           searchedMessages?.includes(msg) &&
-                                          "black",
-                                      }}
-                                    >
-                                      <UncontrolledDropdown>
-                                        <DropdownToggle
-                                          href="#"
-                                          className="btn nav-btn  "
-                                          tag="i"
-                                        >
-                                          <i className="bx bx-dots-vertical-rounded" />
-                                        </DropdownToggle>
-                                        <DropdownMenu>
-                                          {/* <DropdownItem
+                                          'black',
+                                                                            }}
+                                                                        >
+                                                                            <UncontrolledDropdown>
+                                                                                <DropdownToggle
+                                                                                    href="#"
+                                                                                    className="btn nav-btn  "
+                                                                                    tag="i"
+                                                                                >
+                                                                                    <i className="bx bx-dots-vertical-rounded" />
+                                                                                </DropdownToggle>
+                                                                                <DropdownMenu>
+                                                                                    {/* <DropdownItem
                                                 href="#"
                                                 onClick={() =>
                                                   handleForwardMessage(
@@ -2689,57 +2689,57 @@ const ChatRc = () => {
                                               >
                                                 Forward
                                               </DropdownItem> */}
-                                          <DropdownItem
-                                            href="#"
-                                            onClick={() => {
-                                              setCurReplyMessageId(msg)
-                                              setReplyMsgModalOpen(true)
-                                            }}
-                                          >
+                                                                                    <DropdownItem
+                                                                                        href="#"
+                                                                                        onClick={() => {
+                                                                                            setCurReplyMessageId(msg);
+                                                                                            setReplyMsgModalOpen(true);
+                                                                                        }}
+                                                                                    >
                                             Reply
-                                          </DropdownItem>
-                                          {msg?.sender ===
+                                                                                    </DropdownItem>
+                                                                                    {msg?.sender ===
                                             currentUser.userID && (
-                                              <DropdownItem
-                                                href="#"
-                                                onClick={() => {
-                                                  setCurEditMessageId(msg)
-                                                  setMessageEditModalOpen(true)
-                                                }}
-                                              >
+                                                                                        <DropdownItem
+                                                                                            href="#"
+                                                                                            onClick={() => {
+                                                                                                setCurEditMessageId(msg);
+                                                                                                setMessageEditModalOpen(true);
+                                                                                            }}
+                                                                                        >
                                                 Edit
-                                              </DropdownItem>
-                                            )}
-                                          <DropdownItem
-                                            href="#"
-                                            onClick={() => {
-                                              onPinnedMessage(msg)
-                                            }}
-                                          >
+                                                                                        </DropdownItem>
+                                                                                    )}
+                                                                                    <DropdownItem
+                                                                                        href="#"
+                                                                                        onClick={() => {
+                                                                                            onPinnedMessage(msg);
+                                                                                        }}
+                                                                                    >
                                             Pin
-                                          </DropdownItem>
-                                          <DropdownItem
-                                            href="#"
-                                            onClick={() => {
-                                              setCurReminderMessageId(msg)
-                                              setRemainderModelOpen(true)
-                                            }}
-                                          >
+                                                                                    </DropdownItem>
+                                                                                    <DropdownItem
+                                                                                        href="#"
+                                                                                        onClick={() => {
+                                                                                            setCurReminderMessageId(msg);
+                                                                                            setRemainderModelOpen(true);
+                                                                                        }}
+                                                                                    >
                                             Reminder
-                                          </DropdownItem>
-                                          <DropdownItem
-                                            href="#"
-                                            onClick={() => {
-                                              msg.sender === currentUser.userID
-                                                ? handleDelete(msg)
-                                                : toastr.info(
-                                                  "Unable to  delete other's message"
-                                                )
-                                            }}
-                                          >
+                                                                                    </DropdownItem>
+                                                                                    <DropdownItem
+                                                                                        href="#"
+                                                                                        onClick={() => {
+                                                                                            msg.sender === currentUser.userID
+                                                                                                ? handleDelete(msg)
+                                                                                                : toastr.info(
+                                                                                                    'Unable to  delete other\'s message'
+                                                                                                );
+                                                                                        }}
+                                                                                    >
                                             Delete
-                                          </DropdownItem>
-                                          {/* <DropdownItem
+                                                                                    </DropdownItem>
+                                                                                    {/* <DropdownItem
                                             href="#"
                                             onClick={() => {
                                               msg.sender === currentUser.userID
@@ -2751,17 +2751,17 @@ const ChatRc = () => {
                                           >
                                             Send Email
                                           </DropdownItem> */}
-                                        </DropdownMenu>
-                                      </UncontrolledDropdown>
-                                      <div
-                                        className="ctext-wrap "
-                                        style={{
-                                          backgroundColor: msg.sender === currentUser.userID && currentChat?.color
-    ? `${currentChat?.color}33`
-                                              : "#00EE00033"
-                                        }}
-                                      >
-                                        {/* {msg.isForward ? (
+                                                                                </DropdownMenu>
+                                                                            </UncontrolledDropdown>
+                                                                            <div
+                                                                                className="ctext-wrap "
+                                                                                style={{
+                                                                                    backgroundColor: msg.sender === currentUser.userID && currentChat?.color
+                                                                                        ? `${currentChat?.color}33`
+                                                                                        : '#00EE00033'
+                                                                                }}
+                                                                            >
+                                                                                {/* {msg.isForward ? (
                                               <div className=" mdi mdi-forward">
                                                 Forwarded:
                                               </div>
@@ -2770,392 +2770,392 @@ const ChatRc = () => {
                                                 {" "}
                                               </div>
                                             )} */}
-                                        <div>
-                                          {msg?.isPinned ? (
-                                            <div>
-                                              <i className="mdi mdi-pin-outline mdi-rotate-315 text-danger"></i>
-                                            </div>
-                                          ) : (
-                                            <div className="conversation-name">
-                                              {" "}
-                                            </div>
-                                          )}
-                                        </div>
-                                        <div>
-                                          {msg?.isEdit ? (
-                                            <div>
-                                              <p className="text-primary">
+                                                                                <div>
+                                                                                    {msg?.isPinned ? (
+                                                                                        <div>
+                                                                                            <i className="mdi mdi-pin-outline mdi-rotate-315 text-danger"></i>
+                                                                                        </div>
+                                                                                    ) : (
+                                                                                        <div className="conversation-name">
+                                                                                            {' '}
+                                                                                        </div>
+                                                                                    )}
+                                                                                </div>
+                                                                                <div>
+                                                                                    {msg?.isEdit ? (
+                                                                                        <div>
+                                                                                            <p className="text-primary">
                                                 Edited
-                                              </p>
-                                            </div>
-                                          ) : (
-                                            <div className="conversation-name">
-                                              {" "}
-                                            </div>
-                                          )}
-                                        </div>
-                                        <div className="conversation-name">
-                                          {currentChat.isGroup
-                                            ? getMemberName(msg.sender)
-                                            : getSenderOneChat(msg.sender)}
-                                        </div>
+                                                                                            </p>
+                                                                                        </div>
+                                                                                    ) : (
+                                                                                        <div className="conversation-name">
+                                                                                            {' '}
+                                                                                        </div>
+                                                                                    )}
+                                                                                </div>
+                                                                                <div className="conversation-name">
+                                                                                    {currentChat.isGroup
+                                                                                        ? getMemberName(msg.sender)
+                                                                                        : getSenderOneChat(msg.sender)}
+                                                                                </div>
 
-                                        <div className="mb-1">
-                                          {msg.isAttachment ? (
-                                            <>
-                                              <div
-                                                style={{
-                                                  whiteSpace: "break-spaces",
-                                                }}
-                                                dangerouslySetInnerHTML={{
-                                                  __html: msg?.messageData,
-                                                }}
-                                              />
-                                              <AttachmentViewer
-                                                attachments={msg.attachments}
-                                                text={msg.messageData}
-                                              />
+                                                                                <div className="mb-1">
+                                                                                    {msg.isAttachment ? (
+                                                                                        <>
+                                                                                            <div
+                                                                                                style={{
+                                                                                                    whiteSpace: 'break-spaces',
+                                                                                                }}
+                                                                                                dangerouslySetInnerHTML={{
+                                                                                                    __html: msg?.messageData,
+                                                                                                }}
+                                                                                            />
+                                                                                            <AttachmentViewer
+                                                                                                attachments={msg.attachments}
+                                                                                                text={msg.messageData}
+                                                                                            />
 
-                                              <div
-                                                className="mt-1"
-                                                style={{
-                                                  whiteSpace: "break-spaces",
-                                                }}
-                                              >
-                                                {/* {stringFormatter(
+                                                                                            <div
+                                                                                                className="mt-1"
+                                                                                                style={{
+                                                                                                    whiteSpace: 'break-spaces',
+                                                                                                }}
+                                                                                            >
+                                                                                                {/* {stringFormatter(
                                                         msg.messageData
                                                       )} */}
-                                              </div>
-                                            </>
-                                          ) : (
-                                            // <div
-                                            //   style={{
-                                            //     whiteSpace: "break-spaces",
-                                            //   }}
-                                            // >
-                                            //   {stringFormatter(
-                                            //     prettifyMsg(msg.messageData)
-                                            //   )}
+                                                                                            </div>
+                                                                                        </>
+                                                                                    ) : (
+                                                                                    // <div
+                                                                                    //   style={{
+                                                                                    //     whiteSpace: "break-spaces",
+                                                                                    //   }}
+                                                                                    // >
+                                                                                    //   {stringFormatter(
+                                                                                    //     prettifyMsg(msg.messageData)
+                                                                                    //   )}
 
-                                            // </div>
-                                            <div
-                                              style={{
-                                                whiteSpace: "break-spaces",
-                                              }}
-                                              dangerouslySetInnerHTML={{
-                                                __html: msg?.messageData,
-                                              }}
-                                            />
-                                          )}
-                                        </div>
-                                        {msg?.isVoiceMessage && (
-                                          <div>
-                                            <VoiceMessage msg={msg} />
-                                          </div>
-                                        )}
-                                        <p className="chat-time mb-0">
-                                          <i className="bx bx-comment-check align-middle me-1" />
-                                          {/* <i className="bx bx-time-five align-middle me-1" /> */}
-                                          {moment(msg.createdAt).format(
-                                            "DD-MM-YY HH:mm"
-                                          )}
-                                          {msg?.replies?.map((r, i) => (
-                                            <div
-                                              key={i}
-                                              className=" mdi mdi-reply m-2"
-                                            >
+                                                                                    // </div>
+                                                                                        <div
+                                                                                            style={{
+                                                                                                whiteSpace: 'break-spaces',
+                                                                                            }}
+                                                                                            dangerouslySetInnerHTML={{
+                                                                                                __html: msg?.messageData,
+                                                                                            }}
+                                                                                        />
+                                                                                    )}
+                                                                                </div>
+                                                                                {msg?.isVoiceMessage && (
+                                                                                    <div>
+                                                                                        <VoiceMessage msg={msg} />
+                                                                                    </div>
+                                                                                )}
+                                                                                <p className="chat-time mb-0">
+                                                                                    <i className="bx bx-comment-check align-middle me-1" />
+                                                                                    {/* <i className="bx bx-time-five align-middle me-1" /> */}
+                                                                                    {moment(msg.createdAt).format(
+                                                                                        'DD-MM-YY HH:mm'
+                                                                                    )}
+                                                                                    {msg?.replies?.map((r, i) => (
+                                                                                        <div
+                                                                                            key={i}
+                                                                                            className=" mdi mdi-reply m-2"
+                                                                                        >
                                               Replies:
-                                              <div className="conversation-name">
-                                                {currentChat.isGroup
-                                                  ? getMemberName(r?.sender)
-                                                  : getSenderOneChat(r?.sender)}
-                                              </div>
-                                              <div
-                                                style={{
-                                                  whiteSpace: "break-spaces",
-                                                }}
-                                                dangerouslySetInnerHTML={{
-                                                  __html: r?.replyMsg,
-                                                }}
-                                                // Check if _id is equal to replyMsgId and apply style if true
-                                                {...(r?._id === replymsgId && {
-                                                  style: {
-                                                    backgroundColor: "#e6e9f0",
-                                                  },
-                                                })}
-                                              />
-                                            </div>
-                                          ))}
-                                        </p>
-                                        {/* <p className=" mt-2" > Reply :{msg?.replies?.replyMsg}</p> */}
-                                      </div>
-                                    </div>
-                                  </li>
-                                ))}
-                                {messageStack?.length > 0 &&
+                                                                                            <div className="conversation-name">
+                                                                                                {currentChat.isGroup
+                                                                                                    ? getMemberName(r?.sender)
+                                                                                                    : getSenderOneChat(r?.sender)}
+                                                                                            </div>
+                                                                                            <div
+                                                                                                style={{
+                                                                                                    whiteSpace: 'break-spaces',
+                                                                                                }}
+                                                                                                dangerouslySetInnerHTML={{
+                                                                                                    __html: r?.replyMsg,
+                                                                                                }}
+                                                                                                // Check if _id is equal to replyMsgId and apply style if true
+                                                                                                {...(r?._id === replymsgId && {
+                                                                                                    style: {
+                                                                                                        backgroundColor: '#e6e9f0',
+                                                                                                    },
+                                                                                                })}
+                                                                                            />
+                                                                                        </div>
+                                                                                    ))}
+                                                                                </p>
+                                                                                {/* <p className=" mt-2" > Reply :{msg?.replies?.replyMsg}</p> */}
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                ))}
+                                                                {messageStack?.length > 0 &&
                                   messageStack.map((msg, m) => (
-                                    <li key={"test_k" + m} className="right">
-                                      <div className="conversation-list">
-                                        <div
-                                          className="ctext-wrap "
-                                          style={{
-                                            backgroundColor: msg.sender === currentUser.userID && currentChat?.color
-    ? `${currentChat?.color}33`
-                                                : "#00EE0033"
-                                          }}
-                                        >
-                                          <div className="conversation-name">
-                                            {currentUser?.firstname +
+                                      <li key={'test_k' + m} className="right">
+                                          <div className="conversation-list">
+                                              <div
+                                                  className="ctext-wrap "
+                                                  style={{
+                                                      backgroundColor: msg.sender === currentUser.userID && currentChat?.color
+                                                          ? `${currentChat?.color}33`
+                                                          : '#00EE0033'
+                                                  }}
+                                              >
+                                                  <div className="conversation-name">
+                                                      {currentUser?.firstname +
                                               currentUser?.lastname}
+                                                  </div>
+                                                  <div className="mb-1">
+                                                      {msg.messageData}
+                                                  </div>
+                                                  <p className="chat-time mb-0">
+                                                      <i className="bx bx-loader bx-spin  align-middle me-1" />
+                                                      {moment(msg.createdAt).format(
+                                                          'DD-MM-YY HH:mm'
+                                                      )}
+                                                  </p>
+                                              </div>
                                           </div>
-                                          <div className="mb-1">
-                                            {msg.messageData}
-                                          </div>
-                                          <p className="chat-time mb-0">
-                                            <i className="bx bx-loader bx-spin  align-middle me-1" />
-                                            {moment(msg.createdAt).format(
-                                              "DD-MM-YY HH:mm"
-                                            )}
-                                          </p>
-                                        </div>
-                                      </div>
-                                    </li>
+                                      </li>
                                   ))}
-                              </div>
-                            </ul>
-                          </div>
+                                                            </div>
+                                                        </ul>
+                                                    </div>
 
-                          {currentChat?.isGroup && (
-                            <SubgroupBar
-                              groups={allgroups}
-                              selectedGroup={currentChat}
-                              setSelectedgroup={setCurrentChat}
-                              openSubGroupmodel={setSubGroupModelOpen}
-                              currentCase={currentCase}
-                              notifyCount={getNotificationCount}
-                            />
-                          )}
-                          <div class="p-2 chat-input-section">
-                            <div className="row">
-                              <div className="col">
-                                <div className="position-relative">
-                                  {recorder &&
-                                    recorder.state === "recording" ? (
-                                    <div className="d-flex justify-content-center">
-                                      <i
-                                        className="mdi mdi-microphone font-size-18 text-primary"
-                                        style={{
-                                          height: "30px",
-                                          paddingLeft: "10px",
-                                        }}
-                                      ></i>
-                                      <p className="text-primary mt-1 font-size-12">
-                                        {duration}Secs
-                                      </p>
-                                    </div>
-                                  ) : (
-                                    <>
-                                      {blobURL ? (
-                                        <div>
-                                          <audio
-                                            className="w-100 w-sm-100"
-                                            style={{
-                                              height: "33px",
-                                              paddingLeft: "10px",
-                                            }}
-                                            src={blobURL}
-                                            controls="controls"
-                                          ></audio>
-                                        </div>
-                                      ) : (
-                                        <>
-                                          <div className="p-2 pt-0">
-                                            {" "}
-                                            {Array.from(allFiles)?.length >
-                                              0 && (
-                                                <div class="d-flex gap-2 flex-wrap mt-2">
-                                                  {Array.from(allFiles)?.map(
-                                                    (att, a) => (
-                                                      <span
-                                                        class="badge badge-soft-primary font-size-13"
-                                                        key={a}
-                                                      >
-                                                        {att.name}
-                                                        <i
-                                                          class="bx bx-x-circle mx-1"
-                                                          onClick={() =>
-                                                            handleFileRemove(
-                                                              att?.name
-                                                            )
-                                                          }
-                                                          style={{
-                                                            cursor: "pointer",
-                                                          }}
+                                                    {currentChat?.isGroup && (
+                                                        <SubgroupBar
+                                                            groups={allgroups}
+                                                            selectedGroup={currentChat}
+                                                            setSelectedgroup={setCurrentChat}
+                                                            openSubGroupmodel={setSubGroupModelOpen}
+                                                            currentCase={currentCase}
+                                                            notifyCount={getNotificationCount}
                                                         />
-                                                      </span>
-                                                    )
-                                                  )}
+                                                    )}
+                                                    <div className="p-2 chat-input-section">
+                                                        <div className="row">
+                                                            <div className="col">
+                                                                <div className="position-relative">
+                                                                    {recorder &&
+                                    recorder.state === 'recording' ? (
+                                                                            <div className="d-flex justify-content-center">
+                                                                                <i
+                                                                                    className="mdi mdi-microphone font-size-18 text-primary"
+                                                                                    style={{
+                                                                                        height: '30px',
+                                                                                        paddingLeft: '10px',
+                                                                                    }}
+                                                                                ></i>
+                                                                                <p className="text-primary mt-1 font-size-12">
+                                                                                    {duration}Secs
+                                                                                </p>
+                                                                            </div>
+                                                                        ) : (
+                                                                            <>
+                                                                                {blobURL ? (
+                                                                                    <div>
+                                                                                        <audio
+                                                                                            className="w-100 w-sm-100"
+                                                                                            style={{
+                                                                                                height: '33px',
+                                                                                                paddingLeft: '10px',
+                                                                                            }}
+                                                                                            src={blobURL}
+                                                                                            controls="controls"
+                                                                                        ></audio>
+                                                                                    </div>
+                                                                                ) : (
+                                                                                    <>
+                                                                                        <div className="p-2 pt-0">
+                                                                                            {' '}
+                                                                                            {Array.from(allFiles)?.length >
+                                              0 && (
+                                                                                                <div className="d-flex gap-2 flex-wrap mt-2">
+                                                                                                    {Array.from(allFiles)?.map(
+                                                                                                        (att, a) => (
+                                                                                                            <span
+                                                                                                                className="badge badge-soft-primary font-size-13"
+                                                                                                                key={a}
+                                                                                                            >
+                                                                                                                {att.name}
+                                                                                                                <i
+                                                                                                                    className="bx bx-x-circle mx-1"
+                                                                                                                    onClick={() =>
+                                                                                                                        handleFileRemove(
+                                                                                                                            att?.name
+                                                                                                                        )
+                                                                                                                    }
+                                                                                                                    style={{
+                                                                                                                        cursor: 'pointer',
+                                                                                                                    }}
+                                                                                                                />
+                                                                                                            </span>
+                                                                                                        )
+                                                                                                    )}
+                                                                                                </div>
+                                                                                            )}
+                                                                                        </div>
+                                                                                        <div>
+                                                                                            <ReactQuillInput
+                                                                                                value={curMessage}
+                                                                                                onChange={onChange}
+                                                                                                mentionsArray={mentionsArray}
+                                                                                                isQuill={isQuill}
+                                                                                                onKeyPress={onKeyPress}
+                                                                                                isEmptyOrSpaces={isEmptyOrSpaces}
+                                                                                            />
+                                                                                        </div>
+                                                                                    </>
+                                                                                )}
+                                                                            </>
+                                                                        )}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                              )}
-                                          </div>
-                                          <div>
-                                            <ReactQuillInput
-                                              value={curMessage}
-                                              onChange={onChange}
-                                              mentionsArray={mentionsArray}
-                                              isQuill={isQuill}
-                                              onKeyPress={onKeyPress}
-                                              isEmptyOrSpaces={isEmptyOrSpaces}
-                                            />
-                                          </div>
-                                        </>
-                                      )}
-                                    </>
-                                  )}
+                                                <div>
+                                                    <div
+                                                        className="col-auto d-flex justify-content-end  gap-2 "
+                                                        style={{
+                                                            position: 'absolute',
+                                                            right: '19px',
+                                                            bottom: '202px',
+                                                        }}
+                                                    >
+                                                        {recorder && recorder.state === 'recording' ? (
+                                                            <></>
+                                                        ) : (
+                                                            <div>
+                                                                <input
+                                                                    type="file"
+                                                                    name="file"
+                                                                    multiple="true"
+                                                                    id="hidden-file"
+                                                                    className="d-none"
+                                                                    accept=".png, .jpg, .jpeg,.pdf,.doc,.xls,.docx,.xlsx,.zip,.mp3,.webm"
+                                                                    onChange={e => handleFileChange(e)}
+                                                                ></input>
+                                                                <label
+                                                                    htmlFor="hidden-file"
+                                                                    style={{ margin: '10px' }}
+                                                                >
+                                                                    <i
+                                                                        className="mdi mdi-attachment mdi-rotate-315"
+                                                                        disabled={recorder?.state === 'recording'}
+                                                                        title="Attachments"
+                                                                        style={{
+                                                                            color: '#556EE6',
+                                                                            fontSize: '16px',
+                                                                            cursor: 'pointer',
+                                                                        }}
+                                                                    ></i>
+                                                                </label>
+                                                            </div>
+                                                        )}
+                                                        {recorder && recorder.state === 'recording' ? (
+                                                            <i
+                                                                className="mdi mdi-microphone font-size-20 text-danger me-2"
+                                                                title="Stop Recording"
+                                                                onClick={stopRecording}
+                                                                disabled={recorder?.state === 'stopped'}
+                                                                style={{
+                                                                    cursor: 'pointer',
+                                                                    paddingTop: '6px',
+                                                                }}
+                                                            ></i>
+                                                        ) : (
+                                                            <i
+                                                                className="mdi mdi-microphone font-size-20 text-primary me-2"
+                                                                title="Start Recording"
+                                                                onClick={startRecording}
+                                                                disabled={recorder?.state === 'recording'}
+                                                                style={{
+                                                                    cursor: 'pointer',
+                                                                    paddingTop: '6px',
+                                                                }}
+                                                            ></i>
+                                                        )}
+
+                                                        {recorder?.state !== 'recording' && (
+                                                            <div>
+                                                                {loading ? (
+                                                                    <button
+                                                                        type="button"
+                                                                        className="btn btn-primary btn-rounded chat-send"
+                                                                        color="primary"
+                                                                        style={{
+                                                                            cursor: 'not-allowed',
+                                                                        }}
+                                                                    >
+                                                                        <i className="bx bx-loader-alt bx-spin font-size-20 align-middle"></i>
+                                                                    </button>
+                                                                ) : (
+                                                                    <button
+                                                                        type="button"
+                                                                        className="btn btn-primary btn-rounded chat-send"
+                                                                        color="primary"
+                                                                        onClick={() => handleSendMessage()}
+                                                                        disabled={isEmptyOrSpaces()}
+                                                                    >
+                                                                        <i className="mdi mdi-send"></i>
+                                                                    </button>
+                                                                )}
+                                                            </div>
+                                                        )}
+
+                                                        <div
+                                                            style={{
+                                                                position: 'absolute',
+                                                                right: '133px',
+                                                                top: '5px',
+                                                            }}
+                                                        >
+                                                            <i
+                                                                className="bi bi-type"
+                                                                onClick={() => {
+                                                                    toggle_Quill();
+                                                                }}
+                                                                style={{
+                                                                    color: 'blue',
+                                                                    fontSize: '20px',
+                                                                    fontWeight: 'bold',
+                                                                    cursor: 'pointer',
+                                                                }}
+                                                                title={
+                                                                    isQuill
+                                                                        ? 'Show Formatting'
+                                                                        : 'Hide Formatting'
+                                                                }
+                                                            ></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                            </Card>
+                                        )
+                                    ) : (
+                                        <NoChat />
+                                    )}
                                 </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div>
-                          <div
-                            className="col-auto d-flex justify-content-end  gap-2 "
-                            style={{
-                              position: "absolute",
-                              right: "19px",
-                              bottom: "202px",
-                            }}
-                          >
-                            {recorder && recorder.state === "recording" ? (
-                              <></>
-                            ) : (
-                              <div>
-                                <input
-                                  type="file"
-                                  name="file"
-                                  multiple="true"
-                                  id="hidden-file"
-                                  className="d-none"
-                                  accept=".png, .jpg, .jpeg,.pdf,.doc,.xls,.docx,.xlsx,.zip,.mp3,.webm"
-                                  onChange={e => handleFileChange(e)}
-                                ></input>
-                                <label
-                                  for="hidden-file"
-                                  style={{ margin: "10px" }}
-                                >
-                                  <i
-                                    class="mdi mdi-attachment mdi-rotate-315"
-                                    disabled={recorder?.state === "recording"}
-                                    title="Attachments"
-                                    style={{
-                                      color: "#556EE6",
-                                      fontSize: "16px",
-                                      cursor: "pointer",
-                                    }}
-                                  ></i>
-                                </label>
-                              </div>
-                            )}
-                            {recorder && recorder.state === "recording" ? (
-                              <i
-                                className="mdi mdi-microphone font-size-20 text-danger me-2"
-                                title="Stop Recording"
-                                onClick={stopRecording}
-                                disabled={recorder?.state === "stopped"}
-                                style={{
-                                  cursor: "pointer",
-                                  paddingTop: "6px",
-                                }}
-                              ></i>
-                            ) : (
-                              <i
-                                className="mdi mdi-microphone font-size-20 text-primary me-2"
-                                title="Start Recording"
-                                onClick={startRecording}
-                                disabled={recorder?.state === "recording"}
-                                style={{
-                                  cursor: "pointer",
-                                  paddingTop: "6px",
-                                }}
-                              ></i>
-                            )}
-
-                            {recorder?.state !== "recording" && (
-                              <div>
-                                {loading ? (
-                                  <button
-                                    type="button"
-                                    className="btn btn-primary btn-rounded chat-send"
-                                    color="primary"
-                                    style={{
-                                      cursor: "not-allowed",
-                                    }}
-                                  >
-                                    <i className="bx bx-loader-alt bx-spin font-size-20 align-middle"></i>
-                                  </button>
-                                ) : (
-                                  <button
-                                    type="button"
-                                    className="btn btn-primary btn-rounded chat-send"
-                                    color="primary"
-                                    onClick={() => handleSendMessage()}
-                                    disabled={isEmptyOrSpaces()}
-                                  >
-                                    <i className="mdi mdi-send"></i>
-                                  </button>
-                                )}
-                              </div>
-                            )}
-
-                            <div
-                              style={{
-                                position: "absolute",
-                                right: "133px",
-                                top: "5px",
-                              }}
-                            >
-                              <i
-                                className="bi bi-type"
-                                onClick={() => {
-                                  toggle_Quill()
-                                }}
-                                style={{
-                                  color: "blue",
-                                  fontSize: "20px",
-                                  fontWeight: "bold",
-                                  cursor: "pointer",
-                                }}
-                                title={
-                                  isQuill
-                                    ? "Show Formatting"
-                                    : "Hide Formatting"
-                                }
-                              ></i>
-                            </div>
-                          </div>
-                        </div>
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                      </Card>
-                    )
-                  ) : (
-                    <NoChat />
-                  )}
-                </div>
-              </Col>
-            </Row>
-          </>
-        )}
-      </>
-    </div>
-  )
-}
-export default ChatRc
+                            </Col>
+                        </Row>
+                    </>
+                )}
+            </>
+        </div>
+    );
+};
+export default ChatRc;
