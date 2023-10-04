@@ -59,7 +59,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts --max_old_space_size=8000 build",
-    "lint": "eslint src",
+    "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --write \"**/*.{js,jsx,json,md,html,css,less,scss}\"",
     "eject": "react-scripts eject"
@@ -68,7 +68,30 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "env": {
+      "browser": true,
+      "es2021": true
+  },
+ 
+  "settings": {
+      "react": {
+          "version":"^17.0.1"
+      }
+
+  },
+  "parserOptions": {
+      "ecmaFeatures": {
+          "jsx": true,
+          "modules": true,
+          "experimentalObjectRestSpread": true
+      },
+      "ecmaVersion": 12,
+      "sourceType": "module"
+  },
+  "plugins": [
+      "react"
+  ]
   },
   "browserslist": {
     "production": [
