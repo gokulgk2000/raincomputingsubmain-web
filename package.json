@@ -71,7 +71,8 @@
     ],
     "env": {
       "browser": true,
-      "es2021": true
+      "es2021": true,
+      "jest":true
   },
  
   "settings": {
@@ -89,9 +90,13 @@
       "ecmaVersion": 12,
       "sourceType": "module"
   },
-  "plugins": [
-      "react"
-  ]
+  "rules": {
+    "semi": [
+      "error",
+      "never"
+    ]
+  }
+  
   },
   "browserslist": {
     "production": [
