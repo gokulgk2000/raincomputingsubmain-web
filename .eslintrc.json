@@ -1,7 +1,8 @@
 {
     "env": {
         "browser": true,
-        "es2021": true
+        "es2021": true,
+        "jest": true
     },
     "extends": [
         "eslint:recommended",
@@ -26,20 +27,6 @@
         "react"
     ],
     "rules": {
-        "array-bracket-spacing": [
-            "error",
-            "never"
-          ],
-          "comma-dangle": [
-            "error",
-            "always-multiline"
-          ],
-          "CallExpression": {
-            "arguments": "first"
-          },
-          "ignoredNodes": [
-            "JSXElement *"
-          ],    
         "react/react-in-jsx-scope":"off",
         "no-undef": "off",
         "no-unused-vars":"off",
