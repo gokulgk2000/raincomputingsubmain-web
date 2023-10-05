@@ -54,7 +54,7 @@ const NotificationDropdown = props => {
                     tag="button"
                     id="page-header-notifications-dropdown"
                 >
-                    {currentUser && <i className="bx bx-bell" />}
+                    {currentUser && <i className="bx bx-bell mt-2" />}
                     {notifications.length > 0 && (
                         <span className="badge bg-danger rounded-pill">
                             {notifications.length}
