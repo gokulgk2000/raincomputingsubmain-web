@@ -21,6 +21,7 @@ import useMediaQuery from '../../../src/rainComputing/helpers/hooks/useMediaQuer
 import MobileNav from './MobileNav';
 import Reminder from '../../../src/rainComputing/pages/reminder';
 import DocketMenu from '../../../src/rainComputing/pages/docket/DocketMenu';
+import image from "../../assets/images/image.png"
 const Header = (props) => {
     const { currentUser, currentAttorney } = useUser();
     const [isMobile] = useMediaQuery('764');
@@ -33,12 +34,21 @@ const Header = (props) => {
         <React.Fragment>
             <header id="page-topbar">
                 <div className="d-flex justify-content-md-between flex-grow-1 col-md-12  ">
-                    <div className="d-flex ">
-                        <div className="navbar-brand-box">
+                    <Link to="/" className="d-flex mx-4 mt-2 mb-2 ">
+                    <img className=""
+                  style={{ width: "60px", height: "60px" }}
+                  src={image}
+                  alt="Image"
+                />
+                <h4 className=" font d-flex justify-content-md-between pt-4 text-danger-emphasis px-2">
+                  HSUANYEH LAW GROUPS, PC
+                </h4>
+                        {/* <div className="navbar-brand-box">
                             <Link to="/" className="logo logo-dark">
-                                <span className="logo-lg">
-                                    <img src={rainlglogo} alt="" height="50" />
-                                </span>
+                                <span className="logo-lg"> */}
+                                    {/* <img src={rainlglogo} alt="" height="50" /> */}
+                                   
+                                {/* </span>
                             </Link>
 
                             <Link to="/" className="logo logo-light  ">
@@ -48,12 +58,12 @@ const Header = (props) => {
                                 <span className="logo-lg">
                                     <img src={rainlglogo} alt="" height="50" />
                                 </span>
-                            </Link>
-                        </div>
-                        {isMobile&& <h4 className="d-flex justify-content-md-between pt-4 text-primary">
-              Hsuanyeh.Law,Groups.PC
-                        </h4>}
-                    </div>
+                            </Link> */}
+                        {/* </div> */}
+                        {/* {isMobile&&   <h4 className=" font d-flex justify-content-md-between pt-4 text-danger-emphasis px-2">
+                  HSUANYEH LAW GROUPS, PC
+                </h4>} */}
+                    </Link>
 
                     <div className="d-flex justify-content-md-between " id="">
                         {/* <div id="navbox"></div> */}
