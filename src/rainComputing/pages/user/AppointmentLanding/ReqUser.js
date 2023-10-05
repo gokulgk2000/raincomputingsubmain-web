@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {Row, Col, Card, CardBody} from 'reactstrap';
 import toastr from 'toastr';
 import 'toastr/build/toastr.min.css';
@@ -15,72 +15,70 @@ import { Link } from 'react-router-dom';
 import ReqUserAppointmentDetails from './ReqUserAppDetails';
 
 const RequestUser = () => {
-    const { currentAttorney } = useUser();
-    const [modalOpen, setModalOpen, toggleModal] = useModal(false);
-    const [pageLoader, setPageLoader] = useState(true);
+    const { currentAttorney } = useUser()
+    const [modalOpen, setModalOpen, toggleModal] = useModal(false)
+    const [pageLoader, setPageLoader] = useState(true)
+    const [selectedAppointmentReq, setSelectedAppointmentReq] = useState(null)
     toastr.options = {
-        progressBar: true,
-        closeButton: true,
-    };
-    const [appointmentReq, setAppointmentReq] = useState([]);
-    const [refetch, setRefetch] = useState(false);
+      progressBar: true,
+      closeButton: true,
+    }
+    const [appointmentReq, setAppointmentReq] = useState([])
+    const [refetch, setRefetch] = useState(false)
     const handleFileDownload = async ({ id, filename }) => {
-        getFileFromGFS(
-            { id },
-            {
-                responseType: 'blob',
-            }
-        ).then(res => {
-            fileDownload(res, filename);
-        });
-    };
-
- 
-    const onGetAllAppointmentRequest = useCallback(async () => {
-        setPageLoader(true);
-        const RequestRes = await getAllAppointmentRequestById({
-            userID: currentAttorney._id,
-        });
-        if (RequestRes.success) {
-            setAppointmentReq(RequestRes.appointment);
+      getFileFromGFS(
+        { id },
+        {
+          responseType: "blob",
         }
-        setPageLoader(false);
-    }, [currentAttorney]);
-    const handleAppointmentAccept = async ({ id }) => {
-        const payload = {
-            appointmentstatus: 'approved',
-            appointmentID: id,
-        };
-        const res = await appointmentStatusUpdate(payload);
-        if (res.success) {
-            setRefetch(true);
-            toastr.success('Appointment  has been Accepted ', 'Success');
-            await onGetAllAppointmentRequest();
-        } else {
-            setRefetch(false);
-            toastr.error('Failed to Accept Appointment ', 'Failed!!!');
-        }
-    };
-    const handleAppointmentReject = async ({ id }) => {
-        const payload = {
-            appointmentstatus: 'rejected',
-            appointmentID: id,
-        };
-        const res = await appointmentStatusUpdate(payload);
-        if (res.success) {
-            setRefetch(true);
-            toastr.success('Appointment  has been Rejected ', 'Success');
-            await onGetAllAppointmentRequest();
-        } else {
-            setRefetch(false);
-            toastr.error('Failed to Reject Appointment ', 'Failed!!!');
-        }
-        setModalOpen(false);
-    };
-
+      ).then(res => {
+        fileDownload(res, filename)
+      })
+    }
     useEffect(() => {
-        onGetAllAppointmentRequest();
-    }, [currentAttorney,onGetAllAppointmentRequest]);
+      onGetAllAppointmentRequest()
+    }, [currentAttorney])
+    const onGetAllAppointmentRequest = async () => {
+      setPageLoader(true)
+      const RequestRes = await getAllAppointmentRequestById({
+        userID: currentAttorney._id,
+      })
+      if (RequestRes.success) {
+        setAppointmentReq(RequestRes.appointment)
+      }
+      setPageLoader(false)
+    }
+    const handleAppointmentAccept = async ({ id }) => {
+      const payload = {
+        appointmentstatus: "approved",
+        appointmentID: id,
+      }
+      const res = await appointmentStatusUpdate(payload)
+      if (res.success) {
+        setRefetch(true)
+        toastr.success(`Appointment  has been Accepted `, "Success")
+        await onGetAllAppointmentRequest()
+      } else {
+        setRefetch(false)
+        toastr.error(`Failed to Accept Appointment `, "Failed!!!")
+      }
+    }
+    const handleAppointmentReject = async ({ id }) => {
+      const payload = {
+        appointmentstatus: "rejected",
+        appointmentID: id,
+      }
+      const res = await appointmentStatusUpdate(payload)
+      if (res.success) {
+        setRefetch(true)
+        toastr.success(`Appointment  has been Rejected `, "Success")
+        await onGetAllAppointmentRequest()
+      } else {
+        setRefetch(false)
+        toastr.error(`Failed to Reject Appointment `, "Failed!!!")
+      }
+      setModalOpen(false)
+    }
     return (
         <React.Fragment>
             <DeleteModal

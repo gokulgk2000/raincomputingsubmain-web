@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useCallback  } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Col, Row } from 'reactstrap';
 import illustration from '../../../assets/images/law-illustration.jpg';
@@ -18,21 +18,20 @@ import { getAllRegAttorneys } from '../../../../src/rainComputing/helpers/backen
 import Pagination from '../../../../src/components/pagination/Pagination';
 
 const LandingGrid = () => {
-    const [searchText, setSearchText] = useState('');
-    const [loading, setLoading] = useState(true);
-    const [attorneys, setAttorneys] = useState([]);
-    const [page, setPage] = useState(1);
-    const [limit] = useState(12);
-
-    const loadAttorney = useCallback(async () => {
-        const res = await getAllRegAttorneys({ page, limit, searchText });
-        if (res.success) {
-            // console.log(first)
-            setAttorneys(res.attorneys);
-        } else {
-            console.log('Error while fetching Attorneys', res);
-        }
-    },[page, limit, searchText]);
+    const [searchText, setSearchText] = useState("")
+    const [loading, setLoading] = useState(true)
+    const [attorneys, setAttorneys] = useState([])
+    const [page, setPage] = useState(1)
+    const [limit, setLimit] = useState(12)
+    const loadAttorney = async () => {
+      const res = await getAllRegAttorneys({ page, limit, searchText })
+      if (res.success) {
+        // console.log(first)
+        setAttorneys(res.attorneys)
+      } else {
+        console.log("Error while fetching Attorneys", res)
+      }
+    }
     // const loadAttorneyCount = async () => {
     //   const res = await getAttorneysCount({ searchText })
     //   if (res.success) {
@@ -40,30 +39,26 @@ const LandingGrid = () => {
     //   } else {
     //   }
     // }
-
     useEffect(() => {
-        const handleLoad = async () => {
-            setLoading(true);
-            await loadAttorney();
-            setLoading(false);
-        };
-        handleLoad();
-    }, [page, limit,loadAttorney]);
-
+      const handleLoad = async () => {
+        setLoading(true)
+        await loadAttorney()
+        setLoading(false)
+      }
+      handleLoad()
+    }, [page, limit])
     useEffect(() => {
-        setPage(1);
-    }, [searchText]);
-
+      setPage(1)
+    }, [searchText])
     useEffect(() => {
-        const handleLoad = async () => {
-            setLoading(true);
-            // await loadAttorneyCount()
-            await loadAttorney();
-            setLoading(false);
-        };
-
-        handleLoad();
-    }, [searchText,loadAttorney]);
+      const handleLoad = async () => {
+        setLoading(true)
+        // await loadAttorneyCount()
+        await loadAttorney()
+        setLoading(false)
+      }
+      handleLoad()
+    }, [searchText])
 
     return (
         <React.Fragment>

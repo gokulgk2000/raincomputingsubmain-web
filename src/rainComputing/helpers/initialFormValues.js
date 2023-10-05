@@ -7,7 +7,6 @@ export const initialNewCaseValues = {
 
 export const initialNewClientValues = {
     clientName: '',
-    clientId: '',
     email:'',
     address:'',
 };

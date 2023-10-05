@@ -3,7 +3,6 @@ import React, {
     useState,
     lazy,
     useRef,
-    useCallback
 } from 'react';
 import { MetaTags } from 'react-meta-tags';
 import {
@@ -285,6 +284,7 @@ const ChatRc = () => {
     const [deleteMessage, setDeleteMessage] = useState();
     console.log('deleteMessage',deleteMessage);
     const [nonewmessage, setNoNewMessage] = useState([]);
+    const [currentClient,setCurrentClient] = useState(null)
     // const toggle_Quill = () => {
     //   setIsQuil(!isQuil)
     // }
@@ -333,7 +333,7 @@ const ChatRc = () => {
             // Clean up the duration interval on component unmount
             clearInterval(durationIntervalId);
         };
-    }, [durationIntervalId]);
+    }, []);
     const handleScroll = event => {
         if (event && event.currentTarget) {
             const { scrollTop, clientHeight, scrollHeight } = event.currentTarget;
@@ -387,84 +387,82 @@ const ChatRc = () => {
             }, 500);
             return () => clearTimeout(timer);
         }
-    }, [messages,nonewmessage]);
-    const ongetAllChatRooms = useCallback(async () => {
-        const chatRoomsRes = await getOnevsOneChat({ userId: currentUser.userID });
+    }, [messages]);
+    const ongetAllChatRooms = async () => {
+        const chatRoomsRes = await getOnevsOneChat({ userId: currentUser.userID })
         if (chatRoomsRes.success) {
-            const updatedChats = chatRoomsRes.groups.map(chat => {
-                const notification = notifications.find(n => n.groupId === chat._id);
-                return {
-                    ...chat,
-                    notification,
-                };
-            });
-  
-            updatedChats.sort((a, b) => {
-                if (a.notification && b.notification) {
-                    return (
-                        new Date(b.notification.updatedAt) -
-            new Date(a.notification.updatedAt)
-                    );
-                } else if (a.notification) {
-                    return -1; // Move chat with notification to the top
-                } else if (b.notification) {
-                    return 1; // Move chat with notification to the top
-                } else {
-                    return 0; // No notifications for both chats, maintain order
-                }
-            });
-  
-            setChats(updatedChats);
-            setCurrentChat(updatedChats[0]);
-            if (updatedChats.length < 1) {
-                setactiveTab('3');
+          const updatedChats = chatRoomsRes.groups.map(chat => {
+            const notification = notifications.find(n => n.groupId === chat._id)
+            return {
+              ...chat,
+              notification,
             }
+          })
+          updatedChats.sort((a, b) => {
+            if (a.notification && b.notification) {
+              return (
+                new Date(b.notification.updatedAt) -
+                new Date(a.notification.updatedAt)
+              )
+            } else if (a.notification) {
+              return -1 // Move chat with notification to the top
+            } else if (b.notification) {
+              return 1 // Move chat with notification to the top
+            } else {
+              return 0 // No notifications for both chats, maintain order
+            }
+          })
+          setChats(updatedChats)
+          setCurrentChat(updatedChats[0])
+          if (updatedChats.length < 1) {
+            setactiveTab("3")
+          }
         } else {
-            setChats([]);
+          setChats([])
         }
-        setChatLoader(false);
-    }, [currentUser.userID, notifications,setChats,setCurrentChat]);
+        setChatLoader(false)
+      }
   
     // Use ongetAllChatRooms in your component as before
   
 
-    const filterChats = useCallback(() => {
-        if (searchText !== '') {
-            const filteredChats = chats?.filter(chat =>
-                chat.groupMembers.some(member =>
-                    member?.id?.firstname
-                        ?.toLowerCase()
-                        .includes(searchText.toLowerCase())
-                )
-            );
-            setFilteredChats(filteredChats);
-            setChats(filteredChats);
-            setIsSearchTextCleared(false);
+    const filterChats = () => {
+        if (searchText !== "") {
+          const filteredChats = chats?.filter(chat =>
+            chat.groupMembers.some(member =>
+              member?.id?.firstname
+                ?.toLowerCase()
+                .includes(searchText.toLowerCase())
+            )
+          )
+          setFilteredChats(filteredChats)
+          setChats(filteredChats)
+          setIsSearchTextCleared(false)
         } else {
-            if (!isSearchTextCleared) {
-                ongetAllChatRooms(); // Call the function to get all chats
-                setIsSearchTextCleared(true);
-            }
+          if (!isSearchTextCleared) {
+            ongetAllChatRooms() // Call the function to get all chats
+            setIsSearchTextCleared(true)
+          }
         }
-    }, [searchText, chats, isSearchTextCleared, ongetAllChatRooms,setChats]);
+      }
   
     useEffect(() => {
         if (searchText === '') {
             setIsSearchTextCleared(true);
         }
         filterChats();
-    }, [searchText, filterChats]);
-    const Locate = useCallback(() => {
+    }, [searchText]);
+    const Locate = () => {
         const message = [...messages, ...visibleMessages].find(
-            (msg) => msg._id === msgId
-        );
+          msg => msg._id === msgId
+        )
         if (message) {
-            const messageElem = document.getElementById(message._id);
-            if (messageElem) {
-                messageElem.scrollIntoView({ behavior: 'auto' });
-            }
+          const messageElem = document.getElementById(message._id)
+          if (messageElem) {
+            messageElem.scrollIntoView({ behavior: "auto" })
+          }
         }
-    }, [messages, visibleMessages, msgId]);
+      }
     // useEffect(() => {
     //   if (messages && visibleMessages?.length < messages?.length) {
     //     const tempHeight = containerRef?.current?.scrollHeight - prevHeight
@@ -481,7 +479,7 @@ const ChatRc = () => {
             }, 500);
             return () => clearTimeout(timer);
         }
-    }, [replymsgId,Locate]);
+    }, [messages?.length]);
 
     //Toaster settings
     toastr.options = {
@@ -655,19 +653,19 @@ const ChatRc = () => {
     };
 
     // get All clientNames
-    const onGetAllClientNames = useCallback(async () => {
+    const onGetAllClientNames = async () => {
         const allClientNamesRes = await getClientsByUserId({
-            userId: currentUser.userID,
-        });
-  
+          userId: currentUser.userID,
+          // caseId: currentCase.caseId
+        })
         if (allClientNamesRes.success) {
-            setClients(allClientNamesRes?.clients);
+          setClients(allClientNamesRes?.clients)
         }
-    }, [currentUser.userID, setClients]);
-  
-    useEffect(() => {
-        onGetAllClientNames();
-    }, [onGetAllClientNames]);
+        setCurrentClient(allClientNamesRes?.clients)
+      }
+      useEffect(() => {
+        onGetAllClientNames()
+      }, [])
   
 
     //Getting all the cases
@@ -756,43 +754,39 @@ const ChatRc = () => {
     // }
 
     //Fetching Contacts
-    const onGetEmailContacts = useCallback(async () => {
+    const onGetEmailContacts = async () => {
         const userRes = await getAllUsers({
-            userID: currentUser.userID,
-            email: currentUser?.email,
-        });
-  
+          userID: currentUser.userID,
+          email: currentUser?.email,
+        })
         if (userRes.success) {
-            setContacts([...userRes.users]);
+          setContacts([...userRes.users])
         } else {
-            setContacts(userRes?.users);
+          setContacts(userRes?.users)
         }
-    }, [currentUser.userID, currentUser.email, setContacts]);
-    const onGetContacts = useCallback(
-        async ({ isSearch = false }) => {
-            if (searchText === '') {
-                await onGetEmailContacts();
+      }
+    const onGetContacts = async ({ isSearch = false }) => {
+        if (searchText === "") {
+          await onGetEmailContacts()
+        } else {
+          setContactsLoading(true)
+          const userRes = await getAllUsers({
+            userID: currentUser.userID,
+            page: isSearch ? 1 : contactPage,
+            searchText,
+          })
+          if (userRes.success) {
+            if (!isSearch) {
+              setContacts([...contacts, ...userRes.users])
             } else {
-                setContactsLoading(true);
-                const userRes = await getAllUsers({
-                    userID: currentUser.userID,
-                    page: isSearch ? 1 : contactPage,
-                    searchText,
-                });
-                if (userRes.success) {
-                    if (!isSearch) {
-                        setContacts([...contacts, ...userRes.users]);
-                    } else {
-                        setContacts(userRes?.users);
-                    }
-                } else {
-                    setContacts([]);
-                }
-                setContactsLoading(false);
+              setContacts(userRes?.users)
             }
-        },
-        [searchText, onGetEmailContacts, currentUser.userID, contactPage, contacts]
-    );
+          } else {
+            setContacts([])
+          }
+          setContactsLoading(false)
+        }
+      }
     //send message to email
     // const onSendMessageEmail = async (msg) => {
     //   const membersEmail = currentCase?.caseMembers.map((member) => member?.id?.email);
@@ -818,7 +812,7 @@ const ChatRc = () => {
             onGetEmailContacts();
             setSearchText('');
         }
-    }, [activeTab, searchText, onGetEmailContacts]);
+    }, [activeTab, searchText]);
   
     //Selecting current case
     const onSelectingCase = cas => {
@@ -1122,44 +1116,44 @@ const ChatRc = () => {
     };
 
     //Fetching SubGroups
-    const onGettingSubgroups = useCallback(async () => {
-        setChatLoader(true);
+    const onGettingSubgroups = async () => {
+        setChatLoader(true)
         const payLoad = {
-            caseId: currentCase._id,
-            userId: currentUser.userID,
-        };
-        const subGroupsRes = await getGroupsByUserIdandCaseId(payLoad);
+          caseId: currentCase._id,
+          userId: currentUser.userID,
+        }
+        const subGroupsRes = await getGroupsByUserIdandCaseId(payLoad)
         if (subGroupsRes.success) {
-            setAllgroups(subGroupsRes.groups);
-            setCurrentChat(subGroupsRes.groups[0]);
+          setAllgroups(subGroupsRes.groups)
+          setCurrentChat(subGroupsRes.groups[0])
         }
-        setChatLoader(false);
-    }, [currentCase, currentUser,setCurrentChat]);
+        setChatLoader(false)
+      } 
 
-    const handleFetchFiles = useCallback(async () => {
+      const handleFetchFiles = async () => {
         try {
-            const filesRes = await getCaseFiles(currentCase?._id);
-            if (filesRes.success && filesRes?.files?.length > 0) {
-                const updatedFiles = filesRes.files.map((file) => {
-                    const sendAt = moment(file.time).format('DD-MM-YY HH:mm');
-                    return { ...file, time: sendAt, isDownloading: true };
-                });
-                setCaseFile(updatedFiles);
-            } else {
-                setCaseFile([]);
-            }
+          const filesRes = await getCaseFiles(currentCase?._id)
+          if (filesRes.success && filesRes?.files?.length > 0) {
+            const updatedFiles = filesRes.files.map(file => {
+              const sendAt = moment(file.time).format("DD-MM-YY HH:mm")
+              return { ...file, time: sendAt, isDownloading: true }
+            })
+            setCaseFile(updatedFiles)
+          } else {
+            setCaseFile([])
+          }
         } catch (error) {
-            console.error(`Error fetching case files: ${error}`);
-            setCaseFile([]);
+          console.error(`Error fetching case files: ${error}`)
+          setCaseFile([])
         }
-    }, [currentCase, setCaseFile]);
+      }
   
     useEffect(() => {
         handleFetchFiles();
         return () => {
             setCaseFile([]);
         };
-    }, [handleFetchFiles]);
+    }, []);
   
     // Archive Chat
     const onArchievingChat = async () => {
@@ -1363,7 +1357,7 @@ const ChatRc = () => {
         return () => {
             setSearchedMessages([]);
         };
-    }, [searchMessageText,messages]);
+    }, [searchMessageText]);
 
     // const handleFileDownload = async ({ id, filename }) => {
     //   getFileFromGFS(
@@ -1415,7 +1409,7 @@ const ChatRc = () => {
             const elementid = searchedMessages[searchIndex]?._id;
             document.getElementById(elementid)?.scrollIntoView(false);
         }
-    }, [searchIndex,searchedMessages]);
+    }, [searchIndex]);
 
     //Resetting page whiule changing Tab
     useEffect(() => {
@@ -1446,77 +1440,75 @@ const ChatRc = () => {
         if (currentCase) {
             onGettingSubgroups();
         }
-    }, [currentCase, onGettingSubgroups]);
+    }, [currentCase]);
 
     useEffect(() => {
         if (currentChat) {
-            setRecorder([]);
-            setcurMessage('');
-            setMentionsArray(
-                currentChat.groupMembers
-                    .filter(m => m?.id?._id) // filter out members with null IDs
-                    .map(m => ({
-                        id: m?.id?._id,
-                        display: m?.id?.firstname + ' ' + m?.id?.lastname,
-                    }))
-            );
-            setReceivers(
-                currentChat.groupMembers
-                    .filter(m => m?.id?._id && m.id?._id !== currentUser.userID) // filter out members with null IDs and current user
-                    .map(r => r.id?._id)
-            );
-            // const filteredNotifications1 = notifications?.filter(
-            //   n =>{
-            //   const a = n?.groupId !== currentChat?._id
-            //    return  a
-            // }
-            // )
-            // console.log("FN1:",filteredNotifications1)
-            // const filteredNotifications = filteredNotifications1?.filter(
-            //   n =>{
-            //     const b = n?.currentChat?._id !== currentChat?._id
-            //     console.log("b ",n?.currentChat?._id,currentChat?._id)
-            //    return  b
-            // }
-            // )
-            // console.log("FN:",filteredNotifications)
-
-            // setNotifications(filteredNotifications)
-            setNotifications(
-                notifications.filter(n => n.groupId !== currentChat?._id)
-            );
-
-            const onGettingGroupMessages = async () => {
-                setChatLoader(true);
-                const payload = {
-                    groupId: currentChat?._id,
-                    userId: currentUser?.userID,
-                };
-                const res = await getMessagesByUserIdandGroupId(payload);
-                if (res.success) {
-                    setMessages(res.groupMessages);
-                } else {
-                    console.log('Failed to fetch Group message', res);
-                }
-                setChatLoader(false);
-            };
-            onGettingGroupMessages();
+          setRecorder([])
+          setcurMessage("")
+          setMentionsArray(
+            currentChat.groupMembers
+              .filter(m => m?.id?._id) // filter out members with null IDs
+              .map(m => ({
+                id: m?.id?._id,
+                display: m?.id?.firstname + " " + m?.id?.lastname,
+              }))
+          )
+          setReceivers(
+            currentChat.groupMembers
+              .filter(m => m?.id?._id && m.id?._id !== currentUser.userID) // filter out members with null IDs and current user
+              .map(r => r.id?._id)
+          )
+          // const filteredNotifications1 = notifications?.filter(
+          //   n =>{
+          //   const a = n?.groupId !== currentChat?._id
+          //    return  a
+          // }
+          // )
+          // console.log("FN1:",filteredNotifications1)
+          // const filteredNotifications = filteredNotifications1?.filter(
+          //   n =>{
+          //     const b = n?.currentChat?._id !== currentChat?._id
+          //     console.log("b ",n?.currentChat?._id,currentChat?._id)
+          //    return  b
+          // }
+          // )
+          // console.log("FN:",filteredNotifications)
+          // setNotifications(filteredNotifications)
+          setNotifications(
+            notifications.filter(n => n.groupId !== currentChat?._id)
+          )
+          const onGettingGroupMessages = async () => {
+            setChatLoader(true)
+            const payload = {
+              groupId: currentChat?._id,
+              userId: currentUser?.userID,
+            }
+            const res = await getMessagesByUserIdandGroupId(payload)
+            if (res.success) {
+              setMessages(res.groupMessages)
+            } else {
+              console.log("Failed to fetch Group message", res)
+            }
+            setChatLoader(false)
+          }
+          onGettingGroupMessages()
         }
-    }, [currentChat, currentUser?.userID]);
+      }, [currentChat])
 
     //SideEffect while contact page changes
     useEffect(() => {
-        const fetchData = async () => {
-            if (activeTab === '3' && contactPage !== 1 && contactPage <= totalPages?.users) {
-                await onGetContacts({ isSearch: false });
-            }
-            if (activeTab === '3' && contactPage === 1) {
-                await onGetContacts({ isSearch: true });
-            }
-        };
-  
-        fetchData();
-    }, [activeTab, contactPage, totalPages?.users]);
+        if (
+          activeTab === "3" &&
+          contactPage !== 1 &&
+          contactPage <= totalPages?.users
+        ) {
+          onGetContacts({ isSearch: false })
+        }
+        if (activeTab === "3" && contactPage === 1) {
+          onGetContacts({ isSearch: true })
+        }
+      }, [contactPage])
   
 
     //SideEffect while case page changes
@@ -1575,14 +1567,14 @@ const ChatRc = () => {
             setactiveTab('1');
             setCurrentChat(tempChat);
         }
-    }, [privateChatId, pageLoader,chats,setCurrentChat]);
+    }, [privateChatId, pageLoader]);
     useEffect(() => {
         if (privateReplyChatId && !pageLoader) {
             const tempChat = chats?.find(ch => ch?._id === privateReplyChatId);
             setactiveTab('1');
             setCurrentChat(tempChat);
         }
-    }, [privateReplyChatId, pageLoader,chats,setCurrentChat]);
+    }, [privateReplyChatId, pageLoader]);
 
     useEffect(() => {
         if (groupReplyChatId && caseReplyChatId && !pageLoader && !caseLoading) {
@@ -1592,7 +1584,7 @@ const ChatRc = () => {
             setCurrentCase(tempCase);
             setCurrentChat(groupChat);
         }
-    }, [groupReplyChatId, pageLoader, caseReplyChatId, caseLoading,allgroups,allCases,setCurrentChat]);
+    }, [groupReplyChatId, pageLoader, caseReplyChatId, caseLoading]);
     useEffect(() => {
         if (groupChatId && caseChatId && !pageLoader && !caseLoading) {
             const groupChat = allgroups?.find(gch => gch?._id === groupChatId);
@@ -1601,7 +1593,7 @@ const ChatRc = () => {
             setCurrentCase(tempCase);
             setCurrentChat(groupChat);
         }
-    }, [groupChatId, pageLoader, caseChatId, caseLoading,allgroups,allCases,setCurrentChat]);
+    }, [groupChatId, pageLoader, caseChatId, caseLoading]);
     // useEffect(() => {
     //   if (groupChatId && caseChatId && !pageLoader && !caseLoading) {
     //     const groupChat = allgroups?.find(gch => gch?._id === groupChatId)
@@ -1637,21 +1629,6 @@ const ChatRc = () => {
     // Use the sortedCases array for further processing
     };
 
-    const handleClientId = () => {
-        const sortedclients = [...clients].sort((a, b) => {
-            const caseNameA = a.clientId.toUpperCase(); // Convert case names to uppercase for case-insensitive sorting
-            const caseNameB = b.clientId.toUpperCase();
-
-            if (caseNameA < caseNameB) {
-                return -1;
-            }
-            if (caseNameA > caseNameB) {
-                return 1;
-            }
-            return 0;
-        });
-        setClients(sortedclients);
-    };
     const handlecreatedAt = () => {
         const sortedCases = [...allCases].sort((a, b) => {
             const dateA = new Date(a.createdAt);
@@ -1859,7 +1836,7 @@ const ChatRc = () => {
                             open={newClientModelOpen}
                             toggle={toggleNewClientModelOpen}
                             size="lg"
-                            modalTitle="Create NewClient"
+                            modalTitle="Create New Client"
                             footer={false}
                         >
                             <DynamicSuspense>
@@ -2135,7 +2112,7 @@ const ChatRc = () => {
                                                     className="btn btn-info btn-rounded mb-2 col-6"
                                                     onClick={() => setNewClientModelOpen(true)}
                                                 >
-                          Create NewClient
+                          Create New Client
                                                     <i className="bx bx-pencil font-size-16 align-middle me-2 mx-2"></i>
                                                 </button>}
 
@@ -2162,9 +2139,7 @@ const ChatRc = () => {
                                                         </DropdownToggle>
                                                         {currentAttorney ? (
                                                             <DropdownMenu>
-                                                                <DropdownItem onClick={handleClientId}>
-                                  Client Id
-                                                                </DropdownItem>
+                                                              
                                                                 <DropdownItem onClick={handleClientName}>
                                   Client Name
                                                                 </DropdownItem>
