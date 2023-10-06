@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom';
@@ -10,19 +10,22 @@ import { SocketProvider } from '../src/rainComputing/contextProviders/SocketProv
 import { NotificationsProvider } from '../src/rainComputing/contextProviders/NotificationsProvider';
 import { UserProvider } from '../src/rainComputing/contextProviders/UserProvider';
 
+const root = document.getElementById('root');
+
 const app = (
-    <Provider store={store}>
-        <UserProvider>
-            <SocketProvider>
-                <NotificationsProvider>
-                    <BrowserRouter>
-                        <App />
-                    </BrowserRouter>
-                </NotificationsProvider>
-            </SocketProvider>
-        </UserProvider>
-    </Provider>
+  <Provider store={store}>
+    <UserProvider>
+      <SocketProvider>
+        <NotificationsProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </NotificationsProvider>
+      </SocketProvider>
+    </UserProvider>
+  </Provider>
 );
 
-ReactDOM.render(app, document.getElementById('root'));
+const rootElement = createRoot(root);
+rootElement.render(app);
 serviceWorker.unregister();
