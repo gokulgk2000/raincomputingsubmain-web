@@ -1535,7 +1535,7 @@ const ChatRc = () => {
             ongetAllCases({ isSet: true, isSearch: true });
         }
     }, [searchText]);
-
+console.log("messages",messages)
     useEffect(() => {
         const userid = query.get('uid');
         if (userid && userid !== currentUser?.userID) {
