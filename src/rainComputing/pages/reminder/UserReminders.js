@@ -40,7 +40,7 @@ const UserReminders = () => {
             setPageLoader(false);
         };
         getAllReminderById();
-    });
+    },[]);
 
     const handleRemove = async () => {
         const payload = {
