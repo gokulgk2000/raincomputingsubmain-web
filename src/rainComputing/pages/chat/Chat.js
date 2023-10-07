@@ -256,7 +256,6 @@ const ChatRc = () => {
     const [curEditMessageId, setCurEditMessageId] = useState('');
     const [curReminderMessageId, setCurReminderMessageId] = useState(null);
     const [isDeleteMsg, setIsDeleteMsg] = useState(false);
-    console.log('isDeleteMsg',isDeleteMsg);
     const [emailModal, setEmailModal] = useState(false);
     const [email, setEmail] = useState('');
     const [searchIndex, setSearchIndex] = useState(0);
