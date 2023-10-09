@@ -1,150 +1,145 @@
-import React, { useEffect, useState } from "react"
-import { withRouter } from "react-router-dom"
-import PropTypes from "prop-types"
+import React, { useEffect, useState } from 'react';
+import { withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 //actions
 import {
-  changeLayout,
-  changeTopbarTheme,
-  changeLayoutWidth,
-  showRightSidebarAction,
-} from "../../store/actions"
+    changeLayout,
+    changeTopbarTheme,
+    changeLayoutWidth,
+    showRightSidebarAction,
+} from '../../store/actions';
 
 //redux
-import { useSelector, useDispatch } from "react-redux"
+import { useSelector, useDispatch } from 'react-redux';
 
 //components
-import Navbar from "./Navbar"
-import Header from "./Header"
-import Footer from "./Footer"
-import RightSidebar from "../CommonForBoth/RightSidebar"
-import { useLocation } from 'react-router-dom';
+import Header from './Header';
+import Footer from './Footer';
 
 const Layout = props => {
-  const dispatch = useDispatch()
-  const location = useLocation();
+    const dispatch = useDispatch();
 
-  const ischat = location.pathname.includes('/chat-rc');
-
-  const { topbarTheme, layoutWidth, isPreloader, showRightSidebar } =
+    const { topbarTheme, layoutWidth, isPreloader } =
     useSelector(state => ({
-      topbarTheme: state.Layout.topbarTheme,
-      layoutWidth: state.Layout.layoutWidth,
-      isPreloader: state.Layout.isPreloader,
-      showRightSidebar: state.Layout.showRightSidebar,
-    }))
+        topbarTheme: state.Layout.topbarTheme,
+        layoutWidth: state.Layout.layoutWidth,
+        isPreloader: state.Layout.isPreloader,
+        showRightSidebar: state.Layout.showRightSidebar,
+    }));
 
-  /*
+    /*
   document title
   */
-  useEffect(() => {
-    const title = props.location.pathname
-    let currentage = title.charAt(1).toUpperCase() + title.slice(2)
+    useEffect(() => {
+        const title = props.location.pathname;
+        let currentage = title.charAt(1).toUpperCase() + title.slice(2);
 
-    document.title = currentage + " | HsuanyehRC"
-  }, [props.location.pathname])
+        document.title = currentage + ' | HsuanyehRC';
+    }, [props.location.pathname]);
 
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
-  //hides right sidebar on body click
-  const hideRightbar = event => {
-    var rightbar = document.getElementById("right-bar")
-    //if clicked in inside right bar, then do nothing
-    if (rightbar && rightbar.contains(event.target)) {
-      return
-    } else {
-      //if clicked in outside of rightbar then fire action for hide rightbar
-      dispatch(showRightSidebarAction(false))
-    }
-  }
+    //hides right sidebar on body click
+  
 
-  /*
+    /*
   layout settings
   */
-  useEffect(() => {
-    dispatch(changeLayout("horizontal"))
-  }, [dispatch])
+    useEffect(() => {
+        dispatch(changeLayout('horizontal'));
+    }, [dispatch]);
 
-  useEffect(() => {
-    //init body click event fot toggle rightbar
-    document.body.addEventListener("click", hideRightbar, true)
+    useEffect(() => {
+        const hideRightbar = event => {
+            var rightbar = document.getElementById('right-bar');
+            //if clicked in inside right bar, then do nothing
+            if (rightbar && rightbar.contains(event.target)) {
+                return;
+            } else {
+                //if clicked in outside of rightbar then fire action for hide rightbar
+                dispatch(showRightSidebarAction(false));
+            }
+        };
+        //init body click event fot toggle rightbar
+        document.body.addEventListener('click', hideRightbar, true);
 
-    if (isPreloader === true) {
-      document.getElementById("preloader").style.display = "block"
-      document.getElementById("status").style.display = "block"
+        if (isPreloader === true) {
+            document.getElementById('preloader').style.display = 'block';
+            document.getElementById('status').style.display = 'block';
 
-      setTimeout(function () {
-        document.getElementById("preloader").style.display = "none"
-        document.getElementById("status").style.display = "none"
-      }, 2500)
-    } else {
-      document.getElementById("preloader").style.display = "none"
-      document.getElementById("status").style.display = "none"
-    }
-  }, [isPreloader])
+            setTimeout(function () {
+                document.getElementById('preloader').style.display = 'none';
+                document.getElementById('status').style.display = 'none';
+            }, 2500);
+        } else {
+            document.getElementById('preloader').style.display = 'none';
+            document.getElementById('status').style.display = 'none';
+        }
+    }, [isPreloader,dispatch]);
 
-  useEffect(() => {
-    if (topbarTheme) {
-      dispatch(changeTopbarTheme(topbarTheme))
-    }
-  }, [dispatch, topbarTheme])
+    useEffect(() => {
+        if (topbarTheme) {
+            dispatch(changeTopbarTheme(topbarTheme));
+        }
+    }, [dispatch, topbarTheme]);
 
-  useEffect(() => {
-    if (layoutWidth) {
-      dispatch(changeLayoutWidth(layoutWidth))
-    }
-  }, [dispatch, layoutWidth])
+    useEffect(() => {
+        if (layoutWidth) {
+            dispatch(changeLayoutWidth(layoutWidth));
+        }
+    }, [dispatch, layoutWidth]);
 
-  const [isMenuOpened, setIsMenuOpened] = useState(false)
-  const openMenu = () => {
-    setIsMenuOpened(!isMenuOpened)
-  }
+    const [isMenuOpened, setIsMenuOpened] = useState(false);
+    const openMenu = () => {
+        setIsMenuOpened(!isMenuOpened);
+    };
 
-  return (
-    <React.Fragment>
-      <div id="preloader">
-        <div id="status">
-          <div className="spinner-chase">
-            <div className="chase-dot" />
-            <div className="chase-dot" />
-            <div className="chase-dot" />
-            <div className="chase-dot" />
-            <div className="chase-dot" />
-            <div className="chase-dot" />
-          </div>
-        </div>
-      </div>
+    return (
+        <React.Fragment>
+            <div id="preloader">
+                <div id="status">
+                    <div className="spinner-chase">
+                        <div className="chase-dot" />
+                        <div className="chase-dot" />
+                        <div className="chase-dot" />
+                        <div className="chase-dot" />
+                        <div className="chase-dot" />
+                        <div className="chase-dot" />
+                    </div>
+                </div>
+            </div>
 
-      <div id="layout-wrapper">
-        <Header
-          theme={topbarTheme}
-          isMenuOpened={isMenuOpened}
-          openLeftMenuCallBack={openMenu}
-        />
-        {/* <Navbar menuOpen={isMenuOpened} /> */}
-        <div className="main-content">{props.children}</div>
+            <div id="layout-wrapper">
+                <Header
+                    theme={topbarTheme}
+                    isMenuOpened={isMenuOpened}
+                    openLeftMenuCallBack={openMenu}
+                />
+                {/* <Navbar menuOpen={isMenuOpened} /> */}
+                <div className="main-content">{props.children}</div>
         
-        <Footer />
+                <Footer />
       
-      </div>
+            </div>
 
-      {/* {showRightSidebar ? <RightSidebar /> : null} */}
-    </React.Fragment>
-  )
-}
+            {/* {showRightSidebar ? <RightSidebar /> : null} */}
+        </React.Fragment>
+    );
+};
 
 Layout.propTypes = {
-  changeLayout: PropTypes.func /*  */,
-  changeLayoutWidth: PropTypes.func,
-  changeTopbarTheme: PropTypes.func,
-  children: PropTypes.object,
-  isPreloader: PropTypes.any,
-  layoutWidth: PropTypes.any,
-  location: PropTypes.object,
-  showRightSidebar: PropTypes.any,
-  topbarTheme: PropTypes.any,
-}
+    changeLayout: PropTypes.func /*  */,
+    changeLayoutWidth: PropTypes.func,
+    changeTopbarTheme: PropTypes.func,
+    children: PropTypes.object,
+    isPreloader: PropTypes.any,
+    layoutWidth: PropTypes.any,
+    location: PropTypes.object,
+    showRightSidebar: PropTypes.any,
+    topbarTheme: PropTypes.any,
+};
 
-export default withRouter(Layout)
+export default withRouter(Layout);

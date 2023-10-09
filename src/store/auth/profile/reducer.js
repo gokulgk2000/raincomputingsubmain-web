@@ -1,25 +1,25 @@
-import { PROFILE_ERROR, PROFILE_SUCCESS,  RESET_PROFILE_FLAG } from "./actionTypes";
+import { PROFILE_ERROR,RESET_PROFILE_FLAG } from './actionTypes';
 
 const initialState = {
-  error: "",
-  success: "",
+    error: '',
+    success: '',
 };
 
 const profile = (state = initialState, action) => {
-  switch (action.type) {
+    switch (action.type) {
     
     
     case PROFILE_ERROR:
-      state = { ...state, error: action.payload };
-      break;
+        state = { ...state, error: action.payload };
+        break;
     case RESET_PROFILE_FLAG:
-      state = { ...state, success: null };
-      break;
+        state = { ...state, success: null };
+        break;
     default:
-      state = { ...state };
-      break;
-  }
-  return state;
+        state = { ...state };
+        break;
+    }
+    return state;
 };
 
 export default profile;

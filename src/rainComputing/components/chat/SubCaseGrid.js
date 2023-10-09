@@ -1,27 +1,27 @@
-import React, { useEffect, useState } from "react"
-import PropTypes from "prop-types"
-import classNames from "classnames"
-import { Col, Collapse, Row, Tooltip } from "reactstrap"
-import "./style/case-grid.scss"
-import Chevron from "../../../../src/assets/icon/chevron-down.svg"
-import profile from "../../../../src/assets/images/avatar-defult.jpg"
-import { useToggle } from "../../../../src/rainComputing/helpers/hooks/useToggle"
-import DynamicModel from "../modals/DynamicModal"
-import CaseMembers from "./CaseMembers"
-import CaseFilesGrid from "./CaseFilesGrid"
-import DeleteModal from "../modals/DeleteModal"
-import { useUser } from "../../../../src/rainComputing/contextProviders/UserProvider"
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import classNames from "classnames";
+import { Col, Collapse, Row } from "reactstrap";
+import "./style/case-grid.scss";
+import Chevron from "../../../../src/assets/icon/chevron-down.svg";
+import profile from "../../../../src/assets/images/avatar-defult.jpg";
+import { useToggle } from "../../../../src/rainComputing/helpers/hooks/useToggle";
+import DynamicModel from "../modals/DynamicModal";
+import CaseMembers from "./CaseMembers";
+import CaseFilesGrid from "./CaseFilesGrid";
+import DeleteModal from "../modals/DeleteModal";
+import { useUser } from "../../../../src/rainComputing/contextProviders/UserProvider";
 import {
   LeaveGroup,
   caseIdbySubCase,
-} from "../../../../src/rainComputing/helpers/backend_helper"
-import toastr from "toastr"
-import DocketResultModel from "./models/DocketResultModel"
-import EventMaster from "./models/EventMaster"
-import DynamicSuspense from "../loader/DynamicSuspense"
-import EventCalender from "./models/EventCalender"
-import { useHistory } from "react-router-dom"
-import SubCase from "./models/SubCase"
+} from "../../../../src/rainComputing/helpers/backend_helper";
+import toastr from "toastr";
+import DocketResultModel from "./models/DocketResultModel";
+import EventMaster from "./models/EventMaster";
+import DynamicSuspense from "../loader/DynamicSuspense";
+import EventCalender from "./models/EventCalender";
+import { useHistory } from "react-router-dom";
+import SubCase from "./models/SubCase";
 
 const SubCaseGrid = ({
   caseData,
@@ -33,32 +33,32 @@ const SubCaseGrid = ({
   notifyCountforCase,
   ongetAllCases,
 }) => {
-  const history = useHistory()
-  const { toggleOpen: notifyOn, toggleIt: setNotifyOn } = useToggle(false)
-  const { currentUser } = useUser()
-  const [casedetails, setCaseDetails] = useState(caseData)
-  const [caseIdSubCases, setCaseIdSubCases] = useState([])
-  const [newCaseId, setNewCaseId] = useState()
+  const history = useHistory();
+  const { currentUser } = useUser();
+  const [casedetails] = useState(caseData);
+  const [caseIdSubCases, setCaseIdSubCases] = useState([]);
+  const [newCaseId] = useState();
+  console.log("caseIdSubCases", caseIdSubCases);
   const {
     toggleOpen: membersModelOpen,
     setToggleOpen: setMembersModelOpen,
     toggleIt: toggleMembersModelOpen,
-  } = useToggle(false)
+  } = useToggle(false);
   const {
     toggleOpen: leavegroupModalOpen,
     setToggleOpen: setLeaveGroupModalOpen,
     toggleIt: toggleleavegroupModal,
-  } = useToggle(false)
+  } = useToggle(false);
   const {
     toggleOpen: filesModelOpen,
     setToggleOpen: setFilesModelOpen,
     toggleIt: toggleFilesModelOpen,
-  } = useToggle(false)
+  } = useToggle(false);
   const {
     toggleOpen: docketModelOpen,
-    setToggleOpen: setDocketModelOpen,
+    // setToggleOpen: setDocketModelOpen,
     toggleIt: toggleDocketModelOpen,
-  } = useToggle(false)
+  } = useToggle(false);
   // const {
   //   toggleOpen: createEventMasterModelOpen,
   //   setToggleOpen: setCreateEventMasterModelOpen,
@@ -68,20 +68,20 @@ const SubCaseGrid = ({
     toggleOpen: eventMasterModelOpen,
     setToggleOpen: setEventMasterModelOpen,
     toggleIt: toggleEventMasterModelOpen,
-  } = useToggle(false)
+  } = useToggle(false);
   const {
     toggleOpen: eventCalenderModelOpen,
-    setToggleOpen: setEventCalenderModelOpen,
+    // setToggleOpen: setEventCalenderModelOpen,
     toggleIt: toggleEventCalenderModelOpen,
-  } = useToggle(false)
+  } = useToggle(false);
   const {
     toggleOpen: subCaseModelOpen,
     setToggleOpen: setNewSubCaseModelOpen,
     toggleIt: toggleNewSubCaseModelOpen,
-  } = useToggle(false)
+  } = useToggle(false);
   const handleLeave = () => {
-    setLeaveGroupModalOpen(true)
-  }
+    setLeaveGroupModalOpen(true);
+  };
   const AccordionContainer = ({ children, handleAccordionClick }) => (
     <Row
       className="align-items-baseline my-2 text-muted pointer"
@@ -90,42 +90,47 @@ const SubCaseGrid = ({
     >
       <Col xs={11}>{children}</Col>
       <Col xs={1} style={{ padding: 0 }}>
-        <img src={Chevron} className="accordion-icon-right" />
+        <img
+          alt="Accordion Icon"
+          src={Chevron}
+          className="accordion-icon-right"
+        />
       </Col>
     </Row>
-  )
-  const handleAccordionClick = caseData => {
+  );
+  const handleAccordionClick = (caseData) => {
     history.push({
       pathname: "/case_events",
       state: { caseData },
-    })
-  }
+    });
+  };
 
   const handleLeaveGroup = async () => {
     const payload = {
       caseId: casedetails?._id,
       memberId: currentUser?.userID,
-    }
-    const res = await LeaveGroup(payload)
+    };
+    const res = await LeaveGroup(payload);
     if (res.success) {
-      await ongetAllCases({ isSet: false })
-      toastr.success(`case left  successfully`, "Success")
-      setLeaveGroupModalOpen(false)
+      await ongetAllCases({ isSet: false });
+      toastr.success("case left  successfully", "Success");
+      setLeaveGroupModalOpen(false);
     }
-  }
- 
+  };
+
   const onGetCaseIdSubcases = async () => {
     const payload = {
       caseId: casedetails?.caseId,
-    }
-    const res = await caseIdbySubCase(payload)
+      userID: caseData?.userID,
+    };
+    const res = await caseIdbySubCase(payload);
     if (res.success) {
-      setCaseIdSubCases(res?.caseIdSubCases)
+      setCaseIdSubCases(res?.caseIdSubCases);
     }
-  }
+  };
   useEffect(() => {
-    onGetCaseIdSubcases()
-  }, [])
+    onGetCaseIdSubcases();
+  });
   return (
     <>
       <>
@@ -179,7 +184,7 @@ const SubCaseGrid = ({
         >
           <DynamicSuspense>
             <SubCase
-              ongetAllCases={ongetAllCases}
+              // ongetAllCases={ongetAllCases}
               setModalOpen={setNewSubCaseModelOpen}
               caseId={caseData}
               newCaseId={newCaseId}
@@ -241,8 +246,27 @@ const SubCaseGrid = ({
             className="pointer"
             onClick={() => handleSelectingCase(caseData)}
           >
-            <span className="fw-medium">{caseData.caseId}</span>
-            <span className="text-muted font-size-12 ms-2">
+            <svg
+              version="1.1"
+              viewBox="0 0 122.88 89.09"
+              style={{
+                cursor: "pointer",
+                width: "15px",
+                height: "15px",
+                fill: "#f0b40e",
+              }}
+            >
+              <path
+                className="st0"
+                d="M3.97,9.75l-3.93,8.73l122.77,0.01l-3.96-8.74H55.82c-1.59,0-2.88-1.29-2.88-2.88V0H11.97v6.87 c0,1.59-1.29,2.88-2.88,2.88H3.97L3.97,9.75L3.97,9.75z"
+              />
+              <path
+                className="st1"
+                d="M4.63,18.48H0l7.03,67.03c0.11,1.07,0.55,2.02,1.2,2.69c0.55,0.55,1.28,0.89,2.11,0.89h100.1 c0.82,0,1.51-0.33,2.05-0.87c0.68-0.68,1.13-1.67,1.28-2.79l9.1-66.94H4.63V18.48L4.63,18.48z"
+              />
+            </svg>{" "}
+            {/* <span className="fw-medium">{caseData.caseId}</span> */}
+            <span className="text-muted fw-medium font-size-12 ms-2">
               {caseData.caseName}
             </span>
           </Col>
@@ -259,9 +283,11 @@ const SubCaseGrid = ({
             ></i> */}
             <img
               src={Chevron}
+              alt="Accordion Icon" // Provide a descriptive text for the image
               onClick={() => onAccordionButtonClick(index)}
               aria-expanded={index === active}
               className="accordion-icon"
+              style={{ cursor: "pointer" }}
             />
           </Col>
         </Row>
@@ -390,8 +416,8 @@ const SubCaseGrid = ({
         </div>
       </li>
     </>
-  )
-}
+  );
+};
 
 SubCaseGrid.propTypes = {
   caseData: PropTypes.object,
@@ -404,6 +430,6 @@ SubCaseGrid.propTypes = {
   selected: PropTypes.bool,
   notifyCountforCase: PropTypes.func,
   handleAccordionClick: PropTypes.func,
-}
+};
 
-export default SubCaseGrid
+export default SubCaseGrid;

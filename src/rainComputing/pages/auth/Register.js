@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react"
-import MetaTags from "react-meta-tags"
+import React, { useState } from "react";
+import MetaTags from "react-meta-tags";
 import {
   Row,
   Col,
@@ -11,35 +11,35 @@ import {
   Label,
   Form,
   FormFeedback,
-} from "reactstrap"
+} from "reactstrap";
 
 // Formik Validation
-import * as Yup from "yup"
-import { useFormik } from "formik"
-import { useHistory } from "react-router-dom"
-import { Link } from "react-router-dom"
+import * as Yup from "yup";
+import { useFormik } from "formik";
+import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // import images
-import profileImg from "../../../../src/assets/images/profile-img.png"
-import logo from "../../../../src/assets/images/rain-drop.png"
-import login from "../../../../src/assets/images/loginanimi.png"
-import { userRegisteration } from "../../../../src/rainComputing/helpers/backend_helper"
-import toastr from "toastr"
-import "toastr/build/toastr.min.css"
-import { useToggle } from "../../../../src/rainComputing/helpers/hooks/useToggle"
-import TermsModal from "../../../../src/rainComputing/components/modals/TermsModal"
-import DynamicModel from '../../../../src/rainComputing/components/modals/DynamicModal';
-import DynamicSuspense from '../../../../src/rainComputing/components/loader/DynamicSuspense';
+import profileImg from "../../../../src/assets/images/profile-img.png";
+import logo from "../../../../src/assets/images/rain-drop.png";
+import login from "../../../../src/assets/images/loginanimi.png";
+import { userRegisteration } from "../../../../src/rainComputing/helpers/backend_helper";
+import toastr from "toastr";
+import "toastr/build/toastr.min.css";
+import { useToggle } from "../../../../src/rainComputing/helpers/hooks/useToggle";
+import TermsModal from "../../../../src/rainComputing/components/modals/TermsModal";
+import DynamicModel from "../../../../src/rainComputing/components/modals/DynamicModal";
+import DynamicSuspense from "../../../../src/rainComputing/components/loader/DynamicSuspense";
 const RainRegister = () => {
-  let history = useHistory()
-  const [registrationError, setRegistrationError] = useState("")
-  const [registrationSuccess, setRegistrationSuccess] = useState("")
-  const [loading, setLoading] = useState(false)
+  let history = useHistory();
+  const [registrationError, setRegistrationError] = useState("");
+  const [registrationSuccess, setRegistrationSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
   const {
     toggleOpen: termsModelOpen,
     setToggleOpen: setTermsModelOpen,
     toggleIt: toggleTermsModelOpen,
-  } = useToggle(false)
+  } = useToggle(false);
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -59,23 +59,23 @@ const RainRegister = () => {
         .matches(/^(?=.{5,})/, "Must Contain 5 Characters"),
     }),
     onSubmit: async (values, onSubmitProps) => {
-      setLoading(true)
+      setLoading(true);
       //   dispatch(registerUser({ ...values, aflag: true }))
-      const res = await userRegisteration({ ...values, aflag: true })
+      const res = await userRegisteration({ ...values, aflag: true });
       if (res.success) {
-        setRegistrationError("")
-        setRegistrationSuccess(res.msg)
+        setRegistrationError("");
+        setRegistrationSuccess(res.msg);
         // onSubmitProps.setSubmitting(false) //Vidhya
-        onSubmitProps.resetForm()
-        toastr.success(`Registered successfully `, "Success")
-        history.push("/login")
+        onSubmitProps.resetForm();
+        toastr.success("Registered successfully ", "Success");
+        history.push("/login");
       } else {
-        setRegistrationSuccess("")
-        setRegistrationError(res.msg)
+        setRegistrationSuccess("");
+        setRegistrationError(res.msg);
       }
-      setLoading(false)
+      setLoading(false);
     },
-  })
+  });
 
   return (
     <React.Fragment>
@@ -135,10 +135,10 @@ const RainRegister = () => {
                       <div className="">
                         <Form
                           className="form-horizontal"
-                          onSubmit={e => {
-                            e.preventDefault()
-                            validation.handleSubmit()
-                            return false
+                          onSubmit={(e) => {
+                            e.preventDefault();
+                            validation.handleSubmit();
+                            return false;
                           }}
                         >
                           {registrationSuccess && (
@@ -255,7 +255,7 @@ const RainRegister = () => {
                             ) : null}
                           </div>
                           <div className="mt-1">
-                          <DynamicModel
+                            <DynamicModel
                               open={termsModelOpen}
                               toggle={toggleTermsModelOpen}
                               size="lg"
@@ -264,8 +264,7 @@ const RainRegister = () => {
                               isClose={true}
                             >
                               <DynamicSuspense>
-                                <TermsModal 
-                                setModalOpen={setTermsModelOpen}/>
+                                <TermsModal setModalOpen={setTermsModelOpen} />
                               </DynamicSuspense>
                             </DynamicModel>
                             <p className="">
@@ -276,13 +275,14 @@ const RainRegister = () => {
                                 id="flexCheckDefault"
                               />
                               By registering you agree to the raincomputing{" "}
-                             
-                              <a
+                              <button
                                 className="text-primary font-sm"
-                               onClick={()=>{setTermsModelOpen(true)}}
+                                onClick={() => {
+                                  setTermsModelOpen(true);
+                                }}
                               >
                                 Terms of Use
-                              </a>
+                              </button>
                             </p>
                           </div>
                           <div className="mt-3 d-grid">
@@ -339,7 +339,7 @@ const RainRegister = () => {
         </div>
       </div>
     </React.Fragment>
-  )
-}
+  );
+};
 
-export default RainRegister
+export default RainRegister;
