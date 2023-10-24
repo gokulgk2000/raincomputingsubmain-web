@@ -41,7 +41,7 @@ const Header = (props) => {
                   alt="Image"
                 />
                 <h4 className=" font d-flex justify-content-md-between pt-4 text-danger-emphasis px-2">
-                  HSUANYEH LAW GROUPS, PC
+                  HSUANYEH LAW GROUP, PC
                 </h4>
                         {/* <div className="navbar-brand-box">
                             <Link to="/" className="logo logo-dark">
