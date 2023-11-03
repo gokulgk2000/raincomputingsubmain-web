@@ -169,6 +169,7 @@ const ChatRc = () => {
     } = useChat();
 
     const { currentAttorney } = useUser();
+    console.log("currentAttorney",currentAttorney)
     const privateChatId = query.get('p_id');
     const privateReplyChatId = query.get('rp_id');
     const groupChatId = query.get('g_id');
@@ -1131,29 +1132,31 @@ const ChatRc = () => {
       } 
 
       const handleFetchFiles = async () => {
-        try {
-          const filesRes = await getCaseFiles(currentCase?._id)
-          if (filesRes.success && filesRes?.files?.length > 0) {
-            const updatedFiles = filesRes.files.map(file => {
-              const sendAt = moment(file.time).format("DD-MM-YY HH:mm")
-              return { ...file, time: sendAt, isDownloading: true }
-            })
-            setCaseFile(updatedFiles)
-          } else {
-            setCaseFile([])
+        if (currentCase && currentCase._id) {
+            try {
+              const filesRes = await getCaseFiles({ caseId: currentCase._id });
+              if (filesRes.success && filesRes?.files?.length > 0) {
+                const updatedFiles = filesRes.files.map(file => {
+                  const sendAt = moment(file.time).format("DD-MM-YY HH:mm");
+                  return { ...file, time: sendAt, isDownloading: true };
+                });
+                setCaseFile(updatedFiles);
+              } else {
+                setCaseFile([]);
+              }
+            } catch (error) {
+              console.error(`Error fetching case files: ${error}`);
+              setCaseFile([]);
+            }
           }
-        } catch (error) {
-          console.error(`Error fetching case files: ${error}`)
-          setCaseFile([])
-        }
-      }
-  
-    useEffect(() => {
-        handleFetchFiles();
-        return () => {
-            setCaseFile([]);
         };
-    }, []);
+        
+        useEffect(() => {
+          handleFetchFiles();
+          return () => {
+            setCaseFile([]);
+          }
+        }, [currentCase]);
   
     // Archive Chat
     const onArchievingChat = async () => {
@@ -2107,14 +2110,14 @@ const ChatRc = () => {
                                         </TabPane>
                                         <TabPane tabId="2">
                                             <div className="d-flex  gap-2 my-2">
-                                                {currentAttorney && <button
+                                                {currentAttorney &&(<button
                                                     type="button"
                                                     className="btn btn-info btn-rounded mb-2 col-6"
                                                     onClick={() => setNewClientModelOpen(true)}
                                                 >
                           Create New Client
                                                     <i className="bx bx-pencil font-size-16 align-middle me-2 mx-2"></i>
-                                                </button>}
+                                                </button>)}
 
                                                 <div className="d-flex justify-content-center align-items-center">
                                                     <Dropdown
