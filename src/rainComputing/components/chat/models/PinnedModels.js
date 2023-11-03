@@ -113,15 +113,14 @@ const PinnedModels = ({ handleLocateMessage }) => {
                                     <div className="">
                                         {/* <i class="bi bi-person-circle fs-1" style={{ color: "#3987ed" }}></i> */}
                                         <p className="rouded-circle text-primary text pt-1 ">
-                                            <input 
-                                                type="img"
+                                            <img
                                                 className="avatar-sm me-2 rounded-circle "
                                                 src={
                                                     getSender(msg)?.profilePic
                                                         ? getSender(msg)?.profilePic
                                                         : avatar
                                                 }
-                                            ></input>
+                                            ></img>
                                             {getSender(msg)?.firstname}{' '}
                                             {getSender(msg)?.lastname}
                                         </p>

@@ -14,7 +14,7 @@ function useQuery() {
 }
 const ProjectsOverview = props => {
     const [loading, setLoading] = useState(true);
-    const [attorneyDetails,setAttorneyDetail] = useState({});
+    const [attorneyDetails,setAttorneyDetail] = useState([]);
     let query = useQuery();
 
     const getAttorneyinfo = async () => {
@@ -27,7 +27,7 @@ const ProjectsOverview = props => {
     };
     useEffect(() =>{
         getAttorneyinfo();
-    });
+    },[]);
 
     return (
         <React.Fragment>
