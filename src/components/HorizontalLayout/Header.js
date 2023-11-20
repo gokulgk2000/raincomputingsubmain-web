@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
 import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
@@ -22,33 +23,82 @@ import MobileNav from './MobileNav';
 import Reminder from '../../../src/rainComputing/pages/reminder';
 import DocketMenu from '../../../src/rainComputing/pages/docket/DocketMenu';
 import image from "../../assets/images/image.png"
+import rainlog from "../../assets/images/rainlogo.png"
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+
 const Header = (props) => {
     const { currentUser, currentAttorney } = useUser();
     const [isMobile] = useMediaQuery('764');
     const [modal_scroll, setmodal_scroll] = useState(false);
 
+    const openRainComputingSite = () => {
+        window.open("https://raincomputing.net/");
+    };
+
     const tog_scroll = () => {
         setmodal_scroll(!modal_scroll);
     };
+
     return (
         <React.Fragment>
             <header id="page-topbar">
                 <div className="d-flex justify-content-md-between flex-grow-1 col-md-12  ">
-                    <Link to="/" className="d-flex mx-4 mt-2 mb-2 ">
-                    <img className=""
-                  style={{ width: "60px", height: "60px" }}
-                  src={image}
-                  alt="Image"
-                />
-                <h4 className=" font d-flex justify-content-md-between pt-4 text-danger-emphasis px-2">
-                  HSUANYEH LAW GROUP, PC
-                </h4>
+                    <Link to="/" className="d-flex ">
+                        <img className=""
+                            style={{ width: "60px", height: "60px" }}
+                            src={image}
+                            alt="Image"
+                        />
+                        <h4 className="font d-flex justify-content-md-between pt-3 text-danger-emphasis px-2">
+                            HSUANYEH LAW GROUPS, PC
+                        </h4>
+                        <div className="p-2">
+                            <img
+                                src={rainlog}
+                                className=''
+                                id="atticon"
+                                onClick={openRainComputingSite}
+                                style={{ cursor: "pointer", width: "35px", height: "35px" }}
+                                title='Open Rain Computing Site'
+                                alt='Rain Computing Site'
+                            />
+
+
+                            <Dropdown>
+                                <DropdownToggle className="btn nav-btn" tag="i">
+                                    {/* Add any content for the dropdown toggle if needed */}
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    <DropdownItem onClick={openRainComputingSite}>
+                                        Open Rain Computing Site
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
+                        </div>
+
+
+                        {/* <script>
+                                document.addEventListener("DOMContentLoaded", function() {
+                                    // Ensure the DOM has loaded before trying to access elements
+                                    document.getElementById("backIcon").addEventListener("click", function () {
+                                        // Redirect to the specified URL
+                                        window.location.href = 'https://raincomputing.net/';
+                                    })
+        });
+                            </script> */}
+
+
+
+
+
+
+
                         {/* <div className="navbar-brand-box">
                             <Link to="/" className="logo logo-dark">
                                 <span className="logo-lg"> */}
-                                    {/* <img src={rainlglogo} alt="" height="50" /> */}
-                                   
-                                {/* </span>
+                        {/* <img src={rainlglogo} alt="" height="50" /> */}
+
+                        {/* </span>
                             </Link>
 
                             <Link to="/" className="logo logo-light  ">
@@ -71,14 +121,14 @@ const Header = (props) => {
                             <>
                                 {' '}
                                 <div>
-                                    <ul id="menunav" className="d-flex">
+                                    <ul id="menunav" className="d-flex p-4">
                                         <li id="navmen" className="">
                                             <Link to="/">Home</Link>
                                         </li>
                                         <li id="navmen" className="">
                                             <Link to="/chat-rc">
                                                 <Link className="" to="/chat-rc">
-                          ChatPro<sup>TM</sup>
+                                                    ChatPro<sup>TM</sup>
                                                 </Link>
                                             </Link>
                                         </li>
