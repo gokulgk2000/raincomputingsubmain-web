@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import {
-  Col,
-  Collapse,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  Row,
-} from "reactstrap";
+import { Col, Collapse, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row } from "reactstrap";
 import "./style/case-grid.scss";
 import Chevron from "../../../../src/assets/icon/chevron-down.svg";
 import profile from "../../../../src/assets/images/avatar-defult.jpg";
@@ -33,12 +25,9 @@ import { useHistory } from "react-router-dom";
 import SubCaseGrid from "./SubCaseGrid";
 import useAccordian from "../../../../src/rainComputing/helpers/hooks/useAccordian";
 import { useNotifications } from "../../../../src/rainComputing/contextProviders/NotificationsProvider";
-import {
-  initialNewCaseValues,
-  initialNewClientValues,
-} from "../../../../src/rainComputing/helpers/initialFormValues";
+import { initialNewCaseValues, initialNewClientValues } from "../../../../src/rainComputing/helpers/initialFormValues";
 import CreateCase from "./CreateCase";
-import EditClient from "../../../../src/rainComputing/components/chat/EditClient";
+import EditClient from "../../../../src/rainComputing/components/chat/EditClient"
 const CaseGrid = ({
   caseData,
   index,
@@ -117,19 +106,19 @@ const CaseGrid = ({
     toggleOpen: clientEditModalOpen,
     setToggleOpen: setClientEditModalOpen,
     toggleIt: toggleClientEditModal,
-  } = useToggle(false);
+  } = useToggle(false)
 
   const {
     toggleOpen: clientDeleteModalOpen,
     setToggleOpen: setClientDeleteModalOpen,
     toggleIt: toggleClientDeleteModal,
-  } = useToggle(false);
+  } = useToggle(false)
 
   const {
     toggleOpen: clientUpdateModalOpen,
     setToggleOpen: setClientUpdateModalOpen,
     toggleIt: toggleClientUpdateModalOpen,
-  } = useToggle(false);
+  } = useToggle(false)
 
   const handleLeave = () => {
     setLeaveGroupModalOpen(true);
@@ -216,22 +205,23 @@ const CaseGrid = ({
     const payload = {
       id: caseData?._id,
       deleteIt: true,
-    };
-    const res = await updateClient(payload);
+    }
+    const res = await updateClient(payload)
     if (res.success) {
       toastr.success(
         `Client ${res?.deletedClient?.clientName} has been Deleted successfully`,
         "Success"
-      );
-      await onGetAllClientNames();
+      )
+      await onGetAllClientNames()
     } else {
-      toastr.error("Failed to delete client", "Failed!!!");
+      toastr.error("Failed to delete client", "Failed!!!")
     }
-    setClientDeleteModalOpen(false);
-  };
+    setClientDeleteModalOpen(false)
+  }
   const handleClientDelete = () => {
-    setClientDeleteModalOpen(true);
-  };
+    setClientDeleteModalOpen(true)
+  }
+
 
   // get All Client Cases
   const onGetClientCases = async (client) => {
@@ -515,43 +505,51 @@ const CaseGrid = ({
             )}
           </Col>
           <Col xs={1} style={{ padding: 2 }}>
+
             <Dropdown
               isOpen={clientUpdateModalOpen}
-              toggle={() => toggleClientUpdateModalOpen(!clientUpdateModalOpen)}
+              toggle={() =>
+                toggleClientUpdateModalOpen(!clientUpdateModalOpen)}
               className="float-end me-2"
             >
-              <DropdownToggle className="btn nav-btn d-flex" tag="i">
+              <DropdownToggle
+                className="btn nav-btn d-flex"
+                tag="i"
+              >
                 {currentAttorney && (
                   <i
-                    style={{
-                      cursor: "pointer",
-                      position: "absolute",
-                      left: "10px",
-                      bottom: "0.5px",
-                    }}
+                    style={{ cursor: "pointer", position: "absolute", left: "10px", bottom: "0.5px" }}
                     className="bi bi-three-dots-vertical font-size-14 pt-1 me-2"
                     title="Manage Client"
+
                   ></i>
                 )}
               </DropdownToggle>
-              {currentAttorney && (
-                <DropdownMenu>
-                  <DropdownItem onClick={() => setNewCaseModelOpen(true)}>
+              <DropdownMenu>
+                <DropdownItem
+                  onClick={() => setNewCaseModelOpen(true)}>
+                  {currentAttorney && (
                     <i
                       style={{ cursor: "pointer" }}
                       className="bx bxs-plus-square"
-                      title="Create Case"
-                    ></i>{" "}
-                    Create Case
-                  </DropdownItem>
-                  <DropdownItem onClick={() => setClientEditModalOpen(true)}>
-                    <i className="bi bi-pencil-square"></i> Edit Client
-                  </DropdownItem>
-                  <DropdownItem onClick={() => handleClientDelete()}>
-                    <i className="bi bi-trash"></i> Delete Client
-                  </DropdownItem>
-                </DropdownMenu>
-              )}
+                      title="Create Case"></i>
+                  )}
+                  {" "}
+                  Create Case
+                </DropdownItem>
+                <DropdownItem
+                  onClick={() => setClientEditModalOpen(true)}>
+                  <i className="bi bi-pencil-square"></i>
+                  {" "}
+                  Edit Client
+                </DropdownItem>
+                <DropdownItem
+                  onClick={() => handleClientDelete()}>
+                  <i className="bi bi-trash"></i>
+                  {" "}
+                  Delete Client
+                </DropdownItem>
+              </DropdownMenu>
             </Dropdown>
 
             <div className="md:ml-20">
@@ -562,10 +560,14 @@ const CaseGrid = ({
                   className="accordion-icon"
                   role="button"
                 >
-                  <img src={Chevron} alt="#" />
+                  <img
+                    src={Chevron}
+                    alt="#"
+                  />
                 </div>
               )}
             </div>
+
           </Col>
         </Row>
         <div className="px-2 border-top">
@@ -719,6 +721,7 @@ const CaseGrid = ({
                 ))}
             </ul>
           )}
+
         </div>
       </li>
     </>
