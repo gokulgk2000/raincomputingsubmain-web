@@ -46,19 +46,11 @@ const LandingGrid = () => {
         setLoading(false)
       }
       handleLoad()
-    }, [page, limit])
+    }, [page, limit,searchText])
     useEffect(() => {
       setPage(1)
     }, [searchText])
-    useEffect(() => {
-      const handleLoad = async () => {
-        setLoading(true)
-        // await loadAttorneyCount()
-        await loadAttorney()
-        setLoading(false)
-      }
-      handleLoad()
-    }, [searchText])
+   
 
     return (
         <React.Fragment>

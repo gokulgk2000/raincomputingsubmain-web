@@ -261,17 +261,17 @@ const ChatRc = () => {
     const [searchIndex, setSearchIndex] = useState(0);
     const [pinModal, setPinModal] = useState(false);
     const [pinnedMsg, setPinnedMsg] = useState('');
-    console.log('pinnedMsg',pinnedMsg);
+    console.log('pinnedMsg', pinnedMsg);
     // const [getpinnedMsg, setGetPinnedMsg] = useState("")
     const [msgDelete, setMsgDelete] = useState();
     const containerRef = useRef(null);
     const [prevHeight, setPrevHeight] = useState(0);
-    console.log('prevHeight',prevHeight);
+    console.log('prevHeight', prevHeight);
     const [visibleMessages, setVisibleMessages] = useState([]);
     const [blobURL, setBlobURL] = useState(null);
     const [isSearchTextCleared, setIsSearchTextCleared] = useState(false);
     const [filteredChats, setFilteredChats] = useState(chats);
-    console.log('filteredChats',filteredChats);
+    console.log('filteredChats', filteredChats);
     const [duration, setDuration] = useState(0);
     const [durationIntervalId, setDurationIntervalId] = useState(null);
     const [caseFile, setCaseFile] = useState([]);
@@ -281,9 +281,9 @@ const ChatRc = () => {
     // const [isQuil, setIsQuil] = useState(false)
     const [sortedChats, setSortedChats] = useState([]);
     const [deleteMessage, setDeleteMessage] = useState();
-    console.log('deleteMessage',deleteMessage);
+    console.log('deleteMessage', deleteMessage);
     const [nonewmessage, setNoNewMessage] = useState([]);
-    const [currentClient,setCurrentClient] = useState(null)
+    const [currentClient, setCurrentClient] = useState(null)
     // const toggle_Quill = () => {
     //   setIsQuil(!isQuil)
     // }
@@ -390,61 +390,61 @@ const ChatRc = () => {
     const ongetAllChatRooms = async () => {
         const chatRoomsRes = await getOnevsOneChat({ userId: currentUser.userID })
         if (chatRoomsRes.success) {
-          const updatedChats = chatRoomsRes.groups.map(chat => {
-            const notification = notifications.find(n => n.groupId === chat._id)
-            return {
-              ...chat,
-              notification,
+            const updatedChats = chatRoomsRes.groups.map(chat => {
+                const notification = notifications.find(n => n.groupId === chat._id)
+                return {
+                    ...chat,
+                    notification,
+                }
+            })
+            updatedChats.sort((a, b) => {
+                if (a.notification && b.notification) {
+                    return (
+                        new Date(b.notification.updatedAt) -
+                        new Date(a.notification.updatedAt)
+                    )
+                } else if (a.notification) {
+                    return -1 // Move chat with notification to the top
+                } else if (b.notification) {
+                    return 1 // Move chat with notification to the top
+                } else {
+                    return 0 // No notifications for both chats, maintain order
+                }
+            })
+            setChats(updatedChats)
+            // setCurrentChat(updatedChats[0])
+            if (updatedChats.length < 1) {
+                setactiveTab("3")
             }
-          })
-          updatedChats.sort((a, b) => {
-            if (a.notification && b.notification) {
-              return (
-                new Date(b.notification.updatedAt) -
-                new Date(a.notification.updatedAt)
-              )
-            } else if (a.notification) {
-              return -1 // Move chat with notification to the top
-            } else if (b.notification) {
-              return 1 // Move chat with notification to the top
-            } else {
-              return 0 // No notifications for both chats, maintain order
-            }
-          })
-          setChats(updatedChats)
-          setCurrentChat(updatedChats[0])
-          if (updatedChats.length < 1) {
-            setactiveTab("3")
-          }
         } else {
-          setChats([])
+            setChats([])
         }
         setChatLoader(false)
-      }
-  
+    }
+
     // Use ongetAllChatRooms in your component as before
-  
+
 
     const filterChats = () => {
         if (searchText !== "") {
-          const filteredChats = chats?.filter(chat =>
-            chat.groupMembers.some(member =>
-              member?.id?.firstname
-                ?.toLowerCase()
-                .includes(searchText.toLowerCase())
+            const filteredChats = chats?.filter(chat =>
+                chat.groupMembers.some(member =>
+                    member?.id?.firstname
+                        ?.toLowerCase()
+                        .includes(searchText.toLowerCase())
+                )
             )
-          )
-          setFilteredChats(filteredChats)
-          setChats(filteredChats)
-          setIsSearchTextCleared(false)
+            setFilteredChats(filteredChats)
+            setChats(filteredChats)
+            setIsSearchTextCleared(false)
         } else {
-          if (!isSearchTextCleared) {
-            ongetAllChatRooms() // Call the function to get all chats
-            setIsSearchTextCleared(true)
-          }
+            if (!isSearchTextCleared) {
+                ongetAllChatRooms() // Call the function to get all chats
+                setIsSearchTextCleared(true)
+            }
         }
-      }
-  
+    }
+
     useEffect(() => {
         if (searchText === '') {
             setIsSearchTextCleared(true);
@@ -453,15 +453,15 @@ const ChatRc = () => {
     }, [searchText]);
     const Locate = () => {
         const message = [...messages, ...visibleMessages].find(
-          msg => msg._id === msgId
+            msg => msg._id === msgId
         )
         if (message) {
-          const messageElem = document.getElementById(message._id)
-          if (messageElem) {
-            messageElem.scrollIntoView({ behavior: "auto" })
-          }
+            const messageElem = document.getElementById(message._id)
+            if (messageElem) {
+                messageElem.scrollIntoView({ behavior: "auto" })
+            }
         }
-      }
+    }
     // useEffect(() => {
     //   if (messages && visibleMessages?.length < messages?.length) {
     //     const tempHeight = containerRef?.current?.scrollHeight - prevHeight
@@ -469,7 +469,7 @@ const ChatRc = () => {
     //   }
     // }, [visibleMessages?.length, messages])
     useEffect(() => {
-    // setVisibleMessages(messages.slice(-49))
+        // setVisibleMessages(messages.slice(-49))
         if (replymsgId) {
             Locate();
         } else {
@@ -512,11 +512,11 @@ const ChatRc = () => {
     //copy group Id
     const copyToClipboard = () => {
         copy(`[Thread Id: ${currentChat?.threadId}]`);
-    // alert(`You have copied "${currentChat?._id}"`);
+        // alert(`You have copied "${currentChat?._id}"`);
     };
     const copyToemail = () => {
         copy('rpmongotest@gmail.com');
-    // alert(`You have copied "${currentChat?._id}"`);
+        // alert(`You have copied "${currentChat?._id}"`);
     };
 
     //Toggle Chat Box Menus
@@ -560,14 +560,14 @@ const ChatRc = () => {
             const notiCount = notifications.filter((c) => c.groupId === id);
             return notiCount ? notiCount.length : 0;
         };
-  
+
         const updatedSortedChats = chats
             .map((chat) => {
                 const notificationCount = getNotificationCount(chat._id);
                 const recentChat =
-          chat.notification &&
-          chat.notification.updatedAt &&
-          new Date(chat.notification.updatedAt);
+                    chat.notification &&
+                    chat.notification.updatedAt &&
+                    new Date(chat.notification.updatedAt);
                 return {
                     chat,
                     notificationCount,
@@ -587,9 +587,9 @@ const ChatRc = () => {
             });
         setSortedChats(updatedSortedChats);
     }, [chats, notifications]);
-  
 
- 
+
+
     //Creating New ChatRoom
     const handleCreateChatRoom = async id => {
         setPageLoader(true);
@@ -654,18 +654,18 @@ const ChatRc = () => {
     // get All clientNames
     const onGetAllClientNames = async () => {
         const allClientNamesRes = await getClientsByUserId({
-          userId: currentUser.userID,
-          // caseId: currentCase.caseId
+            userId: currentUser.userID,
+            // caseId: currentCase.caseId
         })
         if (allClientNamesRes.success) {
-          setClients(allClientNamesRes?.clients)
+            setClients(allClientNamesRes?.clients)
         }
         setCurrentClient(allClientNamesRes?.clients)
-      }
-      useEffect(() => {
+    }
+    useEffect(() => {
         onGetAllClientNames()
-      }, [])
-  
+    }, [])
+
 
     //Getting all the cases
     const ongetAllCases = async ({ isSet = false, isSearch = false }) => {
@@ -687,9 +687,9 @@ const ChatRc = () => {
 
             setAllCases(sortedCases);
 
-            if (isSet) {
-                setCurrentCase(sortedCases[0]);
-            }
+            // if (isSet) {
+            //     setCurrentCase(sortedCases[0]);
+            // }
         } else {
             setAllCases([]);
             setCurrentCase(null);
@@ -755,37 +755,37 @@ const ChatRc = () => {
     //Fetching Contacts
     const onGetEmailContacts = async () => {
         const userRes = await getAllUsers({
-          userID: currentUser.userID,
-          email: currentUser?.email,
+            userID: currentUser.userID,
+            email: currentUser?.email,
         })
         if (userRes.success) {
-          setContacts([...userRes.users])
+            setContacts([...userRes.users])
         } else {
-          setContacts(userRes?.users)
+            setContacts(userRes?.users)
         }
-      }
+    }
     const onGetContacts = async ({ isSearch = false }) => {
         if (searchText === "") {
-          await onGetEmailContacts()
+            await onGetEmailContacts()
         } else {
-          setContactsLoading(true)
-          const userRes = await getAllUsers({
-            userID: currentUser.userID,
-            page: isSearch ? 1 : contactPage,
-            searchText,
-          })
-          if (userRes.success) {
-            if (!isSearch) {
-              setContacts([...contacts, ...userRes.users])
+            setContactsLoading(true)
+            const userRes = await getAllUsers({
+                userID: currentUser.userID,
+                page: isSearch ? 1 : contactPage,
+                searchText,
+            })
+            if (userRes.success) {
+                if (!isSearch) {
+                    setContacts([...contacts, ...userRes.users])
+                } else {
+                    setContacts(userRes?.users)
+                }
             } else {
-              setContacts(userRes?.users)
+                setContacts([])
             }
-          } else {
-            setContacts([])
-          }
-          setContactsLoading(false)
+            setContactsLoading(false)
         }
-      }
+    }
     //send message to email
     // const onSendMessageEmail = async (msg) => {
     //   const membersEmail = currentCase?.caseMembers.map((member) => member?.id?.email);
@@ -803,8 +803,8 @@ const ChatRc = () => {
     //   setEmail(mailRes.true)
     // }
 
- 
-  
+
+
     useEffect(() => {
         if (activeTab === '3' && searchText === '') {
             // Call onGetEmailContacts and clear searchText
@@ -812,7 +812,7 @@ const ChatRc = () => {
             setSearchText('');
         }
     }, [activeTab, searchText]);
-  
+
     //Selecting current case
     const onSelectingCase = cas => {
         setCurrentCase(cas);
@@ -1054,7 +1054,7 @@ const ChatRc = () => {
     // })
 
     const onChange = (content, delta, source, editor) => {
-    // Remove <p> and <br> tags from the content
+        // Remove <p> and <br> tags from the content
         const strippedContent = content.replace(/<p><br><\/p>/gi, '');
 
         setcurMessage(strippedContent);
@@ -1118,42 +1118,42 @@ const ChatRc = () => {
     const onGettingSubgroups = async () => {
         setChatLoader(true)
         const payLoad = {
-          caseId: currentCase._id,
-          userId: currentUser.userID,
+            caseId: currentCase._id,
+            userId: currentUser.userID,
         }
         const subGroupsRes = await getGroupsByUserIdandCaseId(payLoad)
         if (subGroupsRes.success) {
-          setAllgroups(subGroupsRes.groups)
-          setCurrentChat(subGroupsRes.groups[0])
+            setAllgroups(subGroupsRes.groups)
+            setCurrentChat(subGroupsRes.groups[0])
         }
         setChatLoader(false)
-      } 
+    }
 
-      const handleFetchFiles = async () => {
+    const handleFetchFiles = async () => {
         try {
-          const filesRes = await getCaseFiles(currentCase?._id)
-          if (filesRes.success && filesRes?.files?.length > 0) {
-            const updatedFiles = filesRes.files.map(file => {
-              const sendAt = moment(file.time).format("DD-MM-YY HH:mm")
-              return { ...file, time: sendAt, isDownloading: true }
-            })
-            setCaseFile(updatedFiles)
-          } else {
-            setCaseFile([])
-          }
+            const filesRes = await getCaseFiles({ caseId: currentCase._id })
+            if (filesRes.success && filesRes?.files?.length > 0) {
+                const updatedFiles = filesRes.files.map(file => {
+                    const sendAt = moment(file.time).format("DD-MM-YY HH:mm")
+                    return { ...file, time: sendAt, isDownloading: true }
+                })
+                setCaseFile(updatedFiles)
+            } else {
+                setCaseFile([])
+            }
         } catch (error) {
-          console.error(`Error fetching case files: ${error}`)
-          setCaseFile([])
+            console.error(`Error fetching case files: ${error}`)
+            setCaseFile([])
         }
-      }
-  
+    }
+
     useEffect(() => {
         handleFetchFiles();
         return () => {
             setCaseFile([]);
         };
-    }, []);
-  
+    }, [currentCase, currentChat]);
+
     // Archive Chat
     const onArchievingChat = async () => {
         setChatLoader(true);
@@ -1174,9 +1174,9 @@ const ChatRc = () => {
             const message = m?.messageData;
             const time = moment(m?.createdAt).format('DD-MM-YY HH:mm');
             const attachments =
-        m.isAttachment && m.attachments[0].id
-            ? { url: `${SERVER_URL}/file/${m.attachments[0].id}` }
-            : '-';
+                m.isAttachment && m.attachments[0].id
+                    ? { url: `${SERVER_URL}/file/${m.attachments[0].id}` }
+                    : '-';
             const tempRow = [
                 sender,
                 message,
@@ -1225,8 +1225,8 @@ const ChatRc = () => {
             willDrawCell: data => {
                 if (
                     data.section === 'body' &&
-          data.column.index === 5 &&
-          data.cell.raw !== '-'
+                    data.column.index === 5 &&
+                    data.cell.raw !== '-'
                 ) {
                     data.doc.setFillColor('green');
                     data.doc.setTextColor('black');
@@ -1243,7 +1243,7 @@ const ChatRc = () => {
             },
         });
         const chatDocName = `${currentCase?.caseName ?? 'Private Chat'
-        } - ${groupName} - ${moment(Date.now()).format('DD-MM-YY HH:mm')}`;
+            } - ${groupName} - ${moment(Date.now()).format('DD-MM-YY HH:mm')}`;
         const chatDocBlob = doc.output('blob');
         const zip = new JSZip();
         zip.file(`${chatDocName}.pdf`, chatDocBlob);
@@ -1305,7 +1305,7 @@ const ChatRc = () => {
     const handleContactScroll = t => {
         if (
             t.clientHeight + t.scrollTop + 1 >= t.scrollHeight &&
-      contactPage <= totalPages?.users
+            contactPage <= totalPages?.users
         ) {
             setContactPage(contactPage + 1);
         }
@@ -1414,8 +1414,8 @@ const ChatRc = () => {
     useEffect(() => {
         setContactPage(1);
         setCasePage(1);
-    // if (activeTab === "3") onGetContacts({ isSearch: true })
-    // if (activeTab === "2") ongetAllCases({ isSearch: true })
+        // if (activeTab === "3") onGetContacts({ isSearch: true })
+        // if (activeTab === "2") ongetAllCases({ isSearch: true })
     }, [activeTab]);
 
     //SideEffect for setting isAttachment
@@ -1443,72 +1443,72 @@ const ChatRc = () => {
 
     useEffect(() => {
         if (currentChat) {
-          setRecorder([])
-          setcurMessage("")
-          setMentionsArray(
-            currentChat.groupMembers
-              .filter(m => m?.id?._id) // filter out members with null IDs
-              .map(m => ({
-                id: m?.id?._id,
-                display: m?.id?.firstname + " " + m?.id?.lastname,
-              }))
-          )
-          setReceivers(
-            currentChat.groupMembers
-              .filter(m => m?.id?._id && m.id?._id !== currentUser.userID) // filter out members with null IDs and current user
-              .map(r => r.id?._id)
-          )
-          // const filteredNotifications1 = notifications?.filter(
-          //   n =>{
-          //   const a = n?.groupId !== currentChat?._id
-          //    return  a
-          // }
-          // )
-          // console.log("FN1:",filteredNotifications1)
-          // const filteredNotifications = filteredNotifications1?.filter(
-          //   n =>{
-          //     const b = n?.currentChat?._id !== currentChat?._id
-          //     console.log("b ",n?.currentChat?._id,currentChat?._id)
-          //    return  b
-          // }
-          // )
-          // console.log("FN:",filteredNotifications)
-          // setNotifications(filteredNotifications)
-          setNotifications(
-            notifications.filter(n => n.groupId !== currentChat?._id)
-          )
-          const onGettingGroupMessages = async () => {
-            setChatLoader(true)
-            const payload = {
-              groupId: currentChat?._id,
-              userId: currentUser?.userID,
+            setRecorder([])
+            setcurMessage("")
+            setMentionsArray(
+                currentChat.groupMembers
+                    .filter(m => m?.id?._id) // filter out members with null IDs
+                    .map(m => ({
+                        id: m?.id?._id,
+                        display: m?.id?.firstname + " " + m?.id?.lastname,
+                    }))
+            )
+            setReceivers(
+                currentChat.groupMembers
+                    .filter(m => m?.id?._id && m.id?._id !== currentUser.userID) // filter out members with null IDs and current user
+                    .map(r => r.id?._id)
+            )
+            // const filteredNotifications1 = notifications?.filter(
+            //   n =>{
+            //   const a = n?.groupId !== currentChat?._id
+            //    return  a
+            // }
+            // )
+            // console.log("FN1:",filteredNotifications1)
+            // const filteredNotifications = filteredNotifications1?.filter(
+            //   n =>{
+            //     const b = n?.currentChat?._id !== currentChat?._id
+            //     console.log("b ",n?.currentChat?._id,currentChat?._id)
+            //    return  b
+            // }
+            // )
+            // console.log("FN:",filteredNotifications)
+            // setNotifications(filteredNotifications)
+            setNotifications(
+                notifications.filter(n => n.groupId !== currentChat?._id)
+            )
+            const onGettingGroupMessages = async () => {
+                setChatLoader(true)
+                const payload = {
+                    groupId: currentChat?._id,
+                    userId: currentUser?.userID,
+                }
+                const res = await getMessagesByUserIdandGroupId(payload)
+                if (res.success) {
+                    setMessages(res.groupMessages)
+                } else {
+                    console.log("Failed to fetch Group message", res)
+                }
+                setChatLoader(false)
             }
-            const res = await getMessagesByUserIdandGroupId(payload)
-            if (res.success) {
-              setMessages(res.groupMessages)
-            } else {
-              console.log("Failed to fetch Group message", res)
-            }
-            setChatLoader(false)
-          }
-          onGettingGroupMessages()
+            onGettingGroupMessages()
         }
-      }, [currentChat])
+    }, [currentChat])
 
     //SideEffect while contact page changes
     useEffect(() => {
         if (
-          activeTab === "3" &&
-          contactPage !== 1 &&
-          contactPage <= totalPages?.users
+            activeTab === "3" &&
+            contactPage !== 1 &&
+            contactPage <= totalPages?.users
         ) {
-          onGetContacts({ isSearch: false })
+            onGetContacts({ isSearch: false })
         }
         if (activeTab === "3" && contactPage === 1) {
-          onGetContacts({ isSearch: true })
+            onGetContacts({ isSearch: true })
         }
-      }, [contactPage])
-  
+    }, [contactPage])
+
 
     //SideEffect while case page changes
     useEffect(() => {
@@ -1534,7 +1534,6 @@ const ChatRc = () => {
             ongetAllCases({ isSet: true, isSearch: true });
         }
     }, [searchText]);
-console.log("messages",messages)
     useEffect(() => {
         const userid = query.get('uid');
         if (userid && userid !== currentUser?.userID) {
@@ -1625,7 +1624,7 @@ console.log("messages",messages)
             return 0;
         });
         setClients(sortedclients); // Update the component state with
-    // Use the sortedCases array for further processing
+        // Use the sortedCases array for further processing
     };
 
     const handlecreatedAt = () => {
@@ -1650,7 +1649,7 @@ console.log("messages",messages)
             return 0;
         });
         setAllCases(sortedCases); // Update the component state with
-    // Use the sortedCases array for further processing
+        // Use the sortedCases array for further processing
     };
 
     const handleCaseId = () => {
@@ -1708,14 +1707,14 @@ console.log("messages",messages)
     const attorneycases = [...clients, ...allCases];
     const uniqueClientAndCaseNames = new Set();
     const filteredCases = attorneycases.filter(user => {
-    // const key = user.clientName + user.caseName;
+        // const key = user.clientName + user.caseName;
         if (!uniqueClientAndCaseNames.has(user.clientName)) {
             uniqueClientAndCaseNames.add(user.clientName);
             return true;
         }
         return false;
     });
-  
+
 
     return (
         <div className="page-contents " style={{ marginTop: 100 }}>
@@ -1726,7 +1725,7 @@ console.log("messages",messages)
                             <div className="text-center my-3">
                                 <Link to="#" className="text-success">
                                     <i className="bx bx-hourglass bx-spin me-2" />
-                  Loading. . .
+                                    Loading. . .
                                 </Link>
                             </div>
                         </Col>
@@ -1871,7 +1870,7 @@ console.log("messages",messages)
                                 toggle={togglesubGroupModelOpen}
                                 modalTitle="Subgroup Setting"
                                 modalSubtitle={`You have ${allgroups.filter(a => !a.isParent)?.length || 0
-                                } subgroups`}
+                                    } subgroups`}
                                 footer={true}
                                 size="lg"
                             >
@@ -1985,7 +1984,7 @@ console.log("messages",messages)
                                             </h5>
                                             <p className="text-muted mb-0">
                                                 <i className="mdi mdi-circle text-success align-middle me-1" />
-                        Active
+                                                Active
                                             </p>
                                         </div>
                                         {/* <UserDropdown /> */}
@@ -2111,7 +2110,7 @@ console.log("messages",messages)
                                                     className="btn btn-info btn-rounded mb-2 col-6"
                                                     onClick={() => setNewClientModelOpen(true)}
                                                 >
-                          Create New Client
+                                                    Create New Client
                                                     <i className="bx bx-pencil font-size-16 align-middle me-2 mx-2"></i>
                                                 </button>}
 
@@ -2132,30 +2131,30 @@ console.log("messages",messages)
                                                                     title="Filter"
                                                                 />
                                                                 <label className="mb-0  font-size-16">
-                                  Sort By
+                                                                    Sort By
                                                                 </label>
                                                             </div>
                                                         </DropdownToggle>
                                                         {currentAttorney ? (
                                                             <DropdownMenu>
-                                                              
+
                                                                 <DropdownItem onClick={handleClientName}>
-                                  Client Name
+                                                                    Client Name
                                                                 </DropdownItem>
                                                                 <DropdownItem onClick={handleClientCreatedAt}>
-                                  Client Date
+                                                                    Client Date
                                                                 </DropdownItem>
                                                             </DropdownMenu>
                                                         ) : (
                                                             <DropdownMenu>
                                                                 <DropdownItem onClick={handleCaseId}>
-                                  Case Id
+                                                                    Case Id
                                                                 </DropdownItem>
                                                                 <DropdownItem onClick={handlecaseName}>
-                                  Case Name
+                                                                    Case Name
                                                                 </DropdownItem>
                                                                 <DropdownItem onClick={handlecreatedAt}>
-                                  Case Date
+                                                                    Case Date
                                                                 </DropdownItem>
                                                             </DropdownMenu>
                                                         )
@@ -2252,45 +2251,45 @@ console.log("messages",messages)
                                                     >
                                                         {searchText === '' && <p>Suggestions :</p>}
                                                         {contacts &&
-                              contacts.map((contact, i) => (
-                                  <ul key={i} className="list-unstyled chat-list">
-                                      <li>
-                                          <Link
-                                              to="#"
-                                              onClick={() => {
-                                                  setCurrentCase(null);
-                                                  handleCreateChatRoom(contact._id);
-                                              }}
-                                          >
-                                              <div className="d-flex justify-content-between">
-                                                  <div className="align-self-center d-flex align-items-center me-3">
-                                                      <img
-                                                          src={
-                                                              contact?.profilePic
-                                                                  ? contact?.profilePic
-                                                                  : profile
-                                                          }
-                                                          className="avatar-xs rounded-circle"
-                                                          alt=""
-                                                          style={{ objectFit: 'cover' }}
-                                                      />
-                                                  </div>
-                                                  <div className="flex-grow-1 overflow-hidden align-self-center me-3">
-                                                      <h5 className="text-truncate font-size-14 mb-1">
-                                                          {contact.firstname}{' '}
-                                                          {contact.lastname}
-                                                          { }
-                                                      </h5>
-                                                      <p className="font-size-12 mb-1 text-primary ">
-                                                          {contact.email}
-                                                      </p>
-                                                  </div>
-                                                  <i className="font-size-24 bx bxl-messenger me-2" />
-                                              </div>
-                                          </Link>
-                                      </li>
-                                  </ul>
-                              ))}
+                                                            contacts.map((contact, i) => (
+                                                                <ul key={i} className="list-unstyled chat-list">
+                                                                    <li>
+                                                                        <Link
+                                                                            to="#"
+                                                                            onClick={() => {
+                                                                                setCurrentCase(null);
+                                                                                handleCreateChatRoom(contact._id);
+                                                                            }}
+                                                                        >
+                                                                            <div className="d-flex justify-content-between">
+                                                                                <div className="align-self-center d-flex align-items-center me-3">
+                                                                                    <img
+                                                                                        src={
+                                                                                            contact?.profilePic
+                                                                                                ? contact?.profilePic
+                                                                                                : profile
+                                                                                        }
+                                                                                        className="avatar-xs rounded-circle"
+                                                                                        alt=""
+                                                                                        style={{ objectFit: 'cover' }}
+                                                                                    />
+                                                                                </div>
+                                                                                <div className="flex-grow-1 overflow-hidden align-self-center me-3">
+                                                                                    <h5 className="text-truncate font-size-14 mb-1">
+                                                                                        {contact.firstname}{' '}
+                                                                                        {contact.lastname}
+                                                                                        { }
+                                                                                    </h5>
+                                                                                    <p className="font-size-12 mb-1 text-primary ">
+                                                                                        {contact.email}
+                                                                                    </p>
+                                                                                </div>
+                                                                                <i className="font-size-24 bx bxl-messenger me-2" />
+                                                                            </div>
+                                                                        </Link>
+                                                                    </li>
+                                                                </ul>
+                                                            ))}
                                                     </PerfectScrollbar>
                                                 )}
                                             </div>
@@ -2307,7 +2306,7 @@ console.log("messages",messages)
                                                     <Card className="">
                                                         <div className="text-center my-3 text-success align-self-center col-12 col-lg-8">
                                                             <i className="bx bx-hourglass bx-spin me-2" />
-                              Loading. . .
+                                                            Loading. . .
                                                         </div>
                                                     </Card>
                                                 </Col>
@@ -2324,7 +2323,7 @@ console.log("messages",messages)
                                                             </h5>
                                                             <h5 className="font-size-12 mb-1 text-primary">
                                                                 {!currentChat.isGroup &&
-                                  getChatEmail(currentChat.groupMembers)}
+                                                                    getChatEmail(currentChat.groupMembers)}
                                                             </h5>
                                                             {currentChat?.isGroup && (
                                                                 <span
@@ -2383,7 +2382,7 @@ console.log("messages",messages)
                                                                                         }}
                                                                                     >
                                                                                         <h6 className="fw-bold">
-                                              Email{' '}
+                                                                                            Email{' '}
                                                                                             <i
                                                                                                 className="bx bx-copy ms-2"
                                                                                                 onClick={copyToemail}
@@ -2401,7 +2400,7 @@ console.log("messages",messages)
                                                                                         }}
                                                                                     >
                                                                                         <h6 className="fw-bold">
-                                              Thread ID{' '}
+                                                                                            Thread ID{' '}
                                                                                             <i
                                                                                                 className="bx bx-copy ms-2"
                                                                                                 onClick={copyToClipboard}
@@ -2459,22 +2458,22 @@ console.log("messages",messages)
                                                                         </DropdownToggle>
                                                                         <DropdownMenu className="dropdown-menu-md">
                                                                             {searchMessageText &&
-                                        searchedMessages?.length > 1 ? (
-                                                                                    <span className="ps-3 fw-bold">
-                                                                                        {searchedMessages?.length} results
-                                          found
-                                                                                        <i
-                                                                                            className="mdi mdi-chevron-down-circle-outline mdi-18px ps-4 text-primary"
-                                                                                            onClick={() => handleShow()}
-                                                                                        />
-                                                                                        <i
-                                                                                            className="mdi mdi-chevron-up-circle-outline mdi-18px ps-2 text-primary"
-                                                                                            onClick={() => handleShowTop()}
-                                                                                        />
-                                                                                    </span>
-                                                                                ) : (
-                                                                                    ''
-                                                                                )}
+                                                                                searchedMessages?.length > 1 ? (
+                                                                                <span className="ps-3 fw-bold">
+                                                                                    {searchedMessages?.length} results
+                                                                                    found
+                                                                                    <i
+                                                                                        className="mdi mdi-chevron-down-circle-outline mdi-18px ps-4 text-primary"
+                                                                                        onClick={() => handleShow()}
+                                                                                    />
+                                                                                    <i
+                                                                                        className="mdi mdi-chevron-up-circle-outline mdi-18px ps-2 text-primary"
+                                                                                        onClick={() => handleShowTop()}
+                                                                                    />
+                                                                                </span>
+                                                                            ) : (
+                                                                                ''
+                                                                            )}
                                                                             <InputGroup>
                                                                                 <Input
                                                                                     type="text"
@@ -2510,48 +2509,81 @@ console.log("messages",messages)
                                                                         {currentCase?.admins?.includes(
                                                                             currentUser?.userID
                                                                         ) ? (
-                                                                                <DropdownToggle
-                                                                                    className="btn nav-btn"
-                                                                                    tag="i"
-                                                                                >
-                                                                                    <div>
-                                                                                        <i className="bx bx-cog" />
-                                                                                    </div>
-                                                                                </DropdownToggle>
-                                                                            ) : (
-                                                                                currentChat &&
-                                      currentChat?.admins?.includes(
-                                          currentUser?.userID
-                                      ) && (
-                                                                                    <div className="conversation-name">
-                                                                                        <DropdownToggle
-                                                                                            className="btn nav-btn"
-                                                                                            tag="i"
-                                                                                        >
-                                                                                            <div>
-                                                                                                <i className="bx bx-cog" />
-                                                                                            </div>
-                                                                                        </DropdownToggle>
-                                                                                    </div>
-                                                                                )
-                                                                            )}
+                                                                            <DropdownToggle
+                                                                                className="btn nav-btn"
+                                                                                tag="i"
+                                                                            >
+                                                                                <div>
+                                                                                    <i className="bx bx-cog" />
+                                                                                </div>
+                                                                            </DropdownToggle>
+                                                                        ) : (
+                                                                            currentChat &&
+                                                                            currentChat?.admins?.includes(
+                                                                                currentUser?.userID
+                                                                            ) && (
+                                                                                <div className="conversation-name">
+                                                                                    <DropdownToggle
+                                                                                        className="btn nav-btn"
+                                                                                        tag="i"
+                                                                                    >
+                                                                                        <div>
+                                                                                            <i className="bx bx-cog" />
+                                                                                        </div>
+                                                                                    </DropdownToggle>
+                                                                                </div>
+                                                                            )
+                                                                        )}
                                                                         {currentCase?.admins?.includes(
                                                                             currentUser?.userID
                                                                         ) ? (
+                                                                            <DropdownMenu>
+                                                                                <DropdownItem
+                                                                                    href="#"
+                                                                                    onClick={() => onArchievingChat()}
+                                                                                >
+                                                                                    Archive Chat
+                                                                                </DropdownItem>
+                                                                                <DropdownItem
+                                                                                    href="#"
+                                                                                    onClick={() =>
+                                                                                        setCaseEditModalOpen(true)
+                                                                                    }
+                                                                                >
+                                                                                    Manage Case
+                                                                                </DropdownItem>
+                                                                                <DropdownItem
+                                                                                    href="#"
+                                                                                    onClick={() =>
+                                                                                        toggle_emailModal(true)
+                                                                                    }
+                                                                                >
+                                                                                    Email
+                                                                                </DropdownItem>
+                                                                                <DropdownItem
+                                                                                    href="#"
+                                                                                    onClick={() => handleCaseDelete()}
+                                                                                >
+                                                                                    Delete case
+                                                                                </DropdownItem>
+                                                                                <DropdownItem
+                                                                                    href="#"
+                                                                                    onClick={() => handleCaseCompleted()}
+                                                                                >
+                                                                                    Completed case
+                                                                                </DropdownItem>
+                                                                            </DropdownMenu>
+                                                                        ) : (
+                                                                            currentChat &&
+                                                                            currentChat?.admins?.includes(
+                                                                                currentUser?.userID
+                                                                            ) && (
                                                                                 <DropdownMenu>
                                                                                     <DropdownItem
                                                                                         href="#"
                                                                                         onClick={() => onArchievingChat()}
                                                                                     >
-                                          Archive Chat
-                                                                                    </DropdownItem>
-                                                                                    <DropdownItem
-                                                                                        href="#"
-                                                                                        onClick={() =>
-                                                                                            setCaseEditModalOpen(true)
-                                                                                        }
-                                                                                    >
-                                          Manage Case
+                                                                                        Archive Chat
                                                                                     </DropdownItem>
                                                                                     <DropdownItem
                                                                                         href="#"
@@ -2559,52 +2591,19 @@ console.log("messages",messages)
                                                                                             toggle_emailModal(true)
                                                                                         }
                                                                                     >
-                                          Email
+                                                                                        Email
                                                                                     </DropdownItem>
                                                                                     <DropdownItem
                                                                                         href="#"
-                                                                                        onClick={() => handleCaseDelete()}
+                                                                                        onClick={() =>
+                                                                                            handleChatDelete(currentChat?._id)
+                                                                                        }
                                                                                     >
-                                          Delete case
-                                                                                    </DropdownItem>
-                                                                                    <DropdownItem
-                                                                                        href="#"
-                                                                                        onClick={() => handleCaseCompleted()}
-                                                                                    >
-                                          Completed case
+                                                                                        Delete chat
                                                                                     </DropdownItem>
                                                                                 </DropdownMenu>
-                                                                            ) : (
-                                                                                currentChat &&
-                                      currentChat?.admins?.includes(
-                                          currentUser?.userID
-                                      ) && (
-                                                                                    <DropdownMenu>
-                                                                                        <DropdownItem
-                                                                                            href="#"
-                                                                                            onClick={() => onArchievingChat()}
-                                                                                        >
-                                            Archive Chat
-                                                                                        </DropdownItem>
-                                                                                        <DropdownItem
-                                                                                            href="#"
-                                                                                            onClick={() =>
-                                                                                                toggle_emailModal(true)
-                                                                                            }
-                                                                                        >
-                                            Email
-                                                                                        </DropdownItem>
-                                                                                        <DropdownItem
-                                                                                            href="#"
-                                                                                            onClick={() =>
-                                                                                                handleChatDelete(currentChat?._id)
-                                                                                            }
-                                                                                        >
-                                            Delete chat
-                                                                                        </DropdownItem>
-                                                                                    </DropdownMenu>
-                                                                                )
-                                                                            )}
+                                                                            )
+                                                                        )}
                                                                     </Dropdown>
                                                                 </li>
                                                             </ul>
@@ -2637,11 +2636,11 @@ console.log("messages",messages)
                                                                             style={{
                                                                                 maxWidth: '80%',
                                                                                 color:
-                                          searchedMessages?.includes(msg) &&
-                                          'white',
+                                                                                    searchedMessages?.includes(msg) &&
+                                                                                    'white',
                                                                                 backgroundColor:
-                                          searchedMessages?.includes(msg) &&
-                                          'black',
+                                                                                    searchedMessages?.includes(msg) &&
+                                                                                    'black',
                                                                             }}
                                                                         >
                                                                             <UncontrolledDropdown>
@@ -2670,27 +2669,27 @@ console.log("messages",messages)
                                                                                             setReplyMsgModalOpen(true);
                                                                                         }}
                                                                                     >
-                                            Reply
+                                                                                        Reply
                                                                                     </DropdownItem>
                                                                                     {msg?.sender ===
-                                            currentUser.userID && (
-                                                                                        <DropdownItem
-                                                                                            href="#"
-                                                                                            onClick={() => {
-                                                                                                setCurEditMessageId(msg);
-                                                                                                setMessageEditModalOpen(true);
-                                                                                            }}
-                                                                                        >
-                                                Edit
-                                                                                        </DropdownItem>
-                                                                                    )}
+                                                                                        currentUser.userID && (
+                                                                                            <DropdownItem
+                                                                                                href="#"
+                                                                                                onClick={() => {
+                                                                                                    setCurEditMessageId(msg);
+                                                                                                    setMessageEditModalOpen(true);
+                                                                                                }}
+                                                                                            >
+                                                                                                Edit
+                                                                                            </DropdownItem>
+                                                                                        )}
                                                                                     <DropdownItem
                                                                                         href="#"
                                                                                         onClick={() => {
                                                                                             onPinnedMessage(msg);
                                                                                         }}
                                                                                     >
-                                            Pin
+                                                                                        Pin
                                                                                     </DropdownItem>
                                                                                     <DropdownItem
                                                                                         href="#"
@@ -2699,7 +2698,7 @@ console.log("messages",messages)
                                                                                             setRemainderModelOpen(true);
                                                                                         }}
                                                                                     >
-                                            Reminder
+                                                                                        Reminder
                                                                                     </DropdownItem>
                                                                                     <DropdownItem
                                                                                         href="#"
@@ -2711,7 +2710,7 @@ console.log("messages",messages)
                                                                                                 );
                                                                                         }}
                                                                                     >
-                                            Delete
+                                                                                        Delete
                                                                                     </DropdownItem>
                                                                                     {/* <DropdownItem
                                             href="#"
@@ -2759,7 +2758,7 @@ console.log("messages",messages)
                                                                                     {msg?.isEdit ? (
                                                                                         <div>
                                                                                             <p className="text-primary">
-                                                Edited
+                                                                                                Edited
                                                                                             </p>
                                                                                         </div>
                                                                                     ) : (
@@ -2802,16 +2801,16 @@ console.log("messages",messages)
                                                                                             </div>
                                                                                         </>
                                                                                     ) : (
-                                                                                    // <div
-                                                                                    //   style={{
-                                                                                    //     whiteSpace: "break-spaces",
-                                                                                    //   }}
-                                                                                    // >
-                                                                                    //   {stringFormatter(
-                                                                                    //     prettifyMsg(msg.messageData)
-                                                                                    //   )}
+                                                                                        // <div
+                                                                                        //   style={{
+                                                                                        //     whiteSpace: "break-spaces",
+                                                                                        //   }}
+                                                                                        // >
+                                                                                        //   {stringFormatter(
+                                                                                        //     prettifyMsg(msg.messageData)
+                                                                                        //   )}
 
-                                                                                    // </div>
+                                                                                        // </div>
                                                                                         <div
                                                                                             style={{
                                                                                                 whiteSpace: 'break-spaces',
@@ -2838,7 +2837,7 @@ console.log("messages",messages)
                                                                                             key={i}
                                                                                             className=" mdi mdi-reply m-2"
                                                                                         >
-                                              Replies:
+                                                                                            Replies:
                                                                                             <div className="conversation-name">
                                                                                                 {currentChat.isGroup
                                                                                                     ? getMemberName(r?.sender)
@@ -2867,34 +2866,34 @@ console.log("messages",messages)
                                                                     </li>
                                                                 ))}
                                                                 {messageStack?.length > 0 &&
-                                  messageStack.map((msg, m) => (
-                                      <li key={'test_k' + m} className="right">
-                                          <div className="conversation-list">
-                                              <div
-                                                  className="ctext-wrap "
-                                                  style={{
-                                                      backgroundColor: msg.sender === currentUser.userID && currentChat?.color
-                                                          ? `${currentChat?.color}33`
-                                                          : '#00EE0033'
-                                                  }}
-                                              >
-                                                  <div className="conversation-name">
-                                                      {currentUser?.firstname +
-                                              currentUser?.lastname}
-                                                  </div>
-                                                  <div className="mb-1">
-                                                      {msg.messageData}
-                                                  </div>
-                                                  <p className="chat-time mb-0">
-                                                      <i className="bx bx-loader bx-spin  align-middle me-1" />
-                                                      {moment(msg.createdAt).format(
-                                                          'DD-MM-YY HH:mm'
-                                                      )}
-                                                  </p>
-                                              </div>
-                                          </div>
-                                      </li>
-                                  ))}
+                                                                    messageStack.map((msg, m) => (
+                                                                        <li key={'test_k' + m} className="right">
+                                                                            <div className="conversation-list">
+                                                                                <div
+                                                                                    className="ctext-wrap "
+                                                                                    style={{
+                                                                                        backgroundColor: msg.sender === currentUser.userID && currentChat?.color
+                                                                                            ? `${currentChat?.color}33`
+                                                                                            : '#00EE0033'
+                                                                                    }}
+                                                                                >
+                                                                                    <div className="conversation-name">
+                                                                                        {currentUser?.firstname +
+                                                                                            currentUser?.lastname}
+                                                                                    </div>
+                                                                                    <div className="mb-1">
+                                                                                        {msg.messageData}
+                                                                                    </div>
+                                                                                    <p className="chat-time mb-0">
+                                                                                        <i className="bx bx-loader bx-spin  align-middle me-1" />
+                                                                                        {moment(msg.createdAt).format(
+                                                                                            'DD-MM-YY HH:mm'
+                                                                                        )}
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </li>
+                                                                    ))}
                                                             </div>
                                                         </ul>
                                                     </div>
@@ -2914,39 +2913,39 @@ console.log("messages",messages)
                                                             <div className="col">
                                                                 <div className="position-relative">
                                                                     {recorder &&
-                                    recorder.state === 'recording' ? (
-                                                                            <div className="d-flex justify-content-center">
-                                                                                <i
-                                                                                    className="mdi mdi-microphone font-size-18 text-primary"
-                                                                                    style={{
-                                                                                        height: '30px',
-                                                                                        paddingLeft: '10px',
-                                                                                    }}
-                                                                                ></i>
-                                                                                <p className="text-primary mt-1 font-size-12">
-                                                                                    {duration}Secs
-                                                                                </p>
-                                                                            </div>
-                                                                        ) : (
-                                                                            <>
-                                                                                {blobURL ? (
-                                                                                    <div>
-                                                                                        <audio
-                                                                                            className="w-100 w-sm-100"
-                                                                                            style={{
-                                                                                                height: '33px',
-                                                                                                paddingLeft: '10px',
-                                                                                            }}
-                                                                                            src={blobURL}
-                                                                                            controls="controls"
-                                                                                        ></audio>
-                                                                                    </div>
-                                                                                ) : (
-                                                                                    <>
-                                                                                        <div className="p-2 pt-0">
-                                                                                            {' '}
-                                                                                            {Array.from(allFiles)?.length >
-                                              0 && (
+                                                                        recorder.state === 'recording' ? (
+                                                                        <div className="d-flex justify-content-center">
+                                                                            <i
+                                                                                className="mdi mdi-microphone font-size-18 text-primary"
+                                                                                style={{
+                                                                                    height: '30px',
+                                                                                    paddingLeft: '10px',
+                                                                                }}
+                                                                            ></i>
+                                                                            <p className="text-primary mt-1 font-size-12">
+                                                                                {duration}Secs
+                                                                            </p>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <>
+                                                                            {blobURL ? (
+                                                                                <div>
+                                                                                    <audio
+                                                                                        className="w-100 w-sm-100"
+                                                                                        style={{
+                                                                                            height: '33px',
+                                                                                            paddingLeft: '10px',
+                                                                                        }}
+                                                                                        src={blobURL}
+                                                                                        controls="controls"
+                                                                                    ></audio>
+                                                                                </div>
+                                                                            ) : (
+                                                                                <>
+                                                                                    <div className="p-2 pt-0">
+                                                                                        {' '}
+                                                                                        {Array.from(allFiles)?.length >
+                                                                                            0 && (
                                                                                                 <div className="d-flex gap-2 flex-wrap mt-2">
                                                                                                     {Array.from(allFiles)?.map(
                                                                                                         (att, a) => (
@@ -2971,21 +2970,21 @@ console.log("messages",messages)
                                                                                                     )}
                                                                                                 </div>
                                                                                             )}
-                                                                                        </div>
-                                                                                        <div>
-                                                                                            <ReactQuillInput
-                                                                                                value={curMessage}
-                                                                                                onChange={onChange}
-                                                                                                mentionsArray={mentionsArray}
-                                                                                                isQuill={isQuill}
-                                                                                                onKeyPress={onKeyPress}
-                                                                                                isEmptyOrSpaces={isEmptyOrSpaces}
-                                                                                            />
-                                                                                        </div>
-                                                                                    </>
-                                                                                )}
-                                                                            </>
-                                                                        )}
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <ReactQuillInput
+                                                                                            value={curMessage}
+                                                                                            onChange={onChange}
+                                                                                            mentionsArray={mentionsArray}
+                                                                                            isQuill={isQuill}
+                                                                                            onKeyPress={onKeyPress}
+                                                                                            isEmptyOrSpaces={isEmptyOrSpaces}
+                                                                                        />
+                                                                                    </div>
+                                                                                </>
+                                                                            )}
+                                                                        </>
+                                                                    )}
                                                                 </div>
                                                             </div>
                                                         </div>
