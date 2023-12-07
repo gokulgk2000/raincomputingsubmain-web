@@ -23,7 +23,7 @@ const CreateCase = ({
     const history = useHistory();
     const [loading, setloading] = useState(false);
     const [contacts, setContacts] = useState([]);
-    const [searchText, setSearchText] = useState('');  
+    const [searchText, setSearchText] = useState('');
     const [clientName, setClientName] = useState('');
     toastr.options = {
         progressBar: true,
@@ -56,8 +56,8 @@ const CreateCase = ({
     const isDisabled = () => {
         if (
             !formValues?.caseName ||
-      !formValues?.caseId ||
-      formValues?.members?.length < 1
+            !formValues?.caseId ||
+            formValues?.members?.length < 1
         )
             return true;
         return false;
@@ -155,7 +155,7 @@ const CreateCase = ({
             }
         };
         handleFetchingContacts();
-    }, [searchText,currentUser.userID]);
+    }, [searchText, currentUser.userID]);
 
     return (
         <>
@@ -163,7 +163,7 @@ const CreateCase = ({
                 <label
                     htmlFor="example-text-input"
                     className="col-md-3 col-lg-2 col-form-label">
-          Client Name
+                    Client Name
                 </label>
                 <div className="col-md-8">
                     <input
@@ -180,7 +180,7 @@ const CreateCase = ({
                     htmlFor="example-text-input"
                     className="col-md-3 col-lg-2 col-form-label"
                 >
-          Case name
+                    Case name
                 </label>
                 <div className="col-md-8">
                     <input
@@ -198,7 +198,7 @@ const CreateCase = ({
                     htmlFor="example-text-input"
                     className="col-md-3 col-lg-2 col-form-label"
                 >
-          Case Id
+                    Case Id
                 </label>
                 <div className="col-md-8">
                     <input
@@ -269,7 +269,7 @@ const CreateCase = ({
                     htmlFor="user-search-text"
                     className="col-md-3 col-lg-2 col-form-label"
                 >
-          Select members
+                    Select members
                 </label>
                 <div className="col-md-8">
                     <input
@@ -287,41 +287,56 @@ const CreateCase = ({
             <Row>
                 <Col xs={6} className="px-3 border-end border-info">
                     <span className="text-muted">Members</span>
-                    <div className="d-flex flex-wrap gap-2 my-2">
+                    {contacts?.length > 0 ? (<div className="d-flex flex-wrap gap-2 my-2">
                         {contacts &&
-              contacts
-                  .filter(f => !formValues.members.some(g => g?._id === f?._id))
-                  .filter(a => a?._id !== currentUser?.userID)
-                  .map((contact, c) => (
-                      <Button
-                          key={c}
-                          color={
-                              formValues.members.includes(contact._id)
-                                  ? 'success'
-                                  : 'light'
-                          }
-                          className="btn mx-1 mb-2"
-                          onClick={() => handleAddingGroupMembers(contact)}
-                      >
-                          <div className="d-flex justify-content-between ">
-                              <div>
-                                  {' '}
-                                  {contact.firstname} {contact.lastname}{' '}
-                              </div>
-                              {contact?.attorneyStatus === 'approved' && (
-                                  <div>
-                                      {' '}
-                                      <i className="fas fa-star text-warning"></i>
-                                  </div>
-                              )}
-                          </div>
+                            contacts
+                                .filter(f => !formValues.members.some(g => g?._id === f?._id))
+                                .filter(a => a?._id !== currentUser?.userID)
+                                .map((contact, c) => (
+                                    <Button
+                                        key={c}
+                                        color={
+                                            formValues.members.includes(contact._id)
+                                                ? 'success'
+                                                : 'light'
+                                        }
+                                        className="btn mx-1 mb-2"
+                                        onClick={() => handleAddingGroupMembers(contact)}
+                                    >
+                                        <div className="d-flex justify-content-between ">
+                                            <div>
+                                                {' '}
+                                                {contact.firstname} {contact.lastname}{' '}
+                                            </div>
+                                            {contact?.attorneyStatus === 'approved' && (
+                                                <div>
+                                                    {' '}
+                                                    <i className="fas fa-star text-warning"></i>
+                                                </div>
+                                            )}
+                                        </div>
 
-                          <div className="font-size-0 text-body ">
-                              {contact.email}
-                          </div>
-                      </Button>
-                  ))}
-                    </div>
+                                        <div className="font-size-0 text-body ">
+                                            {contact.email}
+                                        </div>
+                                    </Button>
+                                ))}
+                    </div>) : (
+                        <div className="">
+                            <div>
+                                <i
+                                    className="bi bi-people pt-3 d-flex justify-content-center text-secondary"
+                                    style={{
+                                        fontSize: "25px",
+                                        fontWeight: "bold",
+                                    }}
+                                ></i>
+                            </div>
+                            <div>
+                                <h6 className="d-flex pt-1 justify-content-center text-secondary">Search to Select a Members for their Case..!!</h6>
+                            </div>
+                        </div>
+                    )}
                 </Col>
                 <Col xs={6} className="px-3">
                     <span className="text-muted">Case Members</span>
@@ -336,26 +351,26 @@ const CreateCase = ({
                             <div className="font-size-0 text-body ">{currentUser?.email}</div>
                         </Button>
                         {formValues?.members &&
-              formValues?.members.map((member, m) => (
-                  <Button
-                      key={m}
-                      color="success"
-                      className="btn mx-1 mb-2"
-                      onClick={() => handleAddingGroupMembers(member)}
-                  >
-                      <div className="d-flex justify-content-between">
-                          <div> {member?.firstname + ' ' + member?.lastname}</div>
-                          {member?.attorneyStatus === 'approved' && (
-                              <div>
-                                  {' '}
-                                  <i className="fas fa-star text-warning"></i>
-                              </div>
-                          )}
-                      </div>
+                            formValues?.members.map((member, m) => (
+                                <Button
+                                    key={m}
+                                    color="success"
+                                    className="btn mx-1 mb-2"
+                                    onClick={() => handleAddingGroupMembers(member)}
+                                >
+                                    <div className="d-flex justify-content-between">
+                                        <div> {member?.firstname + ' ' + member?.lastname}</div>
+                                        {member?.attorneyStatus === 'approved' && (
+                                            <div>
+                                                {' '}
+                                                <i className="fas fa-star text-warning"></i>
+                                            </div>
+                                        )}
+                                    </div>
 
-                      <div className="font-size-0 text-body ">{member?.email}</div>
-                  </Button>
-              ))}
+                                    <div className="font-size-0 text-body ">{member?.email}</div>
+                                </Button>
+                            ))}
                     </div>
                 </Col>
             </Row>
@@ -371,13 +386,13 @@ const CreateCase = ({
                             className="btn btn-secondary "
                             data-dismiss="modal"
                         >
-              Close
+                            Close
                         </button>
                     )}
                     {loading ? (
                         <button type="button" className="btn btn-dark ">
                             <i className="bx bx-loader bx-spin font-size-16 align-middle me-2"></i>{' '}
-              Loading
+                            Loading
                         </button>
                     ) : (
                         <button
@@ -386,7 +401,7 @@ const CreateCase = ({
                             onClick={() => handleCreatingCase()}
                             disabled={isDisabled()}
                         >
-              Create Case
+                            Create Case
                         </button>
                     )}
                 </div>

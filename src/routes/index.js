@@ -19,6 +19,7 @@ import emailForgetPassword from '../../src/rainComputing/pages/auth/emailForgetP
 import ForgetPasswordPage from '../../src/rainComputing/pages/auth/forgetPassword';
 import ChatRc from '../../src/rainComputing/pages/chat/Chat';
 
+
 import AdminLogin from '../../src/rainComputing/pages/admin/adminLogin/login';
 import Admin from '../../src/rainComputing/pages/admin/Admin';
 import usersList from '../../src/rainComputing/pages/admin/usersList';
@@ -45,6 +46,7 @@ import DocketMenu from '../../src/rainComputing/pages/docket/DocketMenu';
 import CreateEvents from '../../src/rainComputing/pages/docket/CreateEvents';
 import ManageEvents from '../../src/rainComputing/pages/docket/ManageEvents';
 import EventByCase from '../../src/rainComputing/pages/docket/EventByCase';
+import ManageDomains from '../../src/rainComputing/components/chat/ManageDomains'
 
 const authProtectedRoutes = [
     //Projects
@@ -77,6 +79,7 @@ const authProtectedRoutes = [
     { path: '/create_events', component: CreateEvents },
     { path: '/manage_events', component: ManageEvents },
     { path: '/case_events', component: EventByCase },
+    {path: "/manage_domains",component: ManageDomains}
 ];
 
 const publicRoutes = [

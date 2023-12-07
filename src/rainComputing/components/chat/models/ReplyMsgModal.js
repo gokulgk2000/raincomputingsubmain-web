@@ -18,6 +18,11 @@ const ReplyMsgModal = ({
     receivers,
     currentChat,
     caseId,
+    handleSendMessage,
+    curMessage,
+    setcurMessage,
+    getChatName,
+    mentionsArray,
 }) => {
     const { currentUser } = useUser();
     const { socket } = useSocket();
@@ -30,28 +35,28 @@ const ReplyMsgModal = ({
     const toggle_Quill = () => {
         setIsQuill(!isQuill);
     };
-    const handleReplyMessage = async id => {
-        const payload = {
-            id,
-            sender: currentUser?.userID,
-            currentChat,
-            groupId: currentChat?._id,
-            caseId: caseId,
-            receivers,
-            msg: replyMessage,
-            isReply: true,
-        };
+    // const handleReplyMessage = async id => {
+    //     const payload = {
+    //         id,
+    //         sender: currentUser?.userID,
+    //         currentChat,
+    //         groupId: currentChat?._id,
+    //         caseId: caseId,
+    //         receivers,
+    //         msg: replyMessage,
+    //         isReply: true,
+    //     };
 
-        const res = await postReplies(payload);
+    //     const res = await postReplies(payload);
 
-        if (res?.success) {
-            setMessages(messages?.map(m => (m?._id === id ? res?.replyMessage : m)));
-            socket.emit('s_r', payload);
+    //     if (res?.success) {
+    //         setMessages(messages?.map(m => (m?._id === id ? res?.replyMessage : m)));
+    //         socket.emit('s_r', payload);
 
-            setReplyMessage('');
-            setOpen(false);
-        }
-    };
+    //         setReplyMessage('');
+    //         setOpen(false);
+    //     }
+    // };
 
     return (
         <>
@@ -80,11 +85,14 @@ const ReplyMsgModal = ({
                     <h5>Reply :</h5>
                     <Row>
                         <Col>
-                            <div className="position-relative">
+                            <div className=" border border-2 border-primary rounded-4 position-relative">
                                 <ReactQuillInput
-                                    value={replyMessage}
-                                    onChange={setReplyMessage}
+                                    value={curMessage}
+                                    onChange={setcurMessage}
                                     isQuill={isQuill}
+                                    getChatName={getChatName}
+                                    currentChat={currentChat}
+                                    mentionsArray={mentionsArray}
                                 />
                             </div>
                             <div style={{ position: 'absolute', right: '30px', top: '7px' }}>
@@ -110,15 +118,15 @@ const ReplyMsgModal = ({
                         className="btn btn-secondary "
                         data-dismiss="modal"
                     >
-            Close
+                        Close
                     </button>
 
                     <button
                         type="button"
                         className="btn btn-primary"
-                        onClick={() => handleReplyMessage(curMessageId?._id)}
+                        onClick={() => handleSendMessage(curMessageId?._id)}
                     >
-            Send
+                        Send
                     </button>
                 </div>
             </Modal>
@@ -135,5 +143,10 @@ ReplyMsgModal.propTypes = {
     receivers: PropTypes.any,
     currentChat: PropTypes.any,
     caseId: PropTypes.any,
+    handleSendMessage: PropTypes.any,
+    curMessage: PropTypes.any,
+    setcurMessage: PropTypes.any,
+    getChatName: PropTypes.any,
+    mentionsArray: PropTypes.any,
 };
 export default ReplyMsgModal;

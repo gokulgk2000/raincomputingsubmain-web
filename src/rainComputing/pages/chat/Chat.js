@@ -92,13 +92,17 @@ import 'react-quill/dist/quill.snow.css';
 import 'quill-mention';
 import ReactQuillInput from '../../../../src/rainComputing/components/ReactQuill/ReactQuill';
 import CreateClient from '../../../../src/rainComputing/components/chat/CreateClient';
+import ReplyMessageComponent from "../../../../src/rainComputing/components/chat/ReplyMessage";
+import card from "../chat/card.css";
+import LinksModel from "../../../../src/rainComputing/components/chat/models/LinksModel"
+import CaseFilesGrid from '../../components/chat/CaseFilesGrid';
 const CreateCase = lazy(() =>
     import('../../../../src/rainComputing/components/chat/CreateCase')
 );
 const SubGroups = lazy(() => import('../../../../src/rainComputing/components/chat/SubGroups'));
 
 //Chat left sidebar nav items
-const sidebarNavItems = ['Chat', 'Case', 'Contact'];
+const sidebarNavItems = ['Chat', 'Case', 'Contacts'];
 
 const initialPageCount = {
     chats: 3,
@@ -155,6 +159,16 @@ const ChatRc = () => {
         // setToggleOpen: setClientSortingOpen,
         toggleIt: toggleClientSortingOpen,
     } = useToggle(false);
+    const {
+        toggleOpen: linksModelOpen,
+        setToggleOpen: setLinksModelOpen,
+        toggleIt: toggleLinksModelOpen,
+    } = useToggle(false)
+    const {
+        toggleOpen: filesModelOpen,
+        setToggleOpen: setFilesModelOpen,
+        toggleIt: toggleFilesModelOpen,
+    } = useToggle(false)
 
 
     const {
@@ -281,12 +295,41 @@ const ChatRc = () => {
     // const [isQuil, setIsQuil] = useState(false)
     const [sortedChats, setSortedChats] = useState([]);
     const [deleteMessage, setDeleteMessage] = useState();
-    console.log('deleteMessage', deleteMessage);
+    
     const [nonewmessage, setNoNewMessage] = useState([]);
     const [currentClient, setCurrentClient] = useState(null)
-    // const toggle_Quill = () => {
-    //   setIsQuil(!isQuil)
+    const [isFullScreen, setIsFullScreen] = useState(false)
+    const [inputBoxHeight, setInputBoxHeight] = useState("100%");
+    // const handleFullScreenView = () => {
+    //     setIsFullScreen(!isFullScreen)
     // }
+    const toggleFullScreen = () => {
+        if (isFullScreen) {
+            setInputBoxHeight("100%");
+        } else {
+            setInputBoxHeight("80vh"); // You can adjust the height as needed
+        }
+        setIsFullScreen(!isFullScreen);
+    };
+
+    // When the user changes the active tab, save it to localStorage
+    const handleTabChange = (newActiveTab) => {
+        localStorage.setItem('activeTab', newActiveTab);
+    }
+    // Check if there's a stored active tab in localStorage when the page loads
+    const setActiveTabOnLoad = () => {
+        const storedActiveTab = localStorage.getItem('activeTab');
+        if (storedActiveTab) {
+            // Set the active tab to the stored value
+            setactiveTab(storedActiveTab); // You need to implement this function
+        }
+    }
+    useEffect(() => {
+        setActiveTabOnLoad();
+    }, [activeTab])
+
+
+
     const [isQuill, setIsQuill] = useState(false);
     const toggle_Quill = () => {
         setIsQuill(!isQuill);
@@ -507,6 +550,7 @@ const ChatRc = () => {
         if (activeTab !== tab) {
             setactiveTab(tab);
             setCurrentChat(null);
+            handleTabChange(tab)
         }
     };
     //copy group Id
@@ -904,7 +948,7 @@ const ChatRc = () => {
                 setMessages(res1.groupMessages);
             }
         } else {
-            toastr.error('Unable to delete Message after 1 min', 'Failed!!!');
+            toastr.error('Unable to delete Message after 10 min', 'Failed!!!');
         }
         setMsgDeleteModalOpen(false);
     };
@@ -933,7 +977,7 @@ const ChatRc = () => {
     }, [recorder, isVoiceMessage]);
 
     //Sending Message
-    const handleSendMessage = async () => {
+    const handleSendMessage = async (rID) => {
         setLoading(true);
         if (isEmptyOrSpaces()) {
             console.log('You can\'t send empty message');
@@ -941,6 +985,7 @@ const ChatRc = () => {
             let voiceMessageId = [];
             let attachmentsId = [];
             let payLoad = {
+                rID,
                 caseId: currentCase?._id,
                 groupId: currentChat?._id,
                 sender: currentUser?.userID,
@@ -1033,6 +1078,7 @@ const ChatRc = () => {
             setBlobURL(null);
         }
         setLoading(false);
+        setReplyMsgModalOpen(false);
     };
     // const { getRootProps, getInputProps } = useDropzone({
     //   accept:
@@ -1064,7 +1110,7 @@ const ChatRc = () => {
     const onKeyPress = event => {
         if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
-            handleSendMessage();
+            // handleSendMessage();
         }
     };
 
@@ -1884,6 +1930,24 @@ const ChatRc = () => {
                                 </DynamicSuspense>
                             </DynamicModel>
                         )}
+                        <DynamicModel
+                            open={filesModelOpen}
+                            toggle={toggleFilesModelOpen}
+                            size="xl"
+                            modalTitle="Shared Files"
+                            isClose={true}
+                        >
+                            <CaseFilesGrid groupId={currentChat?._id} />
+                        </DynamicModel>
+                        <DynamicModel
+                            open={linksModelOpen}
+                            toggle={toggleLinksModelOpen}
+                            size="lg"
+                            modalTitle="Links"
+                            isClose={true}
+                        >
+                            <LinksModel />
+                        </DynamicModel>
 
                         {/* Modal for Editing Case*/}
                         {currentCase && (
@@ -1904,7 +1968,11 @@ const ChatRc = () => {
                             setOpen={setMessageEditModalOpen}
                             toggleOpen={toggleMessageEditModal}
                             curMessageId={curEditMessageId}
+                            curEditMessageId={curEditMessageId}
                             msgData={curEditMessageId?.messageData}
+                            currentChat={currentChat}
+                            currentCase={currentCase}
+                            getChatName={getChatName}
                         />
 
                         <ReplyMsgModal
@@ -1915,6 +1983,11 @@ const ChatRc = () => {
                             receivers={receivers}
                             currentChat={currentChat}
                             caseId={currentCase?._id}
+                            curMessage={curMessage}
+                            setcurMessage={setcurMessage}
+                            handleSendMessage={handleSendMessage}
+                            getChatName={getChatName}
+                            currentCase={currentCase}
                         />
                         {/* {contacts && (
               <ForwardMsg
@@ -2413,6 +2486,37 @@ const ChatRc = () => {
                                                                         </Dropdown>
                                                                     </li>
                                                                 )}
+                                                                <li className="list-inline-item">
+                                                                    <Dropdown
+                                                                        toggle={() => toggleLinksModelOpen(true)}
+                                                                    >
+                                                                        <DropdownToggle
+                                                                            className="btn nav-btn"
+                                                                            tag="i"
+                                                                        >
+                                                                            <i className="bi bi-link"
+                                                                                title="Links"
+                                                                            />
+                                                                        </DropdownToggle>
+                                                                    </Dropdown>
+                                                                </li>
+                                                                {!currentChat?.isGroup &&
+                                                                    <li className="list-inline-item">
+                                                                        <Dropdown
+                                                                            toggle={() => toggleFilesModelOpen(true)}
+                                                                        >
+                                                                            <DropdownToggle
+                                                                                className="btn nav-btn"
+                                                                                tag="i"
+                                                                            >
+                                                                                <i className="bi bi-files"
+                                                                                    title="Shared Files"
+                                                                                />
+                                                                            </DropdownToggle>
+                                                                        </Dropdown>
+                                                                    </li>
+                                                                }
+
                                                                 <li className="list-inline-item ">
                                                                     <Dropdown
                                                                         toggle={() => toggleCalendarModelOpen(true)}
@@ -2570,7 +2674,7 @@ const ChatRc = () => {
                                                                                     href="#"
                                                                                     onClick={() => handleCaseCompleted()}
                                                                                 >
-                                                                                    Completed case
+                                                                                    Complete case
                                                                                 </DropdownItem>
                                                                             </DropdownMenu>
                                                                         ) : (
@@ -2610,49 +2714,49 @@ const ChatRc = () => {
                                                         </Col>
                                                     </Row>
                                                 </div>
-                                                <div>
-                                                    <div className="chat-conversation px-3 py-1">
-                                                        <ul className="list-unstyled">
-                                                            <div
-                                                                ref={containerRef}
-                                                                onScroll={event => handleScroll(event)}
-                                                                style={{
-                                                                    height: '50vh',
-                                                                    overflowY: 'scroll',
-                                                                }}
-                                                            >
-                                                                {messages.map((msg, m) => (
-                                                                    <li
-                                                                        key={'test_k' + m}
-                                                                        className={
-                                                                            msg.sender === currentUser.userID
-                                                                                ? 'right'
-                                                                                : ''
-                                                                        }
+
+                                                <div className="chat-conversation px-3 py-1">
+                                                    <ul className="list-unstyled">
+                                                        <div
+                                                            ref={containerRef}
+                                                            onScroll={event => handleScroll(event)}
+                                                            style={{
+                                                                height: '50vh',
+                                                                overflowY: 'scroll',
+                                                            }}
+                                                        >
+                                                            {messages.map((msg, m) => (
+                                                                <li
+                                                                    key={'test_k' + m}
+                                                                    className={
+                                                                        msg.sender === currentUser.userID
+                                                                            ? 'right'
+                                                                            : ''
+                                                                    }
+                                                                >
+                                                                    <div
+                                                                        className="conversation-list"
+                                                                        id={msg?._id}
+                                                                        style={{
+                                                                            maxWidth: '80%',
+                                                                            color:
+                                                                                searchedMessages?.includes(msg) &&
+                                                                                'white',
+                                                                            backgroundColor:
+                                                                                searchedMessages?.includes(msg) &&
+                                                                                'black',
+                                                                        }}
                                                                     >
-                                                                        <div
-                                                                            className="conversation-list"
-                                                                            id={msg?._id}
-                                                                            style={{
-                                                                                maxWidth: '80%',
-                                                                                color:
-                                                                                    searchedMessages?.includes(msg) &&
-                                                                                    'white',
-                                                                                backgroundColor:
-                                                                                    searchedMessages?.includes(msg) &&
-                                                                                    'black',
-                                                                            }}
-                                                                        >
-                                                                            <UncontrolledDropdown>
-                                                                                <DropdownToggle
-                                                                                    href="#"
-                                                                                    className="btn nav-btn  "
-                                                                                    tag="i"
-                                                                                >
-                                                                                    <i className="bx bx-dots-vertical-rounded" />
-                                                                                </DropdownToggle>
-                                                                                <DropdownMenu>
-                                                                                    {/* <DropdownItem
+                                                                        <UncontrolledDropdown>
+                                                                            <DropdownToggle
+                                                                                href="#"
+                                                                                className="btn nav-btn  "
+                                                                                tag="i"
+                                                                            >
+                                                                                <i className="bx bx-dots-vertical-rounded" />
+                                                                            </DropdownToggle>
+                                                                            <DropdownMenu>
+                                                                                {/* <DropdownItem
                                                 href="#"
                                                 onClick={() =>
                                                   handleForwardMessage(
@@ -2662,57 +2766,57 @@ const ChatRc = () => {
                                               >
                                                 Forward
                                               </DropdownItem> */}
-                                                                                    <DropdownItem
-                                                                                        href="#"
-                                                                                        onClick={() => {
-                                                                                            setCurReplyMessageId(msg);
-                                                                                            setReplyMsgModalOpen(true);
-                                                                                        }}
-                                                                                    >
-                                                                                        Reply
-                                                                                    </DropdownItem>
-                                                                                    {msg?.sender ===
-                                                                                        currentUser.userID && (
-                                                                                            <DropdownItem
-                                                                                                href="#"
-                                                                                                onClick={() => {
-                                                                                                    setCurEditMessageId(msg);
-                                                                                                    setMessageEditModalOpen(true);
-                                                                                                }}
-                                                                                            >
-                                                                                                Edit
-                                                                                            </DropdownItem>
-                                                                                        )}
-                                                                                    <DropdownItem
-                                                                                        href="#"
-                                                                                        onClick={() => {
-                                                                                            onPinnedMessage(msg);
-                                                                                        }}
-                                                                                    >
-                                                                                        Pin
-                                                                                    </DropdownItem>
-                                                                                    <DropdownItem
-                                                                                        href="#"
-                                                                                        onClick={() => {
-                                                                                            setCurReminderMessageId(msg);
-                                                                                            setRemainderModelOpen(true);
-                                                                                        }}
-                                                                                    >
-                                                                                        Reminder
-                                                                                    </DropdownItem>
-                                                                                    <DropdownItem
-                                                                                        href="#"
-                                                                                        onClick={() => {
-                                                                                            msg.sender === currentUser.userID
-                                                                                                ? handleDelete(msg)
-                                                                                                : toastr.info(
-                                                                                                    'Unable to  delete other\'s message'
-                                                                                                );
-                                                                                        }}
-                                                                                    >
-                                                                                        Delete
-                                                                                    </DropdownItem>
-                                                                                    {/* <DropdownItem
+                                                                                <DropdownItem
+                                                                                    href="#"
+                                                                                    onClick={() => {
+                                                                                        setCurReplyMessageId(msg);
+                                                                                        setReplyMsgModalOpen(true);
+                                                                                    }}
+                                                                                >
+                                                                                    Reply
+                                                                                </DropdownItem>
+                                                                                {msg?.sender ===
+                                                                                    currentUser.userID && (
+                                                                                        <DropdownItem
+                                                                                            href="#"
+                                                                                            onClick={() => {
+                                                                                                setCurEditMessageId(msg);
+                                                                                                setMessageEditModalOpen(true);
+                                                                                            }}
+                                                                                        >
+                                                                                            Edit
+                                                                                        </DropdownItem>
+                                                                                    )}
+                                                                                <DropdownItem
+                                                                                    href="#"
+                                                                                    onClick={() => {
+                                                                                        onPinnedMessage(msg);
+                                                                                    }}
+                                                                                >
+                                                                                    Pin
+                                                                                </DropdownItem>
+                                                                                <DropdownItem
+                                                                                    href="#"
+                                                                                    onClick={() => {
+                                                                                        setCurReminderMessageId(msg);
+                                                                                        setRemainderModelOpen(true);
+                                                                                    }}
+                                                                                >
+                                                                                    Reminder
+                                                                                </DropdownItem>
+                                                                                <DropdownItem
+                                                                                    href="#"
+                                                                                    onClick={() => {
+                                                                                        msg.sender === currentUser.userID
+                                                                                            ? handleDelete(msg)
+                                                                                            : toastr.info(
+                                                                                                'Unable to  delete other\'s message'
+                                                                                            );
+                                                                                    }}
+                                                                                >
+                                                                                    Delete
+                                                                                </DropdownItem>
+                                                                                {/* <DropdownItem
                                             href="#"
                                             onClick={() => {
                                               msg.sender === currentUser.userID
@@ -2724,17 +2828,26 @@ const ChatRc = () => {
                                           >
                                             Send Email
                                           </DropdownItem> */}
-                                                                                </DropdownMenu>
-                                                                            </UncontrolledDropdown>
-                                                                            <div
-                                                                                className="ctext-wrap "
-                                                                                style={{
-                                                                                    backgroundColor: msg.sender === currentUser.userID && currentChat?.color
-                                                                                        ? `${currentChat?.color}33`
-                                                                                        : '#00EE00033'
-                                                                                }}
-                                                                            >
-                                                                                {/* {msg.isForward ? (
+                                                                            </DropdownMenu>
+                                                                        </UncontrolledDropdown>
+                                                                        <div
+                                                                            className="ctext-wrap "
+                                                                            style={{
+                                                                                backgroundColor: msg.sender === currentUser.userID && currentChat?.color
+                                                                                    ? `${currentChat?.color}33`
+                                                                                    : '#00EE00033'
+                                                                            }}
+                                                                        >
+                                                                            <ReplyMessageComponent
+                                                                                rID={msg.rID}
+                                                                                messages={messages}
+                                                                                handleLocateMessage={handleLocateMessage}
+                                                                                currentChat={currentChat}
+                                                                                getMemberName={getMemberName}
+                                                                                getSenderOneChat={getSenderOneChat}
+                                                                            />
+                                                                            {msg?.rID && <p className="mdi mdi-reply pt-3 fw-bolder">Replies :</p>}
+                                                                            {/* {msg.isForward ? (
                                               <div className=" mdi mdi-forward">
                                                 Forwarded:
                                               </div>
@@ -2743,74 +2856,39 @@ const ChatRc = () => {
                                                 {" "}
                                               </div>
                                             )} */}
-                                                                                <div>
-                                                                                    {msg?.isPinned ? (
-                                                                                        <div>
-                                                                                            <i className="mdi mdi-pin-outline mdi-rotate-315 text-danger"></i>
-                                                                                        </div>
-                                                                                    ) : (
-                                                                                        <div className="conversation-name">
-                                                                                            {' '}
-                                                                                        </div>
-                                                                                    )}
-                                                                                </div>
-                                                                                <div>
-                                                                                    {msg?.isEdit ? (
-                                                                                        <div>
-                                                                                            <p className="text-primary">
-                                                                                                Edited
-                                                                                            </p>
-                                                                                        </div>
-                                                                                    ) : (
-                                                                                        <div className="conversation-name">
-                                                                                            {' '}
-                                                                                        </div>
-                                                                                    )}
-                                                                                </div>
-                                                                                <div className="conversation-name">
-                                                                                    {currentChat.isGroup
-                                                                                        ? getMemberName(msg.sender)
-                                                                                        : getSenderOneChat(msg.sender)}
-                                                                                </div>
+                                                                            <div>
+                                                                                {msg?.isPinned ? (
+                                                                                    <div>
+                                                                                        <i className="mdi mdi-pin-outline mdi-rotate-315 text-danger"></i>
+                                                                                    </div>
+                                                                                ) : (
+                                                                                    <div className="conversation-name">
+                                                                                        {' '}
+                                                                                    </div>
+                                                                                )}
+                                                                            </div>
+                                                                            <div>
+                                                                                {msg?.isEdit ? (
+                                                                                    <div>
+                                                                                        <p className="text-primary">
+                                                                                            Edited
+                                                                                        </p>
+                                                                                    </div>
+                                                                                ) : (
+                                                                                    <div className="conversation-name">
+                                                                                        {' '}
+                                                                                    </div>
+                                                                                )}
+                                                                            </div>
+                                                                            <div className="conversation-name">
+                                                                                {currentChat.isGroup
+                                                                                    ? getMemberName(msg.sender)
+                                                                                    : getSenderOneChat(msg.sender)}
+                                                                            </div>
 
-                                                                                <div className="mb-1">
-                                                                                    {msg.isAttachment ? (
-                                                                                        <>
-                                                                                            <div
-                                                                                                style={{
-                                                                                                    whiteSpace: 'break-spaces',
-                                                                                                }}
-                                                                                                dangerouslySetInnerHTML={{
-                                                                                                    __html: msg?.messageData,
-                                                                                                }}
-                                                                                            />
-                                                                                            <AttachmentViewer
-                                                                                                attachments={msg.attachments}
-                                                                                                text={msg.messageData}
-                                                                                            />
-
-                                                                                            <div
-                                                                                                className="mt-1"
-                                                                                                style={{
-                                                                                                    whiteSpace: 'break-spaces',
-                                                                                                }}
-                                                                                            >
-                                                                                                {/* {stringFormatter(
-                                                        msg.messageData
-                                                      )} */}
-                                                                                            </div>
-                                                                                        </>
-                                                                                    ) : (
-                                                                                        // <div
-                                                                                        //   style={{
-                                                                                        //     whiteSpace: "break-spaces",
-                                                                                        //   }}
-                                                                                        // >
-                                                                                        //   {stringFormatter(
-                                                                                        //     prettifyMsg(msg.messageData)
-                                                                                        //   )}
-
-                                                                                        // </div>
+                                                                            <div className="mb-1">
+                                                                                {msg.isAttachment ? (
+                                                                                    <>
                                                                                         <div
                                                                                             style={{
                                                                                                 whiteSpace: 'break-spaces',
@@ -2819,20 +2897,58 @@ const ChatRc = () => {
                                                                                                 __html: msg?.messageData,
                                                                                             }}
                                                                                         />
-                                                                                    )}
-                                                                                </div>
-                                                                                {msg?.isVoiceMessage && (
+                                                                                        <AttachmentViewer
+                                                                                            attachments={msg.attachments}
+                                                                                            text={msg.messageData}
+                                                                                        />
+
+                                                                                        <div
+                                                                                            className="mt-1"
+                                                                                            style={{
+                                                                                                whiteSpace: 'break-spaces',
+                                                                                            }}
+                                                                                        >
+                                                                                            {/* {stringFormatter(
+                                                        msg.messageData
+                                                      )} */}
+                                                                                        </div>
+                                                                                    </>
+                                                                                ) : (
+                                                                                    // <div
+                                                                                    //   style={{
+                                                                                    //     whiteSpace: "break-spaces",
+                                                                                    //   }}
+                                                                                    // >
+                                                                                    //   {stringFormatter(
+                                                                                    //     prettifyMsg(msg.messageData)
+                                                                                    //   )}
+
+                                                                                    // </div>
+                                                                                    <div
+                                                                                        style={{
+                                                                                            whiteSpace: 'break-spaces',
+                                                                                        }}
+                                                                                        dangerouslySetInnerHTML={{
+                                                                                            __html: msg?.messageData,
+                                                                                        }}
+                                                                                    />
+                                                                                )}
+                                                                            </div>
+                                                                            {/* {msg?.isVoiceMessage && (
                                                                                     <div>
                                                                                         <VoiceMessage msg={msg} />
                                                                                     </div>
-                                                                                )}
-                                                                                <p className="chat-time mb-0">
-                                                                                    <i className="bx bx-comment-check align-middle me-1" />
-                                                                                    {/* <i className="bx bx-time-five align-middle me-1" /> */}
-                                                                                    {moment(msg.createdAt).format(
-                                                                                        'DD-MM-YY HH:mm'
-                                                                                    )}
-                                                                                    {msg?.replies?.map((r, i) => (
+                                                                                )} */}
+                                                                            <p className="chat-time mb-0">
+                                                                                <i className="bx bx-comment-check align-middle me-1" />
+                                                                                {/* <i className="bx bx-time-five align-middle me-1" /> */}
+                                                                                {msg.isEdit ? (moment(msg.updatedAt).format(
+                                                                                    "DD-MM-YY HH:mm"
+                                                                                )) : (moment(msg.createdAt).format(
+                                                                                    "DD-MM-YY HH:mm"
+                                                                                ))}
+
+                                                                                {/* {msg?.replies?.map((r, i) => (
                                                                                         <div
                                                                                             key={i}
                                                                                             className=" mdi mdi-reply m-2"
@@ -2858,261 +2974,517 @@ const ChatRc = () => {
                                                                                                 })}
                                                                                             />
                                                                                         </div>
-                                                                                    ))}
+                                                                                    ))} */}
+                                                                            </p>
+                                                                            {/* <p className=" mt-2" > Reply :{msg?.replies?.replyMsg}</p> */}
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            ))}
+                                                            {messageStack?.length > 0 &&
+                                                                messageStack.map((msg, m) => (
+                                                                    <li key={'test_k' + m} className="right">
+                                                                        <div className="conversation-list">
+                                                                            <div
+                                                                                className="ctext-wrap "
+                                                                                style={{
+                                                                                    backgroundColor: msg.sender === currentUser.userID && currentChat?.color
+                                                                                        ? `${currentChat?.color}33`
+                                                                                        : '#00EE0033'
+                                                                                }}
+                                                                            >
+                                                                                <div className="conversation-name">
+                                                                                    {currentUser?.firstname +
+                                                                                        currentUser?.lastname}
+                                                                                </div>
+                                                                                <div className="mb-1">
+                                                                                    {msg.messageData}
+                                                                                </div>
+                                                                                <p className="chat-time mb-0">
+                                                                                    <i className="bx bx-loader bx-spin  align-middle me-1" />
+                                                                                    {moment(msg.createdAt).format(
+                                                                                        'DD-MM-YY HH:mm'
+                                                                                    )}
                                                                                 </p>
-                                                                                {/* <p className=" mt-2" > Reply :{msg?.replies?.replyMsg}</p> */}
                                                                             </div>
                                                                         </div>
                                                                     </li>
                                                                 ))}
-                                                                {messageStack?.length > 0 &&
-                                                                    messageStack.map((msg, m) => (
-                                                                        <li key={'test_k' + m} className="right">
-                                                                            <div className="conversation-list">
-                                                                                <div
-                                                                                    className="ctext-wrap "
+                                                        </div>
+                                                    </ul>
+                                                </div>
+
+                                                {currentChat?.isGroup && (
+                                                    <SubgroupBar
+                                                        groups={allgroups}
+                                                        selectedGroup={currentChat}
+                                                        setSelectedgroup={setCurrentChat}
+                                                        openSubGroupmodel={setSubGroupModelOpen}
+                                                        currentCase={currentCase}
+                                                        notifyCount={getNotificationCount}
+                                                    />
+                                                )}
+                                                {isFullScreen ? (
+                                                    <>
+                                                        <div
+                                                            className={`border border-2 border-primary rounded-4 p-2 chat-input-section ${isFullScreen ? "full-screen" : ""
+                                                                }`}
+                                                        >
+                                                            <div className="row">
+                                                                <div className="col">
+                                                                    <div className="position-relative">
+                                                                        {recorder &&
+                                                                            recorder.state === "recording" ? (
+                                                                            <div className="d-flex justify-content-center">
+                                                                                <i
+                                                                                    className="mdi mdi-microphone font-size-18 text-primary"
                                                                                     style={{
-                                                                                        backgroundColor: msg.sender === currentUser.userID && currentChat?.color
-                                                                                            ? `${currentChat?.color}33`
-                                                                                            : '#00EE0033'
+                                                                                        height: "30px",
+                                                                                        paddingLeft: "10px",
+                                                                                    }}
+                                                                                ></i>
+                                                                                <p className="text-primary mt-1 font-size-12">
+                                                                                    {duration}Secs
+                                                                                </p>
+                                                                            </div>
+                                                                        ) : (
+                                                                            <>
+                                                                                {blobURL ? (
+                                                                                    <div>
+                                                                                        <audio
+                                                                                            className="w-100 w-sm-100"
+                                                                                            style={{
+                                                                                                height: "33px",
+                                                                                                paddingLeft: "10px",
+                                                                                            }}
+                                                                                            src={blobURL}
+                                                                                            controls="controls"
+                                                                                        ></audio>
+                                                                                    </div>
+                                                                                ) : (
+                                                                                    <>
+                                                                                        <div className="p-2 pt-0">
+                                                                                            {" "}
+                                                                                            {Array.from(allFiles)?.length >
+                                                                                                0 && (
+                                                                                                    <div class="d-flex gap-2 flex-wrap mt-2">
+                                                                                                        {Array.from(allFiles)?.map(
+                                                                                                            (att, a) => (
+                                                                                                                <span
+                                                                                                                    class="badge badge-soft-primary font-size-13"
+                                                                                                                    key={a}
+                                                                                                                >
+                                                                                                                    {att.name}
+                                                                                                                    <i
+                                                                                                                        class="bx bx-x-circle mx-1"
+                                                                                                                        onClick={() =>
+                                                                                                                            handleFileRemove(
+                                                                                                                                att?.name
+                                                                                                                            )
+                                                                                                                        }
+                                                                                                                        style={{
+                                                                                                                            cursor: "pointer",
+                                                                                                                        }}
+                                                                                                                    />
+                                                                                                                </span>
+                                                                                                            )
+                                                                                                        )}
+                                                                                                    </div>
+                                                                                                )}
+                                                                                        </div>
+                                                                                        <div>
+                                                                                            <ReactQuillInput
+                                                                                                value={curMessage}
+                                                                                                onChange={onChange}
+                                                                                                mentionsArray={mentionsArray}
+                                                                                                isQuill={isQuill}
+                                                                                                onKeyPress={onKeyPress}
+                                                                                                currentChat={currentChat}
+                                                                                                currentCase={currentCase}
+                                                                                                getChatName={getChatName}
+                                                                                                isEmptyOrSpaces={
+                                                                                                    isEmptyOrSpaces
+                                                                                                }
+                                                                                                inputBoxHeight={inputBoxHeight}
+                                                                                            />
+                                                                                        </div>
+                                                                                    </>
+                                                                                )}
+                                                                            </>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div>
+                                                                <div
+                                                                    className="col-auto d-flex justify-content-end  gap-2 "
+                                                                    style={{
+                                                                        position: "absolute",
+                                                                        right: "20px",
+                                                                        top: "620px",
+                                                                    }}
+                                                                >
+                                                                    {recorder &&
+                                                                        recorder.state === "recording" ? (
+                                                                        <></>
+                                                                    ) : (
+                                                                        <div>
+                                                                            <input
+                                                                                type="file"
+                                                                                name="file"
+                                                                                multiple="true"
+                                                                                id="hidden-file"
+                                                                                className="d-none"
+                                                                                accept=".png, .jpg, .jpeg,.pdf,.doc,.xls,.docx,.xlsx,.zip,.mp3,.webm"
+                                                                                onChange={e => handleFileChange(e)}
+                                                                            ></input>
+                                                                            <label
+                                                                                for="hidden-file"
+                                                                                style={{ margin: "10px" }}
+                                                                            >
+                                                                                <i
+                                                                                    class="mdi mdi-attachment mdi-rotate-315"
+                                                                                    disabled={
+                                                                                        recorder?.state === "recording"
+                                                                                    }
+                                                                                    title="Attachments"
+                                                                                    style={{
+                                                                                        color: "#556EE6",
+                                                                                        fontSize: "16px",
+                                                                                        cursor: "pointer",
+                                                                                    }}
+                                                                                ></i>
+                                                                            </label>
+                                                                            <i
+                                                                                className="bi bi-fullscreen-exit"
+                                                                                onClick={toggleFullScreen}
+                                                                                style={{
+                                                                                    color: "#556EE6",
+                                                                                    fontSize: "16px",
+                                                                                    cursor: "pointer",
+                                                                                }}
+                                                                                title={
+                                                                                    isFullScreen
+                                                                                        ? "Exit Full Screen"
+                                                                                        : "Enter Full Screen"
+                                                                                }
+                                                                            ></i>
+                                                                        </div>
+                                                                    )}
+                                                                    {recorder &&
+                                                                        recorder.state === "recording" ? (
+                                                                        <i
+                                                                            className="mdi mdi-microphone font-size-20 text-danger me-2"
+                                                                            title="Stop Recording"
+                                                                            onClick={stopRecording}
+                                                                            disabled={recorder?.state == "stopped"}
+                                                                            style={{
+                                                                                cursor: "pointer",
+                                                                                paddingTop: "6px",
+                                                                            }}
+                                                                        ></i>
+                                                                    ) : (
+                                                                        <i
+                                                                            className="mdi mdi-microphone font-size-20 text-primary me-2"
+                                                                            title="Start Recording"
+                                                                            onClick={startRecording}
+                                                                            disabled={recorder?.state == "recording"}
+                                                                            style={{
+                                                                                cursor: "pointer",
+                                                                                paddingTop: "6px",
+                                                                            }}
+                                                                        ></i>
+                                                                    )}
+
+                                                                    {recorder?.state !== "recording" && (
+                                                                        <div>
+                                                                            {loading ? (
+                                                                                <button
+                                                                                    type="button"
+                                                                                    className="btn btn-primary btn-rounded chat-send"
+                                                                                    color="primary"
+                                                                                    style={{
+                                                                                        cursor: "not-allowed",
                                                                                     }}
                                                                                 >
-                                                                                    <div className="conversation-name">
-                                                                                        {currentUser?.firstname +
-                                                                                            currentUser?.lastname}
-                                                                                    </div>
-                                                                                    <div className="mb-1">
-                                                                                        {msg.messageData}
-                                                                                    </div>
-                                                                                    <p className="chat-time mb-0">
-                                                                                        <i className="bx bx-loader bx-spin  align-middle me-1" />
-                                                                                        {moment(msg.createdAt).format(
-                                                                                            'DD-MM-YY HH:mm'
-                                                                                        )}
-                                                                                    </p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </li>
-                                                                    ))}
-                                                            </div>
-                                                        </ul>
-                                                    </div>
-
-                                                    {currentChat?.isGroup && (
-                                                        <SubgroupBar
-                                                            groups={allgroups}
-                                                            selectedGroup={currentChat}
-                                                            setSelectedgroup={setCurrentChat}
-                                                            openSubGroupmodel={setSubGroupModelOpen}
-                                                            currentCase={currentCase}
-                                                            notifyCount={getNotificationCount}
-                                                        />
-                                                    )}
-                                                    <div className="p-2 chat-input-section">
-                                                        <div className="row">
-                                                            <div className="col">
-                                                                <div className="position-relative">
-                                                                    {recorder &&
-                                                                        recorder.state === 'recording' ? (
-                                                                        <div className="d-flex justify-content-center">
-                                                                            <i
-                                                                                className="mdi mdi-microphone font-size-18 text-primary"
-                                                                                style={{
-                                                                                    height: '30px',
-                                                                                    paddingLeft: '10px',
-                                                                                }}
-                                                                            ></i>
-                                                                            <p className="text-primary mt-1 font-size-12">
-                                                                                {duration}Secs
-                                                                            </p>
-                                                                        </div>
-                                                                    ) : (
-                                                                        <>
-                                                                            {blobURL ? (
-                                                                                <div>
-                                                                                    <audio
-                                                                                        className="w-100 w-sm-100"
-                                                                                        style={{
-                                                                                            height: '33px',
-                                                                                            paddingLeft: '10px',
-                                                                                        }}
-                                                                                        src={blobURL}
-                                                                                        controls="controls"
-                                                                                    ></audio>
-                                                                                </div>
+                                                                                    <i className="bx bx-loader-alt bx-spin font-size-20 align-middle"></i>
+                                                                                </button>
                                                                             ) : (
-                                                                                <>
-                                                                                    <div className="p-2 pt-0">
-                                                                                        {' '}
-                                                                                        {Array.from(allFiles)?.length >
-                                                                                            0 && (
-                                                                                                <div className="d-flex gap-2 flex-wrap mt-2">
-                                                                                                    {Array.from(allFiles)?.map(
-                                                                                                        (att, a) => (
-                                                                                                            <span
-                                                                                                                className="badge badge-soft-primary font-size-13"
-                                                                                                                key={a}
-                                                                                                            >
-                                                                                                                {att.name}
-                                                                                                                <i
-                                                                                                                    className="bx bx-x-circle mx-1"
-                                                                                                                    onClick={() =>
-                                                                                                                        handleFileRemove(
-                                                                                                                            att?.name
-                                                                                                                        )
-                                                                                                                    }
-                                                                                                                    style={{
-                                                                                                                        cursor: 'pointer',
-                                                                                                                    }}
-                                                                                                                />
-                                                                                                            </span>
-                                                                                                        )
-                                                                                                    )}
-                                                                                                </div>
-                                                                                            )}
-                                                                                    </div>
-                                                                                    <div>
-                                                                                        <ReactQuillInput
-                                                                                            value={curMessage}
-                                                                                            onChange={onChange}
-                                                                                            mentionsArray={mentionsArray}
-                                                                                            isQuill={isQuill}
-                                                                                            onKeyPress={onKeyPress}
-                                                                                            isEmptyOrSpaces={isEmptyOrSpaces}
-                                                                                        />
-                                                                                    </div>
-                                                                                </>
+                                                                                <button
+                                                                                    type="button"
+                                                                                    className="btn btn-primary btn-rounded chat-send"
+                                                                                    color="primary"
+                                                                                    onClick={() => handleSendMessage()}
+                                                                                    disabled={isEmptyOrSpaces()}
+                                                                                >
+                                                                                    <i className="mdi mdi-send"></i>
+                                                                                </button>
                                                                             )}
-                                                                        </>
+                                                                        </div>
                                                                     )}
+
+                                                                    <div
+                                                                        style={{
+                                                                            position: "absolute",
+                                                                            right: "133px",
+                                                                            top: "5px",
+                                                                        }}
+                                                                    >
+                                                                        <i
+                                                                            className="bi bi-type"
+                                                                            onClick={() => {
+                                                                                toggle_Quill()
+                                                                            }}
+                                                                            style={{
+                                                                                color: "blue",
+                                                                                fontSize: "20px",
+                                                                                fontWeight: "bold",
+                                                                                cursor: "pointer",
+                                                                            }}
+                                                                            title={
+                                                                                isQuill
+                                                                                    ? "Show Formatting"
+                                                                                    : "Hide Formatting"
+                                                                            }
+                                                                        ></i>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <div
-                                                        className="col-auto d-flex justify-content-end  gap-2 "
-                                                        style={{
-                                                            position: 'absolute',
-                                                            right: '19px',
-                                                            bottom: '202px',
-                                                        }}
-                                                    >
-                                                        {recorder && recorder.state === 'recording' ? (
-                                                            <></>
-                                                        ) : (
-                                                            <div>
-                                                                <input
-                                                                    type="file"
-                                                                    name="file"
-                                                                    multiple="true"
-                                                                    id="hidden-file"
-                                                                    className="d-none"
-                                                                    accept=".png, .jpg, .jpeg,.pdf,.doc,.xls,.docx,.xlsx,.zip,.mp3,.webm"
-                                                                    onChange={e => handleFileChange(e)}
-                                                                ></input>
-                                                                <label
-                                                                    htmlFor="hidden-file"
-                                                                    style={{ margin: '10px' }}
-                                                                >
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <div class=" border border-2 border-primary rounded-4  chat-input-section">
+                                                            <div className="row">
+                                                                <div className="col">
+                                                                    <div className="position-relative">
+                                                                        {recorder &&
+                                                                            recorder.state === "recording" ? (
+                                                                            <div className="border border-primary d-flex justify-content-center recorder">
+                                                                                <i
+                                                                                    className="d-block d-md-inline mdi mdi-microphone font-size-18 text-primary"
+                                                                                    style={{
+                                                                                        height: "30px",
+                                                                                        paddingLeft: "50px",
+                                                                                    }}
+                                                                                ></i>
+                                                                                <p
+                                                                                    className="text-primary mt-1 font-size-12"
+                                                                                    style={{
+                                                                                        height: "30px",
+                                                                                        paddingRight: "50px",
+                                                                                    }}
+                                                                                >
+                                                                                    {duration}Secs
+                                                                                </p>
+                                                                            </div>
+                                                                        ) : (
+                                                                            <>
+                                                                                {blobURL ? (
+                                                                                    <div className="p-5">
+                                                                                        <audio
+                                                                                            className="w-100 w-sm-100"
+                                                                                            style={{
+                                                                                                height: "33px",
+                                                                                                paddingLeft: "10px",
+                                                                                            }}
+                                                                                            src={blobURL}
+                                                                                            controls="controls"
+                                                                                        ></audio>
+                                                                                    </div>
+                                                                                ) : (
+                                                                                    <>
+                                                                                        <div className="p-2 pt-0">
+                                                                                            {" "}
+                                                                                            {Array.from(allFiles)?.length >
+                                                                                                0 && (
+                                                                                                    <div class="d-flex gap-2 flex-wrap mt-2">
+                                                                                                        {Array.from(allFiles)?.map(
+                                                                                                            (att, a) => (
+                                                                                                                <span
+                                                                                                                    class="badge badge-soft-primary font-size-13 p-2"
+                                                                                                                    key={a}
+                                                                                                                >
+                                                                                                                    {att.name}
+                                                                                                                    <i
+                                                                                                                        class="bx bx-x-circle mx-1"
+                                                                                                                        onClick={() =>
+                                                                                                                            handleFileRemove(
+                                                                                                                                att?.name
+                                                                                                                            )
+                                                                                                                        }
+                                                                                                                        style={{
+                                                                                                                            cursor: "pointer",
+                                                                                                                        }}
+                                                                                                                    />
+                                                                                                                </span>
+                                                                                                            )
+                                                                                                        )}
+                                                                                                    </div>
+                                                                                                )}
+                                                                                        </div>
+                                                                                        <div>
+                                                                                            <ReactQuillInput
+                                                                                                value={curMessage}
+                                                                                                onChange={onChange}
+                                                                                                mentionsArray={mentionsArray}
+                                                                                                isQuill={isQuill}
+                                                                                                onKeyPress={onKeyPress}
+                                                                                                currentChat={currentChat}
+                                                                                                currentCase={currentCase}
+                                                                                                getChatName={getChatName}
+                                                                                                isEmptyOrSpaces={
+                                                                                                    isEmptyOrSpaces
+                                                                                                }
+                                                                                                inputBoxHeight={inputBoxHeight}
+                                                                                            />
+                                                                                        </div>
+                                                                                    </>
+                                                                                )}
+                                                                            </>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div>
+                                                            <div
+                                                                className="col-auto d-flex justify-content-end  gap-2 "
+                                                                style={{
+                                                                    position: "absolute",
+                                                                    right: "19px",
+                                                                    bottom: "30px",
+                                                                }}
+                                                            >
+                                                                {recorder && recorder.state === "recording" ? (
+                                                                    <></>
+                                                                ) : (
+                                                                    <div>
+                                                                        <input
+                                                                            type="file"
+                                                                            name="file"
+                                                                            multiple="true"
+                                                                            id="hidden-file"
+                                                                            className="d-none"
+                                                                            accept=".png, .jpg, .jpeg,.pdf,.doc,.xls,.docx,.xlsx,.zip,.mp3,.webm"
+                                                                            onChange={e => handleFileChange(e)}
+                                                                        ></input>
+                                                                        <label
+                                                                            for="hidden-file"
+                                                                            style={{ margin: "10px" }}
+                                                                        >
+                                                                            <i
+                                                                                class="mdi mdi-attachment mdi-rotate-315"
+                                                                                disabled={
+                                                                                    recorder?.state === "recording"
+                                                                                }
+                                                                                title="Attachments"
+                                                                                style={{
+                                                                                    color: "#556EE6",
+                                                                                    fontSize: "16px",
+                                                                                    cursor: "pointer",
+                                                                                }}
+                                                                            ></i>
+                                                                        </label>
+                                                                        <i
+                                                                            className="bi bi-arrows-fullscreen"
+                                                                            onClick={toggleFullScreen}
+                                                                            style={{
+                                                                                color: "#556EE6",
+                                                                                fontSize: "16px",
+                                                                                cursor: "pointer",
+                                                                            }}
+                                                                            title={
+                                                                                isFullScreen
+                                                                                    ? "Exit Full Screen"
+                                                                                    : "Enter Full Screen"
+                                                                            }
+                                                                        ></i>
+                                                                    </div>
+                                                                )}
+                                                                {recorder && recorder.state === "recording" ? (
                                                                     <i
-                                                                        className="mdi mdi-attachment mdi-rotate-315"
-                                                                        disabled={recorder?.state === 'recording'}
-                                                                        title="Attachments"
+                                                                        className="mdi mdi-microphone font-size-20 text-danger me-2"
+                                                                        title="Stop Recording"
+                                                                        onClick={stopRecording}
+                                                                        disabled={recorder?.state == "stopped"}
                                                                         style={{
-                                                                            color: '#556EE6',
-                                                                            fontSize: '16px',
-                                                                            cursor: 'pointer',
+                                                                            cursor: "pointer",
+                                                                            paddingTop: "6px",
                                                                         }}
                                                                     ></i>
-                                                                </label>
-                                                            </div>
-                                                        )}
-                                                        {recorder && recorder.state === 'recording' ? (
-                                                            <i
-                                                                className="mdi mdi-microphone font-size-20 text-danger me-2"
-                                                                title="Stop Recording"
-                                                                onClick={stopRecording}
-                                                                disabled={recorder?.state === 'stopped'}
-                                                                style={{
-                                                                    cursor: 'pointer',
-                                                                    paddingTop: '6px',
-                                                                }}
-                                                            ></i>
-                                                        ) : (
-                                                            <i
-                                                                className="mdi mdi-microphone font-size-20 text-primary me-2"
-                                                                title="Start Recording"
-                                                                onClick={startRecording}
-                                                                disabled={recorder?.state === 'recording'}
-                                                                style={{
-                                                                    cursor: 'pointer',
-                                                                    paddingTop: '6px',
-                                                                }}
-                                                            ></i>
-                                                        )}
-
-                                                        {recorder?.state !== 'recording' && (
-                                                            <div>
-                                                                {loading ? (
-                                                                    <button
-                                                                        type="button"
-                                                                        className="btn btn-primary btn-rounded chat-send"
-                                                                        color="primary"
-                                                                        style={{
-                                                                            cursor: 'not-allowed',
-                                                                        }}
-                                                                    >
-                                                                        <i className="bx bx-loader-alt bx-spin font-size-20 align-middle"></i>
-                                                                    </button>
                                                                 ) : (
-                                                                    <button
-                                                                        type="button"
-                                                                        className="btn btn-primary btn-rounded chat-send"
-                                                                        color="primary"
-                                                                        onClick={() => handleSendMessage()}
-                                                                        disabled={isEmptyOrSpaces()}
-                                                                    >
-                                                                        <i className="mdi mdi-send"></i>
-                                                                    </button>
+                                                                    <i
+                                                                        className="mdi mdi-microphone font-size-20 text-primary me-2"
+                                                                        title="Start Recording"
+                                                                        onClick={startRecording}
+                                                                        disabled={recorder?.state == "recording"}
+                                                                        style={{
+                                                                            cursor: "pointer",
+                                                                            paddingTop: "6px",
+                                                                        }}
+                                                                    ></i>
                                                                 )}
-                                                            </div>
-                                                        )}
 
-                                                        <div
-                                                            style={{
-                                                                position: 'absolute',
-                                                                right: '133px',
-                                                                top: '5px',
-                                                            }}
-                                                        >
-                                                            <i
-                                                                className="bi bi-type"
-                                                                onClick={() => {
-                                                                    toggle_Quill();
-                                                                }}
-                                                                style={{
-                                                                    color: 'blue',
-                                                                    fontSize: '20px',
-                                                                    fontWeight: 'bold',
-                                                                    cursor: 'pointer',
-                                                                }}
-                                                                title={
-                                                                    isQuill
-                                                                        ? 'Show Formatting'
-                                                                        : 'Hide Formatting'
-                                                                }
-                                                            ></i>
+                                                                {recorder?.state !== "recording" && (
+                                                                    <div>
+                                                                        {loading ? (
+                                                                            <button
+                                                                                type="button"
+                                                                                className="btn btn-primary btn-rounded chat-send"
+                                                                                color="primary"
+                                                                                style={{
+                                                                                    cursor: "not-allowed",
+                                                                                }}
+                                                                            >
+                                                                                <i className="bx bx-loader-alt bx-spin font-size-20 align-middle"></i>
+                                                                            </button>
+                                                                        ) : (
+                                                                            <button
+                                                                                type="button"
+                                                                                className="btn btn-primary btn-rounded chat-send"
+                                                                                color="primary"
+                                                                                onClick={() => handleSendMessage()}
+                                                                                disabled={isEmptyOrSpaces()}
+                                                                            >
+                                                                                <i className="mdi mdi-send"></i>
+                                                                            </button>
+                                                                        )}
+                                                                    </div>
+                                                                )}
+
+                                                                <div
+                                                                    style={{
+                                                                        position: "absolute",
+                                                                        right: "133px",
+                                                                        top: "5px",
+                                                                    }}
+                                                                >
+                                                                    <i
+                                                                        className="bi bi-type"
+                                                                        onClick={() => {
+                                                                            toggle_Quill()
+                                                                        }}
+                                                                        style={{
+                                                                            color: "blue",
+                                                                            fontSize: "20px",
+                                                                            fontWeight: "bold",
+                                                                            cursor: "pointer",
+                                                                        }}
+                                                                        title={
+                                                                            isQuill
+                                                                                ? "Show Formatting"
+                                                                                : "Hide Formatting"
+                                                                        }
+                                                                    ></i>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <br />
-                                                <br />
-                                                <br />
-                                                <br />
-                                                <br />
-                                                <br />
+                                                    </>
+                                                )}
+
                                                 <br />
                                                 <br />
                                                 <br />
