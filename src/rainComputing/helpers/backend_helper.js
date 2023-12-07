@@ -203,6 +203,9 @@ const UpdateReminder = payload =>
     put(`${BASE_URL}/remainder/updateReminder`, payload);
 const updateGroup = payload => post(`${BASE_URL}/group/updateGroup`, payload);
 const updateClient = payload => post(`${BASE_URL}/client/updateClient`, payload)
+const createDomains = payload => post(`${BASE_URL}/user/createdomains`, payload)
+  const   updateDomains= payload => post(`${BASE_URL}/user/updatedomains`, payload)
+  const   deleteDomains= payload => post(`${BASE_URL}/user/deletedomains`, payload)
 export {
     getAllAttorneys,
     getAttorneysCount,
@@ -315,5 +318,8 @@ export {
     notificationSound,
     caseIdbySubCase,
     getAllSubCases,
-    updateClient
+    updateClient,
+    createDomains,
+    updateDomains,
+    deleteDomains,
 };

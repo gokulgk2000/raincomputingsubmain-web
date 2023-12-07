@@ -5,8 +5,12 @@ import { messageUpdate } from '../../../../../src/rainComputing/helpers/backend_
 import { useChat } from '../../../../../src/rainComputing/contextProviders/ChatProvider';
 import 'react-quill/dist/quill.snow.css';
 import ReactQuillInput from '../../../../../src/rainComputing/components/ReactQuill/ReactQuill';
+import toastr from "toastr"
+import "toastr/build/toastr.min.css"
 
-const EditMessageModel = ({ open, setOpen, toggleOpen, curMessageId }) => {
+const EditMessageModel = ({ open, setOpen, toggleOpen, curMessageId ,curEditMessageId, currentChat,
+    getChatName,
+    currentCase,}) => {
     const { setMessages, messages } = useChat();
     const [updateMessages, setUpdateMessages] = useState(null);
 
@@ -20,19 +24,23 @@ const EditMessageModel = ({ open, setOpen, toggleOpen, curMessageId }) => {
     };
     const handleUpdateMessage = async id => {
         const payload = {
-            _id: id,
-            // sender: currentUser?.userID,
-            messageData: updateMessages,
-        };
-        const res = await messageUpdate(payload);
-        if (res?.success) {
-            console.log('success :', res?.success);
-
-            setMessages(messages?.map(m => (m?._id === id ? res?.updatedMessage : m)));
-            setUpdateMessages(curMessageId);
+          _id: id,
+          // sender: currentUser?.userID,
+          messageData: updateMessages,
+          createdAt: curEditMessageId.createdAt,
         }
-        setOpen(false);
-    };
+        const res = await messageUpdate(payload)
+        if (res?.success) {
+          console.log("success :", res?.success)
+          toastr.success(`Message  has been Edited successfully`, "Success")
+          setMessages(messages?.map(m => (m?._id === id ? res?.updatedMessage : m)))
+          setUpdateMessages(curMessageId)
+        } else {
+          toastr.error("Unable to Edit Message after 10 min", "Failed!!!")
+        }
+        setOpen(false)
+      }
+    
 
     useEffect(() => {
         setUpdateMessages(curMessageId?.messageData);
@@ -62,13 +70,16 @@ const EditMessageModel = ({ open, setOpen, toggleOpen, curMessageId }) => {
                     <h5>Update Message:</h5>
                     <Row>
                         <Col>
-                            <div className="position-relative">
+                            <div className="border border-2 border-primary rounded-4 position-relative">
                                 <ReactQuillInput
                                     value={updateMessages}
                                     onChange={setUpdateMessages}
                                     messages={messages}
                                     curMessageId={curMessageId}
                                     isQuill={isQuill}
+                                    currentChat={currentChat}
+                                    currentCase={currentCase}
+                                    getChatName={getChatName}
                                 />
                             </div>
                             <div style={{ position: 'absolute', right: '30px', top: '7px' }}>
@@ -112,7 +123,12 @@ EditMessageModel.propTypes = {
     setOpen: PropTypes.func,
     toggleOpen: PropTypes.func,
     curMessageId: PropTypes.any,
+    curEditMessageId: PropTypes.any,
     msgData: PropTypes.array,
-};
+    currentChat: PropTypes.any,
+    getChatName: PropTypes.any,
+    currentCase: PropTypes.any,
+  }
+  
 
 export default EditMessageModel;

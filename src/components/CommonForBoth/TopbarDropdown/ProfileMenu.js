@@ -45,8 +45,8 @@ const ProfileMenu = props => {
         toggleIt: toggleNotificationSettingsModelOpen,
     } = useToggle(false);
     const isLoginButton =
-    location.pathname.includes('/login') ||
-    location.pathname.includes('/register');
+        location.pathname.includes('/login') ||
+        location.pathname.includes('/register');
 
     const handleLogout = async () => {
         const res = await logoutUser();
@@ -77,7 +77,7 @@ const ProfileMenu = props => {
             >
                 <div>
                     <h2 className=" text-primary mb-2 px-2">
-            Completed Case
+                        Completed Case
                         <div
                             style={{
                                 width: '70px',
@@ -137,6 +137,9 @@ const ProfileMenu = props => {
                             <i className="bx bx-user font-size-16 align-middle me-1" />
                             {props.t('Profile')}{' '}
                         </DropdownItem>
+                        <DropdownItem tag="a" href="/manage_domains">
+                            <i className="bi bi-gem font-size-16 align-middle me-1" /> {props.t("Manage Domains")}
+                        </DropdownItem>
                         {!currentUser?.attorneyStatus ? (
                             <DropdownItem tag="a" href="/attorney-signup">
                                 <i className="bx bx-group font-size-16 align-middle me-1" />
@@ -174,15 +177,15 @@ const ProfileMenu = props => {
                                 onClick={() => handleCaseCompletedModal()}
                             >
                                 <i className="bx bx-check-circle font-size-16 align-middle me-1" />
-                                {props.t('Completed Case')}
+                                {props.t('Completed Cases')}
                             </DropdownItem>
                         )}
                         <DropdownItem tag="a" onClick={() => handleNotificationModal()}>
                             <i className="bx bx-bell font-size-16 align-middle me-1" />
                             {props.t('Notification Settings')}
                         </DropdownItem>
-            
-            
+
+
 
                         <div className="dropdown-divider" />
 
